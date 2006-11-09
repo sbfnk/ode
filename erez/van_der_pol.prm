@@ -1,5 +1,7 @@
+%%% Van Der Pol Parameters File %%%%%%%%%%%%%%%%
+
 Ode parameters: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-output_file  = try1.dat
+output_file  = van_der_pol.dat
 tmax         = 100
 dt           = 0.01
 nsave        = 100
@@ -7,7 +9,7 @@ nvars        = 2
 step_type    = rkf45
 abs_tol      = 1e-5
 rel_tol      = 1e-4
-ic_file      = tmp.init
+ic_file      = van_der_pol.init
 
 Model parameters: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 beta_d     = 1.2

@@ -16,7 +16,7 @@ void ReadOdeParams(const char *ifile_name, Ode *obj)
    /*****/
    
    // open init file
-   cout << "... opening ode input file: " << ifile_name << endl;
+   cout << "... opening ode input file: " << ifile_name;
    
    ifile.open (ifile_name, ios::in);  
    if(ifile.fail())
@@ -26,13 +26,13 @@ void ReadOdeParams(const char *ifile_name, Ode *obj)
    }
    else
    {
-      cout << "... done\n\n";
+      cout << " ... done\n";
    }
    
    /*****/
    
    // reading Ode content of init.dat
-   cout << "... reading ode parameters\n\n"; 
+   cout << "... reading ode parameters"; 
    
    int i=-1;
    while (i<0)
@@ -65,14 +65,16 @@ void ReadOdeParams(const char *ifile_name, Ode *obj)
    /* ode i.c. file name */
    obj->SeticFileName(read_str_val(&ifile));
 
+   cout << " ... done\n";
+   
    /*****/
   
    // closing init.dat
-   cout << "... closing ode input file: " << ifile_name << endl;
+   cout << "... closing ode input file: " << ifile_name;
   
    ifile.close(); 
    if(!ifile.is_open())
-      cout << "... done\n\n";
+      cout << " ... done\n";
 }
 
 /********************************************************************/  
@@ -86,7 +88,7 @@ void ReadModelParams(const char *ifile_name, VanDerPol *obj)
    /*****/
    
    // open init file
-   cout << "... opening model input file: " << ifile_name << endl;
+   cout << "... opening model input file: " << ifile_name;
    
    ifile.open (ifile_name, ios::in); 
    if(ifile.fail())
@@ -96,13 +98,13 @@ void ReadModelParams(const char *ifile_name, VanDerPol *obj)
    }
    else
    {
-      cout << "... done\n\n";
+      cout << " ... done\n";
    }
    
    /*****/
    
    // reading Model content of init.dat   
-   cout << "... reading model parameters\n\n"; 
+   cout << "... reading model parameters"; 
 
    int i=-1;
    while (i<0)
@@ -149,6 +151,8 @@ void ReadModelParams(const char *ifile_name, VanDerPol *obj)
 
    /* njac */
    model_params->njac=obj->GetNvars();
+
+   cout << " ... done\n";
    
    /*****/
    
@@ -158,11 +162,11 @@ void ReadModelParams(const char *ifile_name, VanDerPol *obj)
    
    
    // closing init.dat
-   cout << "... closing model input file: " << ifile_name << endl;
+   cout << "... closing model input file: " << ifile_name;
    
    ifile.close(); 
    if(!ifile.is_open())
-      cout << "... done\n\n";
+      cout << " ... done\n";
 }
 
 /********************************************************************/  

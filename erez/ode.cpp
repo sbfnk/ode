@@ -156,7 +156,7 @@ inline char *Ode::GeticFileName() {return ic_file_name; }
 
 void Ode::OpenoFile(ofstream *ofile)
 {
-   cout << "... opening ode output file: " << ofile_name << endl;
+   cout << "... opening ode output file: " << ofile_name;
    
    try
    {
@@ -171,14 +171,14 @@ void Ode::OpenoFile(ofstream *ofile)
       exit(1); // uses cstdlib.h
    }
 
-   cout << "... done\n\n";   
+   cout << " ... done\n";   
 }
 
 /********************************************************************/
 
 void Ode::CloseoFile(ofstream *ofile)
 {
-   cout << "... closing ode output file: " << ofile_name << endl;
+   cout << "... closing ode output file: " << ofile_name;
    
    try
    {
@@ -193,7 +193,7 @@ void Ode::CloseoFile(ofstream *ofile)
       exit(1); // uses cstdlib.h
    }
    
-   cout << "... done\n\n";
+   cout << " ... done\n";
 }
 
 /********************************************************************/
@@ -203,7 +203,10 @@ void Ode::InitRhsFromFile()
    ifstream ic_file;
    double *rhs_ic;
 
+   
    /* allocating rhs */
+   cout << "... allocating rhs memory";
+   
    try
    {      
       rhs_ic=new double[nvars]; // will be deleted in destructor
@@ -215,9 +218,11 @@ void Ode::InitRhsFromFile()
       cout << "... Standard exception: " << e.what() << endl;      
       exit(1); // uses cstdlib.h
    }
+
+   cout << " ... done\n";
    
    /* opening ic_file */
-   cout << "... opening ic_file: " << ic_file_name << endl;
+   cout << "... opening ode ic_file: " << ic_file_name;
    
    try
    {
@@ -232,16 +237,20 @@ void Ode::InitRhsFromFile()
       exit(1); // uses cstdlib.h
    }
    
-   cout << "... done\n\n";
+   cout << " ... done\n";
    
    /* init rhs from ic_file */
+   cout << "... reading content of ic_file";
+   
    for(unsigned int i=0; i<nvars; i++)
       ic_file >> rhs_ic[i];
    
    SetRhs(rhs_ic);
+
+   cout << " ... done\n";
    
    /* closing ic_file */
-   cout << "... closing ode output file: " << ofile_name << endl;
+   cout << "... closing ode ic_file: " << ofile_name;
    
    try
    {
@@ -255,7 +264,7 @@ void Ode::InitRhsFromFile()
       exit(1); // uses cstdlib.h
    }
    
-   cout << "... done\n\n";
+   cout << " ... done\n";
 }
 
 /********************************************************************/
@@ -269,16 +278,33 @@ void Ode::OdeSolve()
    double t;
    int status;
    ofstream ofile;
-   
+
+   cout << "Solving the ode system\n"
+        << "----------------------\n";
+
+   /* setting step type */
    SetStep();
+
+   /* allocating rhs and initialize it from ic_file */
    InitRhsFromFile();
+
+   /* opening output file */
    OpenoFile(&ofile);
-   
+
+   /* allocating stepping function */
    gsl_odeiv_step *step = gsl_odeiv_step_alloc(step_type,nvars);
+
+   /* allocating control function */
    gsl_odeiv_control *control = gsl_odeiv_control_y_new(abs_tol,rel_tol);
+
+   /* allocating evolution function */
    gsl_odeiv_evolve *evolve  = gsl_odeiv_evolve_alloc(nvars);
-   
+
+   /* defining the system */
    gsl_odeiv_system sys = {_p2derivs, _p2jac, nvars, _params};
+
+   /* main loop */
+   cout << "... in main loop";
    
    while (t < tmax)
    {
@@ -287,12 +313,16 @@ void Ode::OdeSolve()
       
       if(status != GSL_SUCCESS)
          exit(1);
-      
+
+      // USE NSAVE !!!!!!!
       ofile << t << '\t' << rhs[0] << '\t' << rhs[1] << '\t' << dt  <<endl;
    }
-
-   CloseoFile(&ofile);
    
+   cout << " .................. done\n";
+   
+   CloseoFile(&ofile);
+
+   /* free allocated memory */
    gsl_odeiv_evolve_free (evolve);
    gsl_odeiv_control_free (control);
    gsl_odeiv_step_free (step);
@@ -302,8 +332,7 @@ void Ode::OdeSolve()
 
 void Ode::SetStep()
 {
-   cout << "... setting stepping algorithm to "
-        << step_algo << endl;
+   cout << "... setting stepping algorithm to " << step_algo;
    
    if(!strcmp(step_algo,"rk2"))
    {   
@@ -347,10 +376,10 @@ void Ode::SetStep()
    }
    else
    {
-      cout << "... wrong step_algo value, set to default rkf45\n\n";
+      cout << "... wrong step_algo value, set to default rkf45\n";
    }
    
-   cout << "... done\n\n";
+   cout << " ... done\n";
 }
 
 /********************************************************************/
@@ -366,7 +395,8 @@ void Ode::OdePluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
 
 void Ode::PrtOdePrms() 
 {
-   cout << "Ode parameters:" << endl
+   cout << endl
+        << "Ode parameters:" << endl
         << "---------------" << endl
         << "nvars        = " << GetNvars() << endl
         << "nsave        = " << GetNsave() << endl

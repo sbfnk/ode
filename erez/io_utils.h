@@ -1,16 +1,9 @@
-/***********************************************************************
-
-iostream - I/O to std output
-fstream  - I/O to files
-cstdlib  - exit()
-string   - string class 
-cstring  - strcpy,...
-vector   - vector class
-
-************************************************************************/
+/********************************************************************/
 
 #ifndef IO_UTILS_H
 #define IO_UTILS_H
+
+/********************************************************************/
 
 #include <iostream> 
 #include <fstream>
