@@ -1,0 +1,28 @@
+Ode parameters: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+output_file  = try1.dat
+tmax         = 100
+dt           = 0.01
+nsave        = 100
+nvars        = 2
+step_type    = rkf45
+abs_tol      = 1e-5
+rel_tol      = 1e-4
+ic_file      = tmp.init
+
+Model parameters: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+beta_d     = 1.2
+gamma_d    = 3.4
+delta_d    = 5.6
+beta_i     = 7.8  
+gamma_i    = 9.12
+delta_i    = 3.45
+beta_m     = 67.32
+alpha      = 124.766
+nu         = 165.098
+lambda     = 12.094
+mu1        = 3
+mu2        = 2
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% make sure no empty lines after this one %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
