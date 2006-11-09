@@ -31,44 +31,44 @@ class Ode
    ~Ode();
    
    /* mutators */
-   void set_nvars(const size_t nvars);
-   void set_nsave(const int nsave);
-   void set_step_algo(const char *step_algo);
-   void set_tol(const double abs_tol, const double rel_tol);
-   void set_tmax(const double tmax);
-   void set_dt(const double dt);
-   void set_params(void *params);
-   void set_ofile_name(const char *ofile_name);
-   void set_ic_file_name(const char *ic_file_name);
-   void set_rhs(double *rhs_ic);
+   void SetNvars(const size_t nvars);
+   void SetNsave(const int nsave);
+   void SetStepAlgo(const char *step_algo);
+   void SetTol(const double abs_tol, const double rel_tol);
+   void SetTmax(const double tmax);
+   void SetDt(const double dt);
+   void SetParams(void *params);
+   void SetoFileName(const char *ofile_name);
+   void SeticFileName(const char *ic_file_name);
+   void SetRhs(double *rhs_ic);
    
    /* accessors */
-   size_t get_nvars() const;
-   int get_nsave() const;
-   char *get_step_algo();
-   double get_atol() const;
-   double get_rtol() const;
-   double get_tmax() const;
-   double get_dt() const;
-   double *get_rhs() const;
-   char *get_ofile_name();
-   char *get_ic_file_name();
+   size_t GetNvars() const;
+   int GetNsave() const;
+   char *GetStepAlgo();
+   double GetAtol() const;
+   double GetRtol() const;
+   double GetTmax() const;
+   double GetDt() const;
+   double *GetRhs() const;
+   char *GetoFileName();
+   char *GeticFileName();
    
    /* gsl/odeiv solve stuff */
-   void ode_solve();
-   void ode_plugin_funcs(int (*p2derivs)(double,const double *,double *,void *),
-                         int (*p2jac)(double,const double *,double *,double *,void *));
+   void OdeSolve();
+   void OdePluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
+                       int (*p2jac)(double,const double *,double *,double *,void *));
 
    /* i/o stuff */
-   void prt_ode_prms();
+   void PrtOdePrms();
    
   private:
    
    /* gsl/odeiv solve stuff */
-   void set_step();
-   void open_ofile(ofstream *ofile);
-   void close_ofile(ofstream *ofile);
-   void init_rhs_from_file();
+   void SetStep();
+   void OpenoFile(ofstream *ofile);
+   void CloseoFile(ofstream *ofile);
+   void InitRhsFromFile();
    
    /* ode parameters */
    size_t nvars;                // size of the ode system

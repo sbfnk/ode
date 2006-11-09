@@ -35,28 +35,28 @@ Ode::~Ode()
 
 /********************************************************************/
 
-void Ode::set_nvars(const size_t nvars)
+void Ode::SetNvars(const size_t nvars)
 {
    Ode::nvars=nvars;
 }
 
 /********************************************************************/
 
-void Ode::set_nsave(const int nsave)
+void Ode::SetNsave(const int nsave)
 {
    Ode::nsave=nsave;
 }
 
 /********************************************************************/
 
-void Ode::set_step_algo(const char *step_algo)
+void Ode::SetStepAlgo(const char *step_algo)
 {
    strcpy(Ode::step_algo,step_algo);
 }
 
 /********************************************************************/
 
-void Ode::set_tol(const double abs_tol, const double rel_tol)
+void Ode::SetTol(const double abs_tol, const double rel_tol)
 {
    Ode::abs_tol=abs_tol;
    Ode::rel_tol=rel_tol;
@@ -64,42 +64,42 @@ void Ode::set_tol(const double abs_tol, const double rel_tol)
 
 /********************************************************************/
 
-void Ode::set_tmax(const double tmax)
+void Ode::SetTmax(const double tmax)
 {
    Ode::tmax=tmax;
 }
 
 /********************************************************************/
 
-void Ode::set_dt(const double dt)
+void Ode::SetDt(const double dt)
 {
    Ode::dt=dt;
 }
 
 /********************************************************************/
 
-void Ode::set_params(void *params)
+void Ode::SetParams(void *params)
 {
    Ode::_params=params;
 }
 
 /*******************************************************************/
 
-void Ode::set_ofile_name(const char *ofile_name)
+void Ode::SetoFileName(const char *ofile_name)
 {
    strcpy(Ode::ofile_name,ofile_name);
 }
 
 /********************************************************************/
 
-void Ode::set_ic_file_name(const char *ic_file_name)
+void Ode::SeticFileName(const char *ic_file_name)
 {
    strcpy(Ode::ic_file_name,ic_file_name);
 }
 
 /********************************************************************/
 
-void Ode::set_rhs(double *rhs_ic)
+void Ode::SetRhs(double *rhs_ic)
 {
    Ode::rhs=rhs_ic;
 }
@@ -110,43 +110,43 @@ void Ode::set_rhs(double *rhs_ic)
 
 /********************************************************************/
 
-inline size_t Ode::get_nvars() const { return nvars; }
+inline size_t Ode::Getnvars() const { return nvars; }
 
 /********************************************************************/
 
-inline int Ode::get_nsave() const { return nsave; }
+inline int Ode::Getnsave() const { return nsave; }
 
 /********************************************************************/
 
-inline char *Ode::get_step_algo() { return step_algo; }
+inline char *Ode::Getstep_algo() { return step_algo; }
 
 /********************************************************************/
 
-inline double Ode::get_atol() const { return abs_tol; }
+inline double Ode::Getatol() const { return abs_tol; }
 
 /********************************************************************/
 
-inline double Ode::get_rtol() const { return rel_tol; }
+inline double Ode::Getrtol() const { return rel_tol; }
 
 /********************************************************************/
 
-inline double Ode::get_tmax() const { return tmax; }
+inline double Ode::Gettmax() const { return tmax; }
 
 /********************************************************************/
 
-inline double Ode::get_dt() const { return dt; }
+inline double Ode::Getdt() const { return dt; }
 
 /********************************************************************/
 
-inline double *Ode::get_rhs() const { return rhs; }
+inline double *Ode::Getrhs() const { return rhs; }
 
 /********************************************************************/
 
-inline char *Ode::get_ofile_name() {return ofile_name; }
+inline char *Ode::Getofile_name() {return ofile_name; }
 
 /********************************************************************/
 
-inline char *Ode::get_ic_file_name() {return ic_file_name; }
+inline char *Ode::Getic_file_name() {return ic_file_name; }
 
 /********************************************************************/
 
@@ -238,7 +238,7 @@ void Ode::init_rhs_from_file()
    for(unsigned int i=0; i<nvars; i++)
       ic_file >> rhs_ic[i];
    
-   set_rhs(rhs_ic);
+   Setrhs(rhs_ic);
    
    /* closing ic_file */
    cout << "... closing ode output file: " << ofile_name << endl;
@@ -270,7 +270,7 @@ void Ode::ode_solve()
    int status;
    ofstream ofile;
    
-   set_step();
+   Setstep();
    init_rhs_from_file();
    open_ofile(&ofile);
    
@@ -300,7 +300,7 @@ void Ode::ode_solve()
 
 /********************************************************************/
 
-void Ode::set_step()
+void Ode::Setstep()
 {
    cout << "... setting stepping algorithm to "
         << step_algo << endl;
@@ -368,15 +368,15 @@ void Ode::prt_ode_prms()
 {
    cout << "Ode parameters:" << endl
         << "---------------" << endl
-        << "nvars        = " << get_nvars() << endl
-        << "nsave        = " << get_nsave() << endl
-        << "step type    = " << get_step_algo() << endl
-        << "abs_tol      = " << get_atol() << endl
-        << "rel_tol      = " << get_rtol() << endl
-        << "tmax         = " << get_tmax() << endl
-        << "dt           = " << get_dt() << endl
-        << "ofile_name   = " << get_ofile_name() << endl
-        << "ic_file_name = " << get_ic_file_name() << endl
+        << "nvars        = " << Getnvars() << endl
+        << "nsave        = " << Getnsave() << endl
+        << "step type    = " << Getstep_algo() << endl
+        << "abs_tol      = " << Getatol() << endl
+        << "rel_tol      = " << Getrtol() << endl
+        << "tmax         = " << Gettmax() << endl
+        << "dt           = " << Getdt() << endl
+        << "ofile_name   = " << Getofile_name() << endl
+        << "ic_file_name = " << Getic_file_name() << endl
         << endl;
 }
 
