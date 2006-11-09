@@ -15,16 +15,16 @@ int main(int argc, char *argv[])
 
    /**********/
    
-   read_ode_params("init.dat", &test);
-   read_model_params("init.dat", &test);
+   ReadOdeParams("init.dat", &test);
+   ReadModelParams("init.dat", &test);
    
-   test.plugin_model_params();
+   test.PluginModelParams();
    
-   test.prt_model_prms();
+   test.PrtModelPrms();
 
    /**********/
 
-   test.ode_solve();
+   test.OdeSolve();
    
    return 0;
 }

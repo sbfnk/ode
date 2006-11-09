@@ -24,8 +24,8 @@ using namespace std;
 
 /********************************************************************/
 
-void read_ode_params(const char *ifile_name, Ode *obj);
-void read_model_params(const char *ifile_name, VanDerPol *obj);
+void ReadOdeParams(const char *ifile_name, Ode *obj);
+void ReadModelParams(const char *ifile_name, VanDerPol *obj);
 
 int read_int_val(ifstream *ifile);
 double read_dbl_val(ifstream *ifile);

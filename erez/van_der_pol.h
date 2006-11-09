@@ -31,10 +31,10 @@ class VanDerPol : public Ode
    static int jac(double, const double *, double *, double *, void *);
 
    /* utility function */
-   void set_model_params(ModelParams *model_params);
-   ModelParams *get_model_params() { return model_params; };
-   void plugin_model_params();      
-   void prt_model_prms();
+   void SetModelParams(ModelParams *model_params);
+   ModelParams *GetModelParams() { return model_params; };
+   void PluginModelParams();      
+   void PrtModelPrms();
    
   private:
    ModelParams *model_params;

@@ -8,7 +8,7 @@ using namespace std;
 
 /********************************************************************/  
 
-void read_ode_params(const char *ifile_name, Ode *obj)
+void ReadOdeParams(const char *ifile_name, Ode *obj)
 {
    string line;
    ifstream ifile;
@@ -42,28 +42,28 @@ void read_ode_params(const char *ifile_name, Ode *obj)
    }
    
    /* ode output file name */
-   obj->set_ofile_name(read_str_val(&ifile));
+   obj->SetoFileName(read_str_val(&ifile));
   
    /* tmax */
-   obj->set_tmax(read_dbl_val(&ifile));
+   obj->SetTmax(read_dbl_val(&ifile));
   
    /* dt */
-   obj->set_dt(read_dbl_val(&ifile));
+   obj->SetDt(read_dbl_val(&ifile));
   
    /* nsave */
-   obj->set_nsave(read_int_val(&ifile));
+   obj->SetNsave(read_int_val(&ifile));
   
    /* nvars */
-   obj->set_nvars(read_int_val(&ifile));
+   obj->SetNvars(read_int_val(&ifile));
 
    /* step_algo */
-   obj->set_step_algo(read_str_val(&ifile));
+   obj->SetStepAlgo(read_str_val(&ifile));
 
    /* abs_tol, rel_tol */
-   obj->set_tol(read_dbl_val(&ifile),read_dbl_val(&ifile));
+   obj->SetTol(read_dbl_val(&ifile),read_dbl_val(&ifile));
    
    /* ode i.c. file name */
-   obj->set_ic_file_name(read_str_val(&ifile));
+   obj->SeticFileName(read_str_val(&ifile));
 
    /*****/
   
@@ -77,7 +77,7 @@ void read_ode_params(const char *ifile_name, Ode *obj)
 
 /********************************************************************/  
 
-void read_model_params(const char *ifile_name, VanDerPol *obj)
+void ReadModelParams(const char *ifile_name, VanDerPol *obj)
 {
    string line;
    ifstream ifile;
@@ -148,12 +148,12 @@ void read_model_params(const char *ifile_name, VanDerPol *obj)
    model_params->mu2=read_dbl_val(&ifile);
 
    /* njac */
-   model_params->njac=obj->get_nvars();
+   model_params->njac=obj->GetNvars();
    
    /*****/
    
    // plugin parameters to class object
-   obj->set_model_params(model_params); // model_params will be delete
+   obj->SetModelParams(model_params); // model_params will be delete
                                         // by object destructor
    
    

@@ -9,7 +9,7 @@ using namespace std;
 VanDerPol::VanDerPol() : Ode()
 {
    model_params = NULL;
-   ode_plugin_funcs(&derivs,&jac);
+   OdePluginFuncs(&derivs,&jac);
 }
 
 /********************************************************************/
@@ -21,16 +21,16 @@ VanDerPol::~VanDerPol()
 
 /********************************************************************/
 
-void VanDerPol::set_model_params(ModelParams *model_params)
+void VanDerPol::SetModelParams(ModelParams *model_params)
 {
    VanDerPol::model_params=model_params;
 }   
 
 /********************************************************************/
 
-void VanDerPol::plugin_model_params()
+void VanDerPol::PluginModelParams()
 {
-   set_params(static_cast<void *>(model_params));
+   SetParams(static_cast<void *>(model_params));
 }
 
 /********************************************************************/
@@ -68,22 +68,22 @@ int VanDerPol::jac (double t, const double y[], double *dfdy, double dfdt[], voi
 
 /********************************************************************/   
    
-void VanDerPol::prt_model_prms()
+void VanDerPol::PrtModelPrms()
 {
-   prt_ode_prms();
+   PrtOdePrms();
 
    cout << "Model parameters:" << endl
         << "-----------------" << endl
-        << "beta_d  = " << get_model_params()->beta_d << endl
-        << "gamma_d = " << get_model_params()->gamma_d << endl
-        << "delta_d = " << get_model_params()->delta_d << endl
-        << "beta_i  = " << get_model_params()->beta_i << endl
-        << "gamma_i = " << get_model_params()->gamma_i << endl
-        << "delta_i = " << get_model_params()->delta_i << endl
-        << "beta_m  = " << get_model_params()->beta_m << endl
-        << "alpha   = " << get_model_params()->alpha << endl
-        << "nu      = " << get_model_params()->nu << endl
-        << "lambda  = " << get_model_params()->lambda << endl
+        << "beta_d  = " << GetModelParams()->beta_d << endl
+        << "gamma_d = " << GetModelParams()->gamma_d << endl
+        << "delta_d = " << GetModelParams()->delta_d << endl
+        << "beta_i  = " << GetModelParams()->beta_i << endl
+        << "gamma_i = " << GetModelParams()->gamma_i << endl
+        << "delta_i = " << GetModelParams()->delta_i << endl
+        << "beta_m  = " << GetModelParams()->beta_m << endl
+        << "alpha   = " << GetModelParams()->alpha << endl
+        << "nu      = " << GetModelParams()->nu << endl
+        << "lambda  = " << GetModelParams()->lambda << endl
         << endl;
 }
 
