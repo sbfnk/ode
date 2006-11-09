@@ -283,7 +283,8 @@ void Ode::OdeSolve()
         << "----------------------\n";
 
    /* setting step type */
-   SetStep();
+   const gsl_odeiv_step_type *step_type;
+   step_type = SetStepType();
 
    /* allocating rhs and initialize it from ic_file */
    InitRhsFromFile();
@@ -334,49 +335,51 @@ void Ode::OdeSolve()
 
 /********************************************************************/
 
-void Ode::SetStep()
+const gsl_odeiv_step_type *Ode::SetStepType()
 {
+   const gsl_odeiv_step_type *tmp_step_type;
+
    cout << "... setting stepping algorithm to " << step_algo;
    
    if(!strcmp(step_algo,"rk2"))
    {   
-      step_type = gsl_odeiv_step_rk2;
+      tmp_step_type = gsl_odeiv_step_rk2;
    }
    else if(!strcmp(step_algo,"rk4"))
    {
-      step_type = gsl_odeiv_step_rk2;
+      tmp_step_type = gsl_odeiv_step_rk2;
    }
    else if(!strcmp(step_algo,"rkf45"))
    {
-      step_type = gsl_odeiv_step_rkf45;
+      tmp_step_type = gsl_odeiv_step_rkf45;
    }
    else if(!strcmp(step_algo,"rkck"))
    {
-      step_type = gsl_odeiv_step_rkck;
+      tmp_step_type = gsl_odeiv_step_rkck;
    }
    else if(!strcmp(step_algo,"rk8pd"))
    {
-      step_type = gsl_odeiv_step_rk8pd;
+      tmp_step_type = gsl_odeiv_step_rk8pd;
    }
    else if(!strcmp(step_algo,"rk2imp"))
    {
-      step_type = gsl_odeiv_step_rk2imp;
+      tmp_step_type = gsl_odeiv_step_rk2imp;
    }
    else if(!strcmp(step_algo,"rk4imp"))
    {
-      step_type = gsl_odeiv_step_rk4imp;
+      tmp_step_type = gsl_odeiv_step_rk4imp;
    }
    else if(!strcmp(step_algo,"bsimp"))
    {
-      step_type = gsl_odeiv_step_bsimp;
+      tmp_step_type = gsl_odeiv_step_bsimp;
    }
    else if(!strcmp(step_algo,"gear1"))
    {
-      step_type = gsl_odeiv_step_gear1;
+      tmp_step_type = gsl_odeiv_step_gear1;
    }
    else if(!strcmp(step_algo,"gear2"))
    {
-      step_type = gsl_odeiv_step_gear2;
+      tmp_step_type = gsl_odeiv_step_gear2;
    }
    else
    {
@@ -384,6 +387,8 @@ void Ode::SetStep()
    }
    
    cout << " ... done\n";
+
+   return tmp_step_type;
 }
 
 /********************************************************************/
