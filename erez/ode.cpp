@@ -303,8 +303,12 @@ void Ode::OdeSolve()
    /* defining the system */
    gsl_odeiv_system sys = {_p2derivs, _p2jac, nvars, _params};
 
-   /* main loop */
+   /*** main loop ***/
    cout << "... in main loop";
+
+   /* write t=0 rhs */
+   t=0;
+   ofile << t << '\t' << rhs[0] << '\t' << rhs[1] << '\t' << dt  <<endl;
    
    while (t < tmax)
    {
