@@ -8,7 +8,6 @@ using namespace std;
 
 VanDerPol::VanDerPol() : Ode()
 {
-   model_params = NULL;
    OdePluginFuncs(&derivs,&jac);
 }
 
@@ -16,21 +15,7 @@ VanDerPol::VanDerPol() : Ode()
 
 VanDerPol::~VanDerPol()
 {
-   delete model_params;
-}
-
-/********************************************************************/
-
-void VanDerPol::SetModelParams(ModelParams *model_params)
-{
-   VanDerPol::model_params=model_params;
-}   
-
-/********************************************************************/
-
-void VanDerPol::PluginModelParams()
-{
-   SetParams(static_cast<void *>(model_params));
+   delete static_cast<ModelParams *>(GetModelParams());   
 }
 
 /********************************************************************/
@@ -50,7 +35,7 @@ int VanDerPol::derivs (double t, const double y[], double rhs[], void *params)
 
 int VanDerPol::jac (double t, const double y[], double *dfdy, double dfdt[], void *params)
 {
-   ModelParams prm = *(ModelParams *)params;
+   ModelParams prm = *(static_cast<ModelParams *>(params));
    double mu = prm.mu1+prm.mu2;
    int n=prm.njac;
    
@@ -72,18 +57,20 @@ void VanDerPol::PrtModelPrms()
 {
    PrtOdePrms();
 
+   ModelParams *p=static_cast<ModelParams *>(GetModelParams());
+   
    cout << "Model parameters:" << endl
         << "-----------------" << endl
-        << "beta_d  = " << GetModelParams()->beta_d << endl
-        << "gamma_d = " << GetModelParams()->gamma_d << endl
-        << "delta_d = " << GetModelParams()->delta_d << endl
-        << "beta_i  = " << GetModelParams()->beta_i << endl
-        << "gamma_i = " << GetModelParams()->gamma_i << endl
-        << "delta_i = " << GetModelParams()->delta_i << endl
-        << "beta_m  = " << GetModelParams()->beta_m << endl
-        << "alpha   = " << GetModelParams()->alpha << endl
-        << "nu      = " << GetModelParams()->nu << endl
-        << "lambda  = " << GetModelParams()->lambda << endl
+        << "beta_d  = " << p->beta_d << endl
+        << "gamma_d = " << p->gamma_d << endl
+        << "delta_d = " << p->delta_d << endl
+        << "beta_i  = " << p->beta_i << endl
+        << "gamma_i = " << p->gamma_i << endl
+        << "delta_i = " << p->delta_i << endl
+        << "beta_m  = " << p->beta_m << endl
+        << "alpha   = " << p->alpha << endl
+        << "nu      = " << p->nu << endl
+        << "lambda  = " << p->lambda << endl
         << endl;
 }
 

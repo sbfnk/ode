@@ -1,6 +1,6 @@
 /********************************************************************/  
 
-#include "io_utils.h"
+#include "ode_io_utils.h"
 #include "ode.h"
 #include "van_der_pol.h"
 
@@ -155,11 +155,9 @@ void ReadModelParams(const char *ifile_name, VanDerPol *obj)
    cout << " ... done\n";
    
    /*****/
-   
-   // plugin parameters to class object
-   obj->SetModelParams(model_params); // model_params will be delete
-                                        // by object destructor
-   
+
+   /* passing a pointer to model_params to Ode class member _params */
+   obj->SetModelParams(static_cast<void *>(model_params));
    
    // closing init.dat
    cout << "... closing model input file: " << ifile_name;

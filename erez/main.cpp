@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include "ode.h"
 #include "van_der_pol.h"
-#include "io_utils.h"
+#include "ode_io_utils.h"
 
 using namespace std;
 
@@ -32,9 +32,6 @@ int main(int argc, char *argv[])
 
    /* reading model parameters */
    ReadModelParams(argv[1], &test);
-
-   /* passing model parameters struct to Ode object */
-   test.PluginModelParams();
 
    /* printing ode + model parameters */
    test.PrtModelPrms();

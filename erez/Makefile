@@ -29,7 +29,7 @@ DEPENDFLAGS = -m
 
 #--------------------------------------------------------------------
 
-SOURCES     = main.cpp ode.cpp io_utils.cpp van_der_pol.cpp
+SOURCES     = main.cpp ode.cpp ode_io_utils.cpp van_der_pol.cpp
 OBJECTS     = $(SOURCES:.cpp=.o)
 EXEC        = out
 
@@ -63,7 +63,7 @@ cleaner:
 #-------------------------------------------------------------------
 # DO NOT DELETE
 
-io_utils.o: io_utils.h ode.h van_der_pol.h
-main.o: io_utils.h ode.h van_der_pol.h  
+ode_io_utils.o: ode_io_utils.h ode.h van_der_pol.h
+main.o: ode_io_utils.h ode.h van_der_pol.h  
 ode.o: ode.h 
 van_der_pol: van_der_pol.h ode.h

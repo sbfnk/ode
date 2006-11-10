@@ -78,7 +78,7 @@ void Ode::SetDt(const double dt)
 
 /********************************************************************/
 
-void Ode::SetParams(void *params)
+void Ode::SetModelParams(void *params)
 {
    Ode::_params=params;
 }
@@ -110,43 +110,47 @@ void Ode::SetRhs(double *rhs_ic)
 
 /********************************************************************/
 
-inline size_t Ode::GetNvars() const { return nvars; }
+size_t Ode::GetNvars() const { return nvars; }
 
 /********************************************************************/
 
-inline int Ode::GetNsave() const { return nsave; }
+int Ode::GetNsave() const { return nsave; }
 
 /********************************************************************/
 
-inline char *Ode::GetStepAlgo() { return step_algo; }
+char *Ode::GetStepAlgo() { return step_algo; }
 
 /********************************************************************/
 
-inline double Ode::GetAtol() const { return abs_tol; }
+double Ode::GetAtol() const { return abs_tol; }
 
 /********************************************************************/
 
-inline double Ode::GetRtol() const { return rel_tol; }
+double Ode::GetRtol() const { return rel_tol; }
 
 /********************************************************************/
 
-inline double Ode::GetTmax() const { return tmax; }
+double Ode::GetTmax() const { return tmax; }
 
 /********************************************************************/
 
-inline double Ode::GetDt() const { return dt; }
+double Ode::GetDt() const { return dt; }
 
 /********************************************************************/
 
-inline double *Ode::GetRhs() const { return rhs; }
+void *Ode::GetModelParams() const { return _params; }
 
 /********************************************************************/
 
-inline char *Ode::GetoFileName() {return ofile_name; }
+double *Ode::GetRhs() const { return rhs; }
 
 /********************************************************************/
 
-inline char *Ode::GeticFileName() {return ic_file_name; }
+char *Ode::GetoFileName() {return ofile_name; }
+
+/********************************************************************/
+
+char *Ode::GeticFileName() {return ic_file_name; }
 
 /********************************************************************/
 

@@ -28,20 +28,14 @@ class VanDerPol : public Ode
   public:
    VanDerPol();
    ~VanDerPol();
-
+   
    /* user supplied functions */
    static int derivs(double, const double *, double *, void *);
    static int jac(double, const double *, double *, double *, void *);
-
+   
    /* utility function */
-   void SetModelParams(ModelParams *model_params);
-   ModelParams *GetModelParams() { return model_params; };
-   void PluginModelParams();      
    void PrtModelPrms();
    
-  private:
-   ModelParams *model_params;
-
 }; // class VanDerPol
 
 /********************************************************************/

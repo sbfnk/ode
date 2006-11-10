@@ -6,16 +6,16 @@
 // This is the Ode class interface. This class solves ODE systems
 // using GSL - GNU Scientific Library (www.gnu.org/software/gsl).
 // This is a baes class, i.e. in order to solve a specific system
-// the user must provide the class with pointers to two functions,
-// one for calculating the RHS and one for the Jacobian. The user
-// must also provide the relevant parameters of the model. See as
-// an example the derived class VanDerPol in van_der_pol.h .
+// the user must provide a derived class with pointers to two
+// functions, one for calculating the RHS and one for the Jacobian.
+// The user must also provide the relevant parameters of the model.
+// See as an example the derived class VanDerPol in van_der_pol.h .
 //
 // Parameters:
 // -----------
 // The class's parameters are ODE related. The specific model
-// parameters should be plugged-in from derived classes using an
-// Ode member function.
+// parameters should be plugged-in from derived classes using the
+// Ode member function Ode::SetModelParams.
 //
 // some noteworthy parameters are listed below:
 //
@@ -24,24 +24,27 @@
 // abs_tol, rel_tol - absolute/relative tolerances (see GSL docs).
 // dt - initial step size.
 // *rhs - store derivatives, i.e. du/dt=rhs(u,t).
-// *_params - pointer to model parameters.
+// *_params - pointer to model parameters structure.
 // *_p2derivs - pointer to function derivs, which computes the rhs.
 // *_p2jac - pointer to function jac, which computes the Jacobian.
 //
 // Functions:
 // ----------
 // Constructor, destructor, mutators and accessors - straight forward.
+//
 // OdePluginFuncs - Once the functions for computing the derivatives and 
-//    the Jacobian, this function enables the user to set the Ode class
-//    pointers to those functions. It is used in the derived class
-//    constructor. 
-// SetParams - Once the structure of parameters has been defined by the
+//    the Jacobian are defined by the user, this function enables the user
+//    to set the Ode class pointers to those functions. It is used in the
+//    derived class constructor.
+//
+// SetModelParams - Once the structure of parameters has been defined by the
 //    user in the derived class and has been initialized, a pointer to
 //    this structure has to be passed to initialize *_params. This is done
-//    using SetParams. The user defined derived class member function
-//    PluginModelParams() passes the required pointer to *_params after 
-//    casting it to void, i.e. static_cast<void *>(...).
-//    using
+//    using SetModelParams. For example, once the user has defined and
+//    initialized the parameters structure, this member function is used
+//    to initialize *_params, after casting it to void. See ReadModelParams
+//    in ode_io_utils.h. ),
+//
 // InitRhsFromFile - allocate rhs as rhs_ic ...
 // OdeSolve - runs InitRhsFromFile, open and close dat file, allocate all
 //    necessary objects for gsl/odevi and perform the main loop ...
@@ -98,7 +101,7 @@ class Ode
    void SetTol(const double abs_tol, const double rel_tol);
    void SetTmax(const double tmax);
    void SetDt(const double dt);
-   void SetParams(void *params);
+   void SetModelParams(void *params);
    void SetoFileName(const char *ofile_name);
    void SeticFileName(const char *ic_file_name);
    void SetRhs(double *rhs_ic);
@@ -111,6 +114,7 @@ class Ode
    double GetRtol() const;
    double GetTmax() const;
    double GetDt() const;
+   void *GetModelParams() const;
    double *GetRhs() const;
    char *GetoFileName();
    char *GeticFileName();

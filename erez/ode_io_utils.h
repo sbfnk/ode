@@ -1,7 +1,7 @@
 /********************************************************************/
 
-#ifndef IO_UTILS_H
-#define IO_UTILS_H
+#ifndef ODE_IO_UTILS_H
+#define ODE_IO_UTILS_H
 
 /********************************************************************/
 
@@ -26,4 +26,4 @@ const char *read_str_val(ifstream *ifile);
 
 /********************************************************************/
 
-#endif // IO_UTILS_H
+#endif // ODE_IO_UTILS_H
