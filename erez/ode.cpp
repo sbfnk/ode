@@ -17,9 +17,9 @@ Ode::Ode() : nvars(2), nsave(1), abs_tol(1e-6), rel_tol(1e-6), tmax(1.5),
    strcpy(Ode::ofile_name,"no_ofile_name");
    strcpy(Ode::ic_file_name,"no_ic_file_name");
    Ode::rhs=NULL;
-   Ode::_params=NULL;
-   Ode::_p2derivs=NULL;
-   Ode::_p2jac=NULL;
+   Ode::params=NULL;
+   Ode::p2derivs=NULL;
+   Ode::p2jac=NULL;
 }
 
 /********************************************************************/
@@ -42,7 +42,7 @@ void Ode::SetNvars(const size_t nvars)
 
 /********************************************************************/
 
-void Ode::SetNsave(const int nsave)
+void Ode::SetNsave(const unsigned int nsave)
 {
    Ode::nsave=nsave;
 }
@@ -80,7 +80,7 @@ void Ode::SetDt(const double dt)
 
 void Ode::SetModelParams(void *params)
 {
-   Ode::_params=params;
+   Ode::params=params;
 }
 
 /*******************************************************************/
@@ -114,7 +114,7 @@ size_t Ode::GetNvars() const { return nvars; }
 
 /********************************************************************/
 
-int Ode::GetNsave() const { return nsave; }
+unsigned int Ode::GetNsave() const { return nsave; }
 
 /********************************************************************/
 
@@ -138,7 +138,7 @@ double Ode::GetDt() const { return dt; }
 
 /********************************************************************/
 
-void *Ode::GetModelParams() const { return _params; }
+void *Ode::GetModelParams() const { return params; }
 
 /********************************************************************/
 
@@ -306,35 +306,39 @@ void Ode::OdeSolve()
    gsl_odeiv_evolve *evolve  = gsl_odeiv_evolve_alloc(nvars);
 
    /* defining the system */
-   gsl_odeiv_system sys = {_p2derivs, _p2jac, nvars, _params};
-
-   /*** main loop ***/
-   cout << "... in main loop";
+   gsl_odeiv_system sys = {p2derivs, p2jac, nvars, params};
 
    /* write t=0 rhs */
    t=0;
-   ofile << t << '\t' << rhs[0] << '\t' << rhs[1] << '\t' << dt  <<endl;
+   WriteRHS(&ofile, t);
+
+   unsigned int o_count=1;
+   
+   /*** main loop ***/
+   cout << "... in main loop";   
    
    while (t < tmax)
    {
+      /* stepping solution */
       status = gsl_odeiv_evolve_apply (evolve, control, step, &sys, &t, tmax,
                                        &dt, rhs);      
       
       if(status != GSL_SUCCESS)
          exit(1);
-
-      // USE NSAVE !!!!!!!
-      ofile << t << '\t' << rhs[0] << '\t' << rhs[1] << '\t' << dt  <<endl;
+      
+      /* writing RHS to ofile */
+      if(!(o_count++ % nsave))
+         WriteRHS(&ofile, t);
    }
    
    cout << " .................. done\n";
    
    CloseoFile(&ofile);
-
+   
    /* free allocated memory */
-   gsl_odeiv_evolve_free (evolve);
-   gsl_odeiv_control_free (control);
-   gsl_odeiv_step_free (step);
+   gsl_odeiv_evolve_free(evolve);
+   gsl_odeiv_control_free(control);
+   gsl_odeiv_step_free(step);
 }
 
 /********************************************************************/
@@ -400,8 +404,8 @@ const gsl_odeiv_step_type *Ode::SetStepType()
 void Ode::OdePluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
                          int (*p2jac)(double,const double *,double *,double *,void *))
 {
-   Ode::_p2derivs=p2derivs;
-   Ode::_p2jac=p2jac;
+   Ode::p2derivs=p2derivs;
+   Ode::p2jac=p2jac;
 }
 
 /********************************************************************/
@@ -421,6 +425,16 @@ void Ode::PrtOdePrms()
         << "ofile_name   = " << GetoFileName() << endl
         << "ic_file_name = " << GeticFileName() << endl
         << endl;
+}
+
+/********************************************************************/
+
+void Ode::WriteRHS(ofstream *ofile, double t)
+{
+   *ofile << t;
+   for(unsigned int i=0; i<nvars; i++)
+      *ofile << '\t' << rhs[i];
+   *ofile << endl;
 }
 
 /********************************************************************/
