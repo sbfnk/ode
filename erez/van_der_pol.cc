@@ -10,6 +10,7 @@ using namespace std;
 VanDerPol::VanDerPol() : Ode()
 {
    OdePluginFuncs(&derivs,&jac);
+   //   OdePluginFuncs(&derivs,NULL);
 }
 
 /******************************************************************/
