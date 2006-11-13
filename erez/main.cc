@@ -1,20 +1,20 @@
-/********************************************************************/
+/******************************************************************/
 
 #include <iostream>
 #include <cstdlib>
-#include "ode.h"
-#include "van_der_pol.h"
-#include "ode_io_utils.h"
+#include "ode.hh"
+#include "van_der_pol.hh"
+#include "ode_io_utils.hh"
 
 using namespace std;
 
-/********************************************************************/
+/******************************************************************/
 
 int main(int argc, char *argv[])
 {
    VanDerPol test;
 
-   /**********/
+   /********/
 
    if(argc<2)
    {
@@ -27,16 +27,16 @@ int main(int argc, char *argv[])
         << "Starting ODE solver\n"
         << "-------------------\n";
 
-   /* reading ode parameters */
-   ReadOdeParams(argv[1], &test);
+   // reading ode parameters 
+   ReadOdeParams(argv[1], test);
 
-   /* reading model parameters */
-   ReadModelParams(argv[1], &test);
+   // reading model parameters 
+   ReadModelParams(argv[1], test);
 
-   /* printing ode + model parameters */
+   // printing ode + model parameters 
    test.PrtModelPrms();
    
-   /* solve the system */   
+   // solve the system    
    test.OdeSolve();
    
    return 0;
