@@ -29,8 +29,8 @@ DEPENDFLAGS = -m
 
 #--------------------------------------------------------------------
 
-SOURCES     = main.cpp ode.cpp ode_io_utils.cpp van_der_pol.cpp
-OBJECTS     = $(SOURCES:.cpp=.o)
+SOURCES     = main.cc ode.cc ode_io_utils.cc van_der_pol.cc
+OBJECTS     = $(SOURCES:.cc=.o)
 EXEC        = out
 
 #--------------------------------------------------------------------
@@ -42,7 +42,7 @@ $(EXEC): $(OBJECTS)
 	$(LINKER) $(LDFLAGS) $(OPTFLAGS) $(CPPFLAGS) $(OBJECTS) -o $@.x
 	@echo
 
-%.o : %.cpp
+%.o : %.cc
 	@echo ... compiling $<:
 	$(CC) -c $(CPPFLAGS) $(OPTFLAGS) $< -o $@
 	@echo
@@ -56,14 +56,14 @@ clean:
 	@echo ... done
 
 cleaner:
-	@echo '... cleaning also *~ and gmon.out'
-	@rm -f $(OBJECTS) *~ gmon.out
+	@echo '... cleaning also *~, *.x and gmon.out'
+	@rm -f $(OBJECTS) *~ *.x gmon.out 
 	@echo ... done
 
 #-------------------------------------------------------------------
 # DO NOT DELETE
 
-ode_io_utils.o: ode_io_utils.h ode.h van_der_pol.h
-main.o: ode_io_utils.h ode.h van_der_pol.h  
-ode.o: ode.h 
-van_der_pol: van_der_pol.h ode.h
+ode_io_utils.o: ode_io_utils.hh ode.hh van_der_pol.hh
+main.o: ode_io_utils.hh ode.hh van_der_pol.hh  
+ode.o: ode.hh 
+van_der_pol: van_der_pol.hh ode.hh
