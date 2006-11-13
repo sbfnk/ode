@@ -69,14 +69,14 @@
 #include <string>
 #include <cstring>
 #include "ode.hh"
-#include "van_der_pol.hh"
+#include "mfa.hh"
 
 using namespace std;
 
 /******************************************************************/
 
 void ReadOdeParams(const char *ifile_name, Ode& obj);
-void ReadModelParams(const char *ifile_name, VanDerPol& obj);
+void ReadModelParams(const char *ifile_name, MeanField& obj);
 
 int read_int_val(ifstream& ifile);
 double read_dbl_val(ifstream& ifile);

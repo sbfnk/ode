@@ -2,7 +2,7 @@
 
 #include "ode_io_utils.hh"
 #include "ode.hh"
-#include "van_der_pol.hh"
+#include "mfa.hh"
 
 using namespace std;
 
@@ -76,7 +76,7 @@ void ReadOdeParams(const char *ifile_name, Ode& obj)
 
 /******************************************************************/  
 
-void ReadModelParams(const char *ifile_name, VanDerPol& obj)
+void ReadModelParams(const char *ifile_name, MeanField& obj)
 {
    string line;
    ifstream ifile;
@@ -124,8 +124,11 @@ void ReadModelParams(const char *ifile_name, VanDerPol& obj)
    // delta_i 
    model_params->delta_i=read_dbl_val(ifile);
    
-   // beta_m 
-   model_params->beta_m=read_dbl_val(ifile);
+   // beta_m1 
+   model_params->beta_m1=read_dbl_val(ifile);
+   
+   // beta_m2 
+   model_params->beta_m2=read_dbl_val(ifile);
    
    // alpha 
    model_params->alpha=read_dbl_val(ifile);
@@ -136,12 +139,15 @@ void ReadModelParams(const char *ifile_name, VanDerPol& obj)
    // lambda 
    model_params->lambda=read_dbl_val(ifile);
    
-   // mu1 
-   model_params->mu1=read_dbl_val(ifile);
+   // Qd 
+   model_params->Qd=read_dbl_val(ifile);
    
-   // mu2 
-   model_params->mu2=read_dbl_val(ifile);
-
+   // Qi 
+   model_params->Qi=read_dbl_val(ifile);
+   
+   // N
+   model_params->N=read_dbl_val(ifile);
+   
    // njac 
    model_params->njac=obj.GetNvars();
 
