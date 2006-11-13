@@ -1,15 +1,14 @@
-/********************************************************************/
+/******************************************************************/
 
-#include "ode.h"
+#include "ode.hh"
 
 using namespace std;
 
-/********************************************************************/
+/******************************************************************/
 
-/* constructors and destructors */
+// constructors and destructors 
 
-/********************************************************************/
-
+/******************************************************************/
 Ode::Ode() : nvars(2), nsave(1), abs_tol(1e-6), rel_tol(1e-6), tmax(1.5),
              dt(1e-6) 
 {
@@ -22,149 +21,155 @@ Ode::Ode() : nvars(2), nsave(1), abs_tol(1e-6), rel_tol(1e-6), tmax(1.5),
    Ode::p2jac=NULL;
 }
 
-/********************************************************************/
+/******************************************************************/
 
 Ode::~Ode()
 {
    delete [] rhs;
 }
 
-/********************************************************************/
+/******************************************************************/
 
-/* mutators */
+// mutators 
 
-/********************************************************************/
+/******************************************************************/
 
 void Ode::SetNvars(const size_t nvars)
 {
    Ode::nvars=nvars;
 }
 
-/********************************************************************/
+/******************************************************************/
 
 void Ode::SetNsave(const unsigned int nsave)
 {
    Ode::nsave=nsave;
 }
 
-/********************************************************************/
+/******************************************************************/
 
 void Ode::SetStepAlgo(const char *step_algo)
 {
    strcpy(Ode::step_algo,step_algo);
 }
 
-/********************************************************************/
+/******************************************************************/
 
-void Ode::SetTol(const double abs_tol, const double rel_tol)
+void Ode::SetAbsTol(const double abs_tol)
 {
    Ode::abs_tol=abs_tol;
+}
+
+/******************************************************************/
+
+void Ode::SetRelTol(const double rel_tol)
+{
    Ode::rel_tol=rel_tol;
 }
 
-/********************************************************************/
+/******************************************************************/
 
 void Ode::SetTmax(const double tmax)
 {
    Ode::tmax=tmax;
 }
 
-/********************************************************************/
+/******************************************************************/
 
 void Ode::SetDt(const double dt)
 {
    Ode::dt=dt;
 }
 
-/********************************************************************/
+/******************************************************************/
 
 void Ode::SetModelParams(void *params)
 {
    Ode::params=params;
 }
 
-/*******************************************************************/
+/******************************************************************/
 
 void Ode::SetoFileName(const char *ofile_name)
 {
    strcpy(Ode::ofile_name,ofile_name);
 }
 
-/********************************************************************/
+/******************************************************************/
 
 void Ode::SeticFileName(const char *ic_file_name)
 {
    strcpy(Ode::ic_file_name,ic_file_name);
 }
 
-/********************************************************************/
+/******************************************************************/
 
 void Ode::SetRhs(double *rhs_ic)
 {
    Ode::rhs=rhs_ic;
 }
 
-/*******************************************************************/
+/******************************************************************/
 
-/* accessors */
+// accessors 
 
-/********************************************************************/
+/******************************************************************/
 
 size_t Ode::GetNvars() const { return nvars; }
 
-/********************************************************************/
+/******************************************************************/
 
 unsigned int Ode::GetNsave() const { return nsave; }
 
-/********************************************************************/
+/******************************************************************/
 
-char *Ode::GetStepAlgo() { return step_algo; }
+const char *Ode::GetStepAlgo() const { return step_algo; }
 
-/********************************************************************/
+/******************************************************************/
 
 double Ode::GetAtol() const { return abs_tol; }
 
-/********************************************************************/
+/******************************************************************/
 
 double Ode::GetRtol() const { return rel_tol; }
 
-/********************************************************************/
+/******************************************************************/
 
 double Ode::GetTmax() const { return tmax; }
 
-/********************************************************************/
+/******************************************************************/
 
 double Ode::GetDt() const { return dt; }
 
-/********************************************************************/
+/******************************************************************/
 
 void *Ode::GetModelParams() const { return params; }
 
-/********************************************************************/
+/******************************************************************/
 
 double *Ode::GetRhs() const { return rhs; }
 
-/********************************************************************/
+/******************************************************************/
 
 char *Ode::GetoFileName() {return ofile_name; }
 
-/********************************************************************/
+/******************************************************************/
 
 char *Ode::GeticFileName() {return ic_file_name; }
 
-/********************************************************************/
+/******************************************************************/
 
-/* gsl/odeiv solve stuff */
+// gsl/odeiv solve stuff 
 
-/********************************************************************/
+/******************************************************************/
 
-void Ode::OpenoFile(ofstream *ofile)
+void Ode::OpenoFile(ofstream& ofile)
 {
    cout << "... opening ode output file: " << ofile_name;
    
    try
    {
-      (*ofile).open(ofile_name, ios::out);
+      ofile.open(ofile_name, ios::out);
    }
    
    catch (exception &e)
@@ -178,15 +183,15 @@ void Ode::OpenoFile(ofstream *ofile)
    cout << " ... done\n";   
 }
 
-/********************************************************************/
+/******************************************************************/
 
-void Ode::CloseoFile(ofstream *ofile)
+void Ode::CloseoFile(ofstream& ofile)
 {
    cout << "... closing ode output file: " << ofile_name;
    
    try
    {
-      (*ofile).close();
+      ofile.close();
    }
 
    catch (exception &e)
@@ -200,7 +205,7 @@ void Ode::CloseoFile(ofstream *ofile)
    cout << " ... done\n";
 }
 
-/********************************************************************/
+/******************************************************************/
 
 void Ode::InitRhsFromFile()
 {
@@ -208,7 +213,7 @@ void Ode::InitRhsFromFile()
    double *rhs_ic;
 
    
-   /* allocating rhs */
+   // allocating rhs 
    cout << "... allocating rhs memory";
    
    try
@@ -225,7 +230,7 @@ void Ode::InitRhsFromFile()
 
    cout << " ... done\n";
    
-   /* opening ic_file */
+   // opening ic_file 
    cout << "... opening ode ic_file: " << ic_file_name;
    
    try
@@ -243,7 +248,7 @@ void Ode::InitRhsFromFile()
    
    cout << " ... done\n";
    
-   /* init rhs from ic_file */
+   // init rhs from ic_file 
    cout << "... reading content of ic_file";
    
    for(unsigned int i=0; i<nvars; i++)
@@ -253,7 +258,7 @@ void Ode::InitRhsFromFile()
 
    cout << " ... done\n";
    
-   /* closing ic_file */
+   // closing ic_file 
    cout << "... closing ode ic_file: " << ofile_name;
    
    try
@@ -261,7 +266,8 @@ void Ode::InitRhsFromFile()
       ic_file.close();
    }
    
-   catch (exception &e) {
+   catch (exception &e)
+   {
       cout << "... unable to close ic_file " 
            << ic_file_name << endl;
       cout << "... Standard exception: " << e.what() << endl;      
@@ -271,11 +277,11 @@ void Ode::InitRhsFromFile()
    cout << " ... done\n";
 }
 
-/********************************************************************/
+/******************************************************************/
 
-/* gsl/odeiv solve stuff */
+// gsl/odeiv solve stuff 
 
-/********************************************************************/
+/******************************************************************/
 
 void Ode::OdeSolve()
 {
@@ -286,62 +292,62 @@ void Ode::OdeSolve()
    cout << "Solving the ode system\n"
         << "----------------------\n";
 
-   /* setting step type */
+   // setting step type 
    const gsl_odeiv_step_type *step_type;
    step_type = SetStepType();
 
-   /* allocating rhs and initialize it from ic_file */
+   // allocating rhs and initialize it from ic_file 
    InitRhsFromFile();
 
-   /* opening output file */
-   OpenoFile(&ofile);
+   // opening output file 
+   OpenoFile(ofile);
 
-   /* allocating stepping function */
+   // allocating stepping function 
    gsl_odeiv_step *step = gsl_odeiv_step_alloc(step_type,nvars);
 
-   /* allocating control function */
+   // allocating control function 
    gsl_odeiv_control *control = gsl_odeiv_control_y_new(abs_tol,rel_tol);
 
-   /* allocating evolution function */
+   // allocating evolution function 
    gsl_odeiv_evolve *evolve  = gsl_odeiv_evolve_alloc(nvars);
 
-   /* defining the system */
+   // defining the system 
    gsl_odeiv_system sys = {p2derivs, p2jac, nvars, params};
 
-   /* write t=0 rhs */
+   // write t=0 rhs 
    t=0;
-   WriteRHS(&ofile, t);
+   WriteRHS(ofile, t);
 
    unsigned int o_count=1;
    
-   /*** main loop ***/
+   ///// main loop /////
    cout << "... in main loop";   
    
    while (t < tmax)
    {
-      /* stepping solution */
+      // stepping solution 
       status = gsl_odeiv_evolve_apply (evolve, control, step, &sys, &t, tmax,
                                        &dt, rhs);      
       
       if(status != GSL_SUCCESS)
          exit(1);
       
-      /* writing RHS to ofile */
+      // writing RHS to ofile 
       if(!(o_count++ % nsave))
-         WriteRHS(&ofile, t);
+         WriteRHS(ofile, t);
    }
    
    cout << " .................. done\n";
    
-   CloseoFile(&ofile);
+   CloseoFile(ofile);
    
-   /* free allocated memory */
+   // free allocated memory 
    gsl_odeiv_evolve_free(evolve);
    gsl_odeiv_control_free(control);
    gsl_odeiv_step_free(step);
 }
 
-/********************************************************************/
+/******************************************************************/
 
 const gsl_odeiv_step_type *Ode::SetStepType()
 {
@@ -399,7 +405,7 @@ const gsl_odeiv_step_type *Ode::SetStepType()
    return tmp_step_type;
 }
 
-/********************************************************************/
+/******************************************************************/
 
 void Ode::OdePluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
                          int (*p2jac)(double,const double *,double *,double *,void *))
@@ -408,7 +414,7 @@ void Ode::OdePluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
    Ode::p2jac=p2jac;
 }
 
-/********************************************************************/
+/******************************************************************/
 
 void Ode::PrtOdePrms() 
 {
@@ -427,14 +433,14 @@ void Ode::PrtOdePrms()
         << endl;
 }
 
-/********************************************************************/
+/******************************************************************/
 
-void Ode::WriteRHS(ofstream *ofile, double t)
+void Ode::WriteRHS(ofstream& ofile, double t)
 {
-   *ofile << t;
+   ofile << t;
    for(unsigned int i=0; i<nvars; i++)
-      *ofile << '\t' << rhs[i];
-   *ofile << endl;
+      ofile << '\t' << rhs[i];
+   ofile << endl;
 }
 
-/********************************************************************/
+/******************************************************************/

@@ -1,4 +1,4 @@
-//*******************************************************************
+/*******************************************************************/
 //
 // Class Ode
 // ---------
@@ -103,12 +103,12 @@
 // - The signature of the functions derivs and jac, and therefor the form of
 //   the pointers *p2derivs ans *p2jac, is dictated by GSL (see GSL docs).
 //
-/********************************************************************/
+/******************************************************************/
 
 #ifndef ODE_H
 #define ODE_H
 
-/********************************************************************/
+/******************************************************************/
 
 #include <iostream>
 #include <fstream>
@@ -121,82 +121,83 @@
 
 using namespace std;
 
-/********************************************************************/
+/******************************************************************/
 
 const size_t MAX_STR_LEN=64; 
 
-/********************************************************************/
+/******************************************************************/
 
 class Ode
 {
-  public:
-   
-   /* constructors and destructors */
-   Ode();
-   ~Ode();
-   
-   /* mutators */
-   void SetNvars(const size_t nvars);
-   void SetNsave(const unsigned int nsave);
-   void SetStepAlgo(const char *step_algo);
-   void SetTol(const double abs_tol, const double rel_tol);
-   void SetTmax(const double tmax);
-   void SetDt(const double dt);
-   void SetModelParams(void *params);
-   void SetoFileName(const char *ofile_name);
-   void SeticFileName(const char *ic_file_name);
-   void SetRhs(double *rhs_ic);
-   
-   /* accessors */
-   size_t GetNvars() const;
-   unsigned int GetNsave() const;
-   char *GetStepAlgo();
-   double GetAtol() const;
-   double GetRtol() const;
-   double GetTmax() const;
-   double GetDt() const;
-   void *GetModelParams() const;
-   double *GetRhs() const;
-   char *GetoFileName();
-   char *GeticFileName();
-   
-   /* gsl/odeiv solve stuff */
-   void OdeSolve();
-   void OdePluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
-                       int (*p2jac)(double,const double *,double *,double *,void *));
-
-   /* i/o stuff */
-   void PrtOdePrms();
-   
-  private:
-   
-   /* gsl/odeiv solve stuff */
-   const gsl_odeiv_step_type *SetStepType();
-   void OpenoFile(ofstream *ofile);
-   void CloseoFile(ofstream *ofile);
-   void InitRhsFromFile();
-   void WriteRHS(ofstream *ofile, double t);
+   public:
       
-   /* ode parameters */
-   size_t nvars;                // size of the ode system
-   unsigned int nsave;          // save solution every nsave time steps
-   char step_algo[MAX_STR_LEN]; // name of stepping algorithm type
-   double abs_tol, rel_tol;     // absolute/relative tolerances
-   double tmax, dt;             // ...
-   double *rhs;                 // rhs[navrs] for the variables
-   void *params;               // pointer to model parameters. will be set
-                                // by the user to some specific model
-                                // parameters using the member function
-                                // Ode::SetParams(void *params);
-   
-   /* output file */
-   char ofile_name[MAX_STR_LEN];   // output file name
-   char ic_file_name[MAX_STR_LEN]; // ic input file name
-   
-   /* pointers to rhs and jacobian declaration */
-   int (*p2derivs)(double, const double *, double *, void *);
-   int (*p2jac)(double, const double *, double *, double *, void *);
-   
+      // constructors and destructors 
+      Ode();
+      ~Ode();
+      
+      // mutators 
+      void SetNvars(const size_t nvars);
+      void SetNsave(const unsigned int nsave);
+      void SetStepAlgo(const char *step_algo);
+      void SetAbsTol(const double abs_tol);
+      void SetRelTol(const double rel_tol);
+      void SetTmax(const double tmax);
+      void SetDt(const double dt);
+      void SetModelParams(void *params);
+      void SetoFileName(const char *ofile_name);
+      void SeticFileName(const char *ic_file_name);
+      void SetRhs(double *rhs_ic);
+      
+      // accessors 
+      size_t GetNvars() const;
+      unsigned int GetNsave() const;
+      const char *GetStepAlgo() const;
+      double GetAtol() const;
+      double GetRtol() const;
+      double GetTmax() const;
+      double GetDt() const;
+      void *GetModelParams() const;
+      double *GetRhs() const;
+      char *GetoFileName();
+      char *GeticFileName();
+      
+      // gsl/odeiv solve stuff 
+      void OdeSolve();
+      void OdePluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
+                          int (*p2jac)(double,const double *,double *,double *,void *));
+      
+      // i/o stuff 
+      void PrtOdePrms();
+      
+   private:
+      
+      // gsl/odeiv solve stuff 
+      const gsl_odeiv_step_type *SetStepType();
+      void OpenoFile(ofstream& ofile);
+      void CloseoFile(ofstream& ofile);
+      void InitRhsFromFile();
+      void WriteRHS(ofstream& ofile, double t);
+      
+      // ode parameters 
+      size_t nvars;                // size of the ode system
+      unsigned int nsave;          // save solution every nsave time steps
+      char step_algo[MAX_STR_LEN]; // name of stepping algorithm type
+      double abs_tol, rel_tol;     // absolute/relative tolerances
+      double tmax, dt;             // ...
+      double *rhs;                 // rhs[navrs] for the variables
+      void *params;                // pointer to model parameters. will be set
+                                   // by the user to some specific model
+                                   // parameters using the member function
+                                   // Ode::SetParams(void *params);
+      
+      // output file 
+      char ofile_name[MAX_STR_LEN];   // output file name
+      char ic_file_name[MAX_STR_LEN]; // ic input file name
+      
+      // pointers to rhs and jacobian declaration 
+      int (*p2derivs)(double, const double *, double *, void *);
+      int (*p2jac)(double, const double *, double *, double *, void *);
+      
 }; // class Ode
 
 #endif // ODE_H
