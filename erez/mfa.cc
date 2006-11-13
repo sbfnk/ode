@@ -109,6 +109,8 @@ void MeanField::PrtModelPrms()
         << "Qd      = " << p->Qd << endl
         << "Qi      = " << p->Qi << endl
         << "N       = " << p->N << endl
+        << "R_0 d   = " << (p->beta_d)*(p->Qd)/(p->gamma_d) << endl
+        << "R_0 i   = " << (p->alpha)*(p->Qi)/(p->lambda) << endl
         << endl;
 }
 
