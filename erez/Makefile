@@ -29,7 +29,7 @@ DEPENDFLAGS = -m
 
 #--------------------------------------------------------------------
 
-SOURCES     = main.cc ode.cc ode_io_utils.cc van_der_pol.cc
+SOURCES     = mfa_solve.cc ode.cc ode_io_utils.cc mfa.cc
 OBJECTS     = $(SOURCES:.cc=.o)
 EXEC        = out
 
@@ -63,7 +63,7 @@ cleaner:
 #-------------------------------------------------------------------
 # DO NOT DELETE
 
-ode_io_utils.o: ode_io_utils.hh ode.hh van_der_pol.hh
-main.o: ode_io_utils.hh ode.hh van_der_pol.hh  
+ode_io_utils.o: ode_io_utils.hh ode.hh mfa.hh
+mfa_solve.o: ode_io_utils.hh ode.hh mfa.hh  
 ode.o: ode.hh 
-van_der_pol: van_der_pol.hh ode.hh
+mfa.o: mfa.hh ode.hh
