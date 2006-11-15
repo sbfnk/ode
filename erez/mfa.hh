@@ -3,7 +3,7 @@
 // Class MeanField
 // ---------------
 //
-// This is the MeanFiled class interface.
+// This is the MeanField class interface.
 //
 // See van_der_pol.hh for documentation.
 //
