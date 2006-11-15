@@ -31,7 +31,7 @@ void ReadOdeParams(const char *ifile_name, Ode& obj)
    cout << "... reading ode parameters"; 
    
    int i=-1;
-   while (i<0)
+   while ((i<0) && !(ifile.eof()))
    {
       getline(ifile,line); // reading a line
       i=line.find("Ode parameters"); // looking for "Ode ... %%%"
@@ -100,7 +100,7 @@ void ReadModelParams(const char *ifile_name, MeanField& obj)
    cout << "... reading model parameters"; 
    
    int i=-1;
-   while (i<0)
+   while ((i<0) && !(ifile.eof()))
    {
       getline(ifile,line); // reading a line
       i=line.find("Model parameters"); // looking for "Model ... %%%"
