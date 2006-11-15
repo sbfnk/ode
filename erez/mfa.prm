@@ -8,7 +8,7 @@ nsave        = 1
 nvars        = 6
 step_algo    = rkf45
 abs_tol      = 1e-5
-rel_tol      = 1e-4
+rel_tol      = 1e-5
 ic_file      = mfa.init
 
 Model parameters: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
