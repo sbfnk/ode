@@ -23,139 +23,10 @@ Ode::Ode() : nvars(2), nsave(1), abs_tol(1e-6), rel_tol(1e-6), tmax(1.5),
 
 /******************************************************************/
 
-Ode::~Ode()
-{
-   delete [] rhs;
-}
-
-/******************************************************************/
-
-// mutators 
-
-/******************************************************************/
-
-void Ode::SetNvars(const size_t nvars)
-{
-   Ode::nvars=nvars;
-}
-
-/******************************************************************/
-
-void Ode::SetNsave(const unsigned int nsave)
-{
-   Ode::nsave=nsave;
-}
-
-/******************************************************************/
-
-void Ode::SetStepAlgo(const char *step_algo)
-{
-   strcpy(Ode::step_algo,step_algo);
-}
-
-/******************************************************************/
-
-void Ode::SetAbsTol(const double abs_tol)
-{
-   Ode::abs_tol=abs_tol;
-}
-
-/******************************************************************/
-
-void Ode::SetRelTol(const double rel_tol)
-{
-   Ode::rel_tol=rel_tol;
-}
-
-/******************************************************************/
-
-void Ode::SetTmax(const double tmax)
-{
-   Ode::tmax=tmax;
-}
-
-/******************************************************************/
-
-void Ode::SetDt(const double dt)
-{
-   Ode::dt=dt;
-}
-
-/******************************************************************/
-
-void Ode::SetModelParams(void *params)
-{
-   Ode::params=params;
-}
-
-/******************************************************************/
-
-void Ode::SetoFileName(const char *ofile_name)
-{
-   strcpy(Ode::ofile_name,ofile_name);
-}
-
-/******************************************************************/
-
-void Ode::SeticFileName(const char *ic_file_name)
-{
-   strcpy(Ode::ic_file_name,ic_file_name);
-}
-
-/******************************************************************/
-
-void Ode::SetRhs(double *rhs_ic)
-{
-   Ode::rhs=rhs_ic;
-}
-
-/******************************************************************/
-
-// accessors 
-
-/******************************************************************/
-
-size_t Ode::GetNvars() const { return nvars; }
-
-/******************************************************************/
-
-unsigned int Ode::GetNsave() const { return nsave; }
-
-/******************************************************************/
-
-const char *Ode::GetStepAlgo() const { return step_algo; }
-
-/******************************************************************/
-
-double Ode::GetAtol() const { return abs_tol; }
-
-/******************************************************************/
-
-double Ode::GetRtol() const { return rel_tol; }
-
-/******************************************************************/
-
-double Ode::GetTmax() const { return tmax; }
-
-/******************************************************************/
-
-double Ode::GetDt() const { return dt; }
-
-/******************************************************************/
-
-void *Ode::GetModelParams() const { return params; }
-
-/******************************************************************/
-
-double *Ode::GetRhs() const { return rhs; }
-
-/******************************************************************/
-
-char *Ode::GetoFileName() {return ofile_name; }
-
-/******************************************************************/
-
-char *Ode::GeticFileName() {return ic_file_name; }
+//Ode::~Ode()
+//{
+//   delete [] rhs;
+//}
 
 /******************************************************************/
 
@@ -283,7 +154,7 @@ void Ode::InitRhsFromFile()
 
 /******************************************************************/
 
-void Ode::OdeSolve()
+void Ode::Solve()
 {
    double t;
    int status;
@@ -345,6 +216,9 @@ void Ode::OdeSolve()
    gsl_odeiv_evolve_free(evolve);
    gsl_odeiv_control_free(control);
    gsl_odeiv_step_free(step);
+
+   delete [] rhs;
+   rhs = NULL;
 }
 
 /******************************************************************/
@@ -407,7 +281,7 @@ const gsl_odeiv_step_type *Ode::SetStepType()
 
 /******************************************************************/
 
-void Ode::OdePluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
+void Ode::PluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
                          int (*p2jac)(double,const double *,double *,double *,void *))
 {
    Ode::p2derivs=p2derivs;

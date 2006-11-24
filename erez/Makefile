@@ -29,10 +29,13 @@ DEPENDFLAGS = -m
 
 #--------------------------------------------------------------------
 
-SOURCES     = mfa_solve.cc ode.cc ode_io_utils.cc mfa.cc
-OBJECTS     = $(SOURCES:.cc=.o)
-EXEC        = out
+#SOURCES     = mfa_solve.cc ode.cc ode_io_utils.cc mfa.cc 
+#OBJECTS     = $(SOURCES:.cc=.o)
 
+SOURCES     = ode_solve.cc ode.cc ode_io_utils.cc model_ode.cc 
+OBJECTS     = $(SOURCES:.cc=.o)
+
+EXEC        = out
 #--------------------------------------------------------------------
 
 all:  $(EXEC)
@@ -48,7 +51,7 @@ $(EXEC): $(OBJECTS)
 	@echo
 
 depend:
-	$(MAKEDEPEND) $(DEPENDFLAGS) *.cpp
+	$(MAKEDEPEND) $(DEPENDFLAGS) *.cc
 
 clean:
 	@echo ... cleaning $(OBJECTS)
@@ -63,7 +66,7 @@ cleaner:
 #-------------------------------------------------------------------
 # DO NOT DELETE
 
-ode_io_utils.o: ode_io_utils.hh ode.hh mfa.hh
-mfa_solve.o: ode_io_utils.hh ode.hh mfa.hh  
+ode_io_utils.o: ode_io_utils.hh ode.hh model_ode.hh
+ode_solve.o: ode_io_utils.hh ode.hh model_ode.hh 
 ode.o: ode.hh 
-mfa.o: mfa.hh ode.hh
+model_ode.o: model_ode.hh ode.hh pa_macros.hh

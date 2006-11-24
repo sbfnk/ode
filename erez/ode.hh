@@ -133,37 +133,39 @@ class Ode
       
       // constructors and destructors 
       Ode();
-      ~Ode();
+      //~Ode();
       
       // mutators 
-      void SetNvars(const size_t nvars);
-      void SetNsave(const unsigned int nsave);
-      void SetStepAlgo(const char *step_algo);
-      void SetAbsTol(const double abs_tol);
-      void SetRelTol(const double rel_tol);
-      void SetTmax(const double tmax);
-      void SetDt(const double dt);
-      void SetModelParams(void *params);
-      void SetoFileName(const char *ofile_name);
-      void SeticFileName(const char *ic_file_name);
-      void SetRhs(double *rhs_ic);
+      void SetNvars(const size_t nvars) { Ode::nvars=nvars; }
+      void SetNsave(const unsigned int nsave) { Ode::nsave=nsave; }
+      void SetStepAlgo(const char *step_algo) { strcpy(Ode::step_algo,step_algo); }
+      void SetAbsTol(const double abs_tol) { Ode::abs_tol=abs_tol; }
+      void SetRelTol(const double rel_tol) { Ode::rel_tol=rel_tol; } 
+      void SetTmax(const double tmax) { Ode::tmax=tmax; }
+      void SetDt(const double dt) { Ode::dt=dt; }
+      void SetModelParams(void *params) { Ode::params=params; }
+      void SetFileId(const char *file_id) { strcpy(Ode::file_id,file_id); }
+      void SetoFileName(const char *ofile_name) { strcpy(Ode::ofile_name,ofile_name); }
+      void SeticFileName(const char *ic_file_name) { strcpy(Ode::ic_file_name,ic_file_name);} 
+      void SetRhs(double *rhs_ic) { Ode::rhs=rhs_ic; }
       
       // accessors 
-      size_t GetNvars() const;
-      unsigned int GetNsave() const;
-      const char *GetStepAlgo() const;
-      double GetAtol() const;
-      double GetRtol() const;
-      double GetTmax() const;
-      double GetDt() const;
-      void *GetModelParams() const;
-      double *GetRhs() const;
-      char *GetoFileName();
-      char *GeticFileName();
+      size_t GetNvars() const { return nvars; }
+      unsigned int GetNsave() const { return nsave; }
+      const char *GetStepAlgo() const { return step_algo; }
+      double GetAtol() const { return abs_tol; }
+      double GetRtol() const { return rel_tol; }
+      double GetTmax() const { return tmax; }
+      double GetDt() const { return dt; }
+      void *GetModelParams() const { return params; }
+      double *GetRhs() const { return rhs; }
+      char *GetFileId()  {return file_id; }
+      char *GetoFileName()  {return ofile_name; }
+      char *GeticFileName() {return ic_file_name; }
       
       // gsl/odeiv solve stuff 
-      void OdeSolve();
-      void OdePluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
+      void Solve();
+      void PluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
                           int (*p2jac)(double,const double *,double *,double *,void *));
       
       // i/o stuff 
@@ -190,7 +192,8 @@ class Ode
                                    // parameters using the member function
                                    // Ode::SetParams(void *params);
       
-      // output file 
+      // output file
+      char file_id[MAX_STR_LEN];      // file identifier 
       char ofile_name[MAX_STR_LEN];   // output file name
       char ic_file_name[MAX_STR_LEN]; // ic input file name
       
