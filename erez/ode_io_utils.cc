@@ -2,7 +2,7 @@
 
 #include "ode_io_utils.hh"
 #include "ode.hh"
-#include "mfa.hh"
+#include "model_ode.hh"
 
 using namespace std;
 
@@ -37,8 +37,8 @@ void ReadOdeParams(const char *ifile_name, Ode& obj)
       i=line.find("Ode parameters"); // looking for "Ode ... %%%"
    }
    
-   // ode output file name 
-   obj.SetoFileName(read_str_val(ifile));
+   // ode file id name 
+   obj.SetFileId(read_str_val(ifile));
   
    // tmax 
    obj.SetTmax(read_dbl_val(ifile));
@@ -49,9 +49,6 @@ void ReadOdeParams(const char *ifile_name, Ode& obj)
    // nsave 
    obj.SetNsave(read_int_val(ifile));
    
-   // nvars 
-   obj.SetNvars(read_int_val(ifile));
-
    // step_algo 
    obj.SetStepAlgo(read_str_val(ifile));
 
@@ -60,9 +57,12 @@ void ReadOdeParams(const char *ifile_name, Ode& obj)
 
    // rel_tol 
    obj.SetRelTol(read_dbl_val(ifile));
+
+   // ode output file name 
+   //obj.SetoFileName(read_str_val(ifile));
    
    // ode i.c. file name 
-   obj.SeticFileName(read_str_val(ifile));
+   //obj.SeticFileName(read_str_val(ifile));
 
    cout << " ... done\n";
    
@@ -76,7 +76,7 @@ void ReadOdeParams(const char *ifile_name, Ode& obj)
 
 /******************************************************************/  
 
-void ReadModelParams(const char *ifile_name, MeanField& obj)
+void ReadModelParams(const char *ifile_name, ModelOde& obj)
 {
    string line;
    ifstream ifile;
@@ -140,10 +140,10 @@ void ReadModelParams(const char *ifile_name, MeanField& obj)
    model_params->lambda=read_dbl_val(ifile);
    
    // Qd 
-   model_params->Qd=read_dbl_val(ifile);
+   //model_params->Qd=read_dbl_val(ifile);
    
    // Qi 
-   model_params->Qi=read_dbl_val(ifile);
+   //model_params->Qi=read_dbl_val(ifile);
    
    // N
    model_params->N=read_dbl_val(ifile);
