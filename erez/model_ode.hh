@@ -1,9 +1,9 @@
 /*******************************************************************/
 //
-// Class MeanField
+// Class ModelOde - SHOULD BE UPDATED - 24/11/2006
 // ---------------
 //
-// This is the VanDerPol class interface. This class is AN EXAMPLE for
+// This is the ModelOde class interface. This class is for
 // using the Ode class. This class is a derived class of Ode, that
 // provides the Ode class with the specific Model equations and
 // parameters. The user should define the I/O functionality to read
@@ -57,7 +57,6 @@
 // - If a Jacobian is not supplied, the pointer to the function that
 // calculates it should be set to NULL (see the constructor).
 //
-
 /******************************************************************/
 
 #ifndef MODEL_ODE_H
