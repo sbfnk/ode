@@ -4,14 +4,11 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
-#include <boost/program_options.hpp>
-
 #include "ode.hh"
 #include "model_ode.hh"
 #include "ode_io_utils.hh"
 
 using namespace std;
-namespace po = boost::program_options;
 
 /******************************************************************/
 
@@ -36,40 +33,22 @@ int main(int argc, char *argv[])
    ModelOde Model;
    
    // checking command line arguments
-   po::options_description command_line_options
-     ("Usage: ode_solve -p params_file [options]... \n\nAllowed options");
-
-   command_line_options.add_options()
-     ("help,h",
-      "produce help message")
-     ("params-file,p",po::value<std::string>(),
-      "file containing model and ode parameters")
-     ;
-
-   po::variables_map vm;
-   po::store(po::parse_command_line(argc, argv, command_line_options), vm);
-   po::notify(vm);
-
-   if (vm.count("help")) {
-     std::cout << command_line_options << std::endl;
-     return 1;
+   if(argc<2)
+   {
+      cout << "Usage: a.out [parameters file]\n"
+           << "             e.g. file.prm\n";
+      exit(1);
    }
-
-   std::string paramsFile = "";
-   
-   if (vm.count("params-file")) {
-     paramsFile = vm["params-file"].as<std::string>();
-   }
-
-   // reading ode parameters 
-   ReadOdeParams(argc, argv, paramsFile.c_str(), Model);
-   
-   // reading model parameters 
-   ReadModelParams(argc, argv, paramsFile.c_str(), Model);
    
    cout << endl
         << "Starting ODE solver\n"
         << "-------------------\n";
+   
+   // reading ode parameters 
+   ReadOdeParams(argv[1], Model);
+   
+   // reading model parameters 
+   ReadModelParams(argv[1], Model);
    
    // init stuff from Graph object //
    
