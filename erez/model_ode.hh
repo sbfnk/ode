@@ -73,9 +73,8 @@ using namespace std;
 struct ModelParams
 {
       // rates
-      double beta_d, gamma_d, delta_d;
-      double beta_i, gamma_i, delta_i;
-      double beta_m1, beta_m2, alpha, nu, lambda;
+      double gamma[2], delta[2];
+      double beta[2][2], alpha, nu, lambda, omega;
 
       // Graph properties
       double Qd, Qi, N;
