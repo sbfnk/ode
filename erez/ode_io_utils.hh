@@ -68,15 +68,20 @@
 #include <cstdlib>
 #include <string>
 #include <cstring>
+
+#include <boost/program_options.hpp>
+
 #include "ode.hh"
 #include "model_ode.hh"
 
 using namespace std;
 
+namespace po = boost::program_options;
+
 /******************************************************************/
 
-void ReadOdeParams(const char *ifile_name, Ode& obj);
-void ReadModelParams(const char *ifile_name, ModelOde& obj);
+int ReadOdeParams(po::variables_map& vm, Ode& obj);
+int ReadModelParams(po::variables_map& vm, ModelOde& obj);
 
 int read_int_val(ifstream& ifile);
 double read_dbl_val(ifstream& ifile);

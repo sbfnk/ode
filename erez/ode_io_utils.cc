@@ -8,234 +8,165 @@ using namespace std;
 
 /******************************************************************/  
 
-void ReadOdeParams(const char *ifile_name, Ode& obj)
+int ReadOdeParams(po::variables_map& vm, Ode& obj)
 {
-   string line;
-   ifstream ifile;
-   
-   // open init file
-   cout << "... opening ode input file: " << ifile_name;
-   
-   ifile.open (ifile_name, ios::in);  
-   if(ifile.fail())
-   {
-      cout << "... unable to open " << ifile_name << endl;
-      exit(1); // uses stdlib.h
-   }
-   else
-   {
-      cout << " ... done\n";
-   }
-   
-   // reading Ode content of init.dat
-   cout << "... reading ode parameters"; 
-   
-   int i=-1;
-   while ((i<0) && !(ifile.eof()))
-   {
-      getline(ifile,line); // reading a line
-      i=line.find("Ode parameters"); // looking for "Ode ... %%%"
-   }
-   
-   // ode file id name 
-   obj.SetFileId(read_str_val(ifile));
+  if (vm.count("file_id")) {
+    // ode file id name 
+    obj.SetFileId(vm["file_id"].as<std::string>().c_str());
+  } else {
+    std::cerr << "ERROR: no file_id given" << std::endl;
+    return 1;
+  }
   
-   // tmax 
-   obj.SetTmax(read_dbl_val(ifile));
-   
-   // dt 
-   obj.SetDt(read_dbl_val(ifile));
-   
-   // nsave 
-   obj.SetNsave(read_int_val(ifile));
-   
-   // step_algo 
-   obj.SetStepAlgo(read_str_val(ifile));
+  if (vm.count("tmax")) {
+    // tmax 
+    obj.SetTmax(vm["tmax"].as<double>());
+  } else {
+    std::cerr << "ERROR: no tmax give" << std::endl;
+    return 1;
+  }
+  if (vm.count("dt")) {
+    // dt 
+    obj.SetDt(vm["dt"].as<double>());
+  } else {
+    std::cerr << "ERROR: no dt given" << std::endl;
+    return 1;
+  }
+  if (vm.count("nsave")) {
+    // nsave 
+    obj.SetNsave(vm["nsave"].as<unsigned int>());
+  } else {
+    std::cerr << "ERROR: no nsave given" << std::endl;
+    return 1;
+  }
+  if (vm.count("step_algo")) {
+    // step_algo 
+    obj.SetStepAlgo(vm["step_algo"].as<std::string>().c_str());
+  } else {
+    std::cerr << "ERROR: no step_algo given" << std::endl;
+    return 1;
+  }
+  if (vm.count("abs_tol")) {
+    // abs_tol 
+    obj.SetAbsTol(vm["abs_tol"].as<double>());
+  } else {
+    std::cerr << "ERROR: no abs_tol given" << std::endl;
+    return 1;
+  }
+  if (vm.count("rel_tol")) {
+    // rel_tol 
+    obj.SetRelTol(vm["rel_tol"].as<double>());
+  } else {
+    std::cerr << "ERROR: no rel_tol given" << std::endl;
+    return 1;
+  }
 
-   // abs_tol 
-   obj.SetAbsTol(read_dbl_val(ifile));
-
-   // rel_tol 
-   obj.SetRelTol(read_dbl_val(ifile));
-
-   // ode output file name 
-   //obj.SetoFileName(read_str_val(ifile));
-   
-   // ode i.c. file name 
-   //obj.SeticFileName(read_str_val(ifile));
-
-   cout << " ... done\n";
-   
-   // closing init.dat
-   cout << "... closing ode input file: " << ifile_name;
-  
-   ifile.close(); 
-   if(!ifile.is_open())
-      cout << " ... done\n";
+  return 0;
 }
 
 /******************************************************************/  
 
-void ReadModelParams(const char *ifile_name, ModelOde& obj)
+int ReadModelParams(po::variables_map& vm, ModelOde& obj)
 {
-   string line;
-   ifstream ifile;
-   ModelParams *model_params = new ModelParams;
-   
-   // open init file
-   cout << "... opening model input file: " << ifile_name;
-   
-   ifile.open (ifile_name, ios::in); 
-   if(ifile.fail())
-   {
-      cout << "... unable to open " << ifile_name << endl;
-      exit(1); // uses stdlib.h
-   }
-   else
-   {
-      cout << " ... done\n";
-   }
-   
-   // reading Model content of init.dat   
-   cout << "... reading model parameters"; 
-   
-   int i=-1;
-   while ((i<0) && !(ifile.eof()))
-   {
-      getline(ifile,line); // reading a line
-      i=line.find("Model parameters"); // looking for "Model ... %%%"
-   }
-   
-   // beta_d    
-   model_params->beta_d=read_dbl_val(ifile);
+  ModelParams *model_params = new ModelParams;
   
-   // gamma_d 
-   model_params->gamma_d=read_dbl_val(ifile);
+  if (vm.count("beta--")) {
+    model_params->beta[0][0]=vm["beta--"].as<double>();
+  } else {
+    std::cerr << "WARNING: no beta-- given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->beta[0][0]=0;
+  }
+  if (vm.count("beta+-")) {
+    model_params->beta[1][0]=vm["beta+-"].as<double>();
+  } else {
+    std::cerr << "WARNING: no beta+- given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->beta[1][0]=0;
+  }
+  if (vm.count("beta-+")) {
+    model_params->beta[0][1]=vm["beta-+"].as<double>();
+  } else {
+    std::cerr << "WARNING: no beta-+ given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->beta[0][1]=0;
+  }
+  if (vm.count("beta++")) {
+    model_params->beta[1][1]=vm["beta++"].as<double>();
+  } else {
+    std::cerr << "WARNING: no beta++ given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->beta[1][1]=0;
+  }
+  if (vm.count("gamma-")) {
+    model_params->gamma[0]=vm["gamma-"].as<double>();
+  } else {
+    std::cerr << "WARNING: no gamma- given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->gamma[0]=0;
+  }
+  if (vm.count("gamma+")) {
+    model_params->gamma[1]=vm["gamma+"].as<double>();
+  } else {
+    std::cerr << "WARNING: no gamma+ given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->gamma[1]=0;
+  }
+  if (vm.count("delta-")) {
+    model_params->delta[0]=vm["delta-"].as<double>();
+  } else {
+    std::cerr << "WARNING: no delta- given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->delta[0]=0;
+  }
+  if (vm.count("delta+")) {
+    model_params->delta[1]=vm["delta+"].as<double>();
+  } else {
+    std::cerr << "WARNING: no delta+ given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->delta[1]=0;
+  }
+  if (vm.count("alpha")) {
+    model_params->alpha=vm["alpha"].as<double>();
+  } else {
+    std::cerr << "WARNING: no alpha given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->alpha=0;
+  }
+  if (vm.count("nu")) {
+    model_params->nu=vm["nu"].as<double>();
+  } else {
+    std::cerr << "WARNING: no nu given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->nu=0;
+  }
+  if (vm.count("omega")) {
+    model_params->omega=vm["omega"].as<double>();
+  } else {
+    std::cerr << "WARNING: no omega given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->omega=0;
+  }
+  if (vm.count("lambda")) {
+    model_params->lambda=vm["lambda"].as<double>();
+  } else {
+    std::cerr << "WARNING: no lambda given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->lambda=0;
+  }
+  if (vm.count("N")) {
+    model_params->N=vm["N"].as<double>();
+  } else {
+    std::cerr << "ERROR: no N given" << std::endl;
+    return 1;
+  }
+  if (vm.count("njac")) {
+    model_params->njac=vm["njac"].as<size_t>();
+  }
+
+  // passing a pointer to model_params to Ode class member _params 
+  obj.SetModelParams(static_cast<void *>(model_params));
   
-   // delta_d 
-   model_params->delta_d=read_dbl_val(ifile);
-      
-   // beta_i 
-   model_params->beta_i=read_dbl_val(ifile);
-   
-   // gamma_i 
-   model_params->gamma_i=read_dbl_val(ifile);
-   
-   // delta_i 
-   model_params->delta_i=read_dbl_val(ifile);
-   
-   // beta_m1 
-   model_params->beta_m1=read_dbl_val(ifile);
-   
-   // beta_m2 
-   model_params->beta_m2=read_dbl_val(ifile);
-   
-   // alpha 
-   model_params->alpha=read_dbl_val(ifile);
-   
-   // nu 
-   model_params->nu=read_dbl_val(ifile);
-   
-   // lambda 
-   model_params->lambda=read_dbl_val(ifile);
-   
-   // Qd 
-   //model_params->Qd=read_dbl_val(ifile);
-   
-   // Qi 
-   //model_params->Qi=read_dbl_val(ifile);
-   
-   // N
-   model_params->N=read_dbl_val(ifile);
-   
-   // njac 
-   model_params->njac=obj.GetNvars();
-
-   cout << " ... done\n";
-   
-   // passing a pointer to model_params to Ode class member _params 
-   obj.SetModelParams(static_cast<void *>(model_params));
-   
-   // closing init.dat
-   cout << "... closing model input file: " << ifile_name;
-   
-   ifile.close(); 
-   if(!ifile.is_open())
-      cout << " ... done\n";
+  return 0;
 }
-
-/******************************************************************/  
-
-int read_int_val(ifstream& ifile)
-{
-   string line, str_tmp;
-   
-   getline(ifile,line); 
-   int i=line.find("="); // looking for the =  
-   if(i>=0) // check if = was found 
-   {
-      str_tmp=line.substr(i+2,line.length()-i); // extracting substring
-   }
-   else
-   {
-      cout << "... problem reading params, no = was found\n";
-      exit(1);
-   }
-
-   return atoi(str_tmp.c_str());
-}
-
-/******************************************************************/  
-
-double read_dbl_val(ifstream& ifile)
-{
-   string line, str_tmp;
-   
-   getline(ifile,line); 
-   int i=line.find("="); // looking for the =  
-   if(i>=0) // check if = was found 
-   {
-      str_tmp=line.substr(i+2,line.length()-i); // extracting substring
-   }
-   else
-   {
-      cout << "... problem reading params, no = was found\n";
-      exit(1);
-   }
-
-   return atof(str_tmp.c_str());
-
-}
-
-/******************************************************************/
-
-const char *read_str_val(ifstream& ifile)
-{
-   string line, str_tmp;
-   char *cstr=new char[64];
-   
-   getline(ifile,line); 
-   int i=line.find("="); // looking for the =    
-   if(i>=0) // check if = was found
-   {
-      str_tmp=line.substr(i+2,line.length()-i);
-   }
-   else
-   {
-      cout << "... problem reading params, no = was found\n";
-      exit(1);
-   }
-
-   strcpy(cstr, str_tmp.c_str());
-   return cstr;
-}
-
-/******************************************************************/
-
-
-
-
-
-
-
 

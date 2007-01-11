@@ -4,11 +4,14 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
+#include <boost/program_options.hpp>
+
 #include "ode.hh"
 #include "model_ode.hh"
 #include "ode_io_utils.hh"
 
 using namespace std;
+namespace po = boost::program_options;
 
 /******************************************************************/
 
@@ -33,22 +36,114 @@ int main(int argc, char *argv[])
    ModelOde Model;
    
    // checking command line arguments
-   if(argc<2)
-   {
-      cout << "Usage: a.out [parameters file]\n"
-           << "             e.g. file.prm\n";
-      exit(1);
+   po::options_description command_line_options
+     ("Usage: ode_solve -p params_file [options]... \n\nAllowed options");
+
+   command_line_options.add_options()
+     ("help,h",
+      "produce help message")
+     ("params-file,p",po::value<std::string>(),
+      "file containing model and ode parameters")
+     ;
+
+   po::options_description ode_options
+     ("ODE parameters");
+
+   ode_options.add_options()
+     ("file_id", po::value<std::string>(),
+      "file-id for output files")
+     ("tmax", po::value<double>(),
+      "stopping time")
+     ("dt", po::value<double>(),
+      "size of time step")
+     ("nsave", po::value<unsigned int>(),
+      "save solution every nsave time steps")
+     ("step_algo", po::value<std::string>(),
+      "name of stepping algorithm type")
+     ("abs_tol", po::value<double>(),
+      "absolute tolerance")
+     ("rel_tol", po::value<double>(),
+      "relative tolerance")
+     ;
+
+    po::options_description model_options
+     ("Model parameters");
+
+   model_options.add_options()
+     ("beta--", po::value<double>(),
+      "disease transmission rate uninformed->uninformed")
+     ("beta+-", po::value<double>(),
+      "disease transmission rate informed->uninformed")
+     ("beta-+", po::value<double>(),
+      "disease transmission rate uninformed->informed")
+     ("beta++", po::value<double>(),
+      "disease transmission rate informed->informed")
+     ("gamma-", po::value<double>(),
+      "recovery rate of uninformed")
+     ("gamma+", po::value<double>(),
+      "recovery rate of informed")
+     ("delta-", po::value<double>(),
+      "loss of immunity rate of uninformed")
+     ("delta+", po::value<double>(),
+      "loss of immunity rate of informed")
+     ("alpha", po::value<double>(),
+      "information transmission rate")
+     ("nu", po::value<double>(),
+      "information generation rate")
+     ("omega", po::value<double>(),
+      "local information generation rate")
+     ("lambda", po::value<double>(),
+      "loss of information rate")
+     ("N", po::value<double>(),
+      "total number of individuals")
+     ("njac", po::value<double>(),
+      "size of Jacobian (if needed)")
+     ;
+
+   po::options_description all_options;
+   all_options.add(command_line_options).add(ode_options).add(model_options);
+  
+   po::variables_map vm;
+   po::store(po::parse_command_line(argc, argv, all_options), vm);
+   po::notify(vm);
+
+   if (vm.count("help")) {
+     std::cout << all_options << std::endl;
+     return 1;
+   }
+  
+   if (vm.count("params-file")) {
+     std::ifstream ifs(vm["params-file"].as<std::string>().c_str());
+     try {
+       po::store(po::parse_config_file(ifs, all_options), vm);
+     }
+     catch (std::exception& e) {
+       std::cout << "Error parsing config file: " << e.what() << std::endl;
+       return 1;
+     }
+   }
+
+   po::notify(vm);
+
+   // reading ode parameters
+   if (ReadOdeParams(vm, Model) != 0) {
+     po::options_description options;
+     options.add(command_line_options).add(ode_options);
+     std::cout << options << std::endl;
+     return 1;
    }
    
+   // reading model parameters 
+   if (ReadModelParams(vm, Model) != 0) {
+     po::options_description options;
+     options.add(command_line_options).add(model_options);
+     std::cout << options << std::endl;
+     return 1;
+   }
+    
    cout << endl
         << "Starting ODE solver\n"
         << "-------------------\n";
-   
-   // reading ode parameters 
-   ReadOdeParams(argv[1], Model);
-   
-   // reading model parameters 
-   ReadModelParams(argv[1], Model);
    
    // init stuff from Graph object //
    
