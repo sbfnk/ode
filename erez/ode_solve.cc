@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
        po::store(po::parse_config_file(ifs, all_options), vm);
      }
      catch (std::exception& e) {
-       std::cout << "Error parsing config file: " << e.what() << std::endl;
+       std::cout << "Error parsing params file: " << e.what() << std::endl;
        return 1;
      }
    }
