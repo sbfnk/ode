@@ -129,15 +129,13 @@ int main(int argc, char *argv[])
    if (ReadOdeParams(vm, Model) != 0) {
      po::options_description options;
      options.add(command_line_options).add(ode_options);
-     std::cout << options << std::endl;
+     std::cout << command_line_options << ode_options << std::endl;
      return 1;
    }
    
    // reading model parameters 
    if (ReadModelParams(vm, Model) != 0) {
-     po::options_description options;
-     options.add(command_line_options).add(model_options);
-     std::cout << options << std::endl;
+     std::cout << command_line_options << model_options << std::endl;
      return 1;
    }
     
