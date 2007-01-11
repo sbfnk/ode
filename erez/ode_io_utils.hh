@@ -75,8 +75,9 @@ using namespace std;
 
 /******************************************************************/
 
-void ReadOdeParams(const char *ifile_name, Ode& obj);
-void ReadModelParams(const char *ifile_name, ModelOde& obj);
+int ReadOdeParams(int argc, char* argv[], const char* config_file, Ode& obj);
+int ReadModelParams(int argc, char* argv[], const char* config_file,
+                     ModelOde& obj);
 
 int read_int_val(ifstream& ifile);
 double read_dbl_val(ifstream& ifile);

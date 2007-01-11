@@ -35,14 +35,14 @@ DEPENDFLAGS = -m
 SOURCES     = ode_solve.cc ode.cc ode_io_utils.cc model_ode.cc 
 OBJECTS     = $(SOURCES:.cc=.o)
 
-EXEC        = out
+EXEC        = ode_solve
 #--------------------------------------------------------------------
 
 all:  $(EXEC)
 
 $(EXEC): $(OBJECTS) 
 	@echo ... linking:
-	$(LINKER) $(LDFLAGS) $(OPTFLAGS) $(CPPFLAGS) $(OBJECTS) -o $@.x
+	$(LINKER) $(LDFLAGS) $(OPTFLAGS) $(CPPFLAGS) $(OBJECTS) -o $@
 	@echo
 
 %.o : %.cc
@@ -59,8 +59,8 @@ clean:
 	@echo ... done
 
 cleaner:
-	@echo '... cleaning also *~, *.x and gmon.out'
-	@rm -f $(OBJECTS) *~ *.x gmon.out 
+	@echo '... cleaning also *~, *.x, gmon.out and '$(EXEC)
+	@rm -f $(OBJECTS) *~ *.x gmon.out $(EXEC)
 	@echo ... done
 
 #-------------------------------------------------------------------
