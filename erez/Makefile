@@ -6,7 +6,7 @@ CPPFLAGS     = -Wall -g
 OPTFLAGS   = 
 
 LINKER      = g++
-LDFLAGS   = -lgsl -lcblas -lm 
+LDFLAGS   = -lgsl -lcblas -lm -lboost_program_options
 
 #------ Intel icpc  --------------------------------------------------
 
