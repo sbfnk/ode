@@ -37,13 +37,15 @@ int main(int argc, char *argv[])
    
    // checking command line arguments
    po::options_description command_line_options
-     ("Usage: ode_solve -p params_file [options]... \n\nAllowed options");
+     ("Usage: ode_solve -p params_file -m model_file [options]... \n\nAllowed options");
 
    command_line_options.add_options()
      ("help,h",
       "produce help message")
      ("params-file,p",po::value<std::string>(),
-      "file containing model and ode parameters")
+      "file containing ode parameters")
+     ("model-file,m",po::value<std::string>(),
+      "file containing model parameters")
      ;
 
    po::options_description ode_options
@@ -119,6 +121,17 @@ int main(int argc, char *argv[])
      }
      catch (std::exception& e) {
        std::cout << "Error parsing params file: " << e.what() << std::endl;
+       return 1;
+     }
+   }
+
+   if (vm.count("model-file")) {
+     std::ifstream ifs(vm["model-file"].as<std::string>().c_str());
+     try {
+       po::store(po::parse_config_file(ifs, all_options), vm);
+     }
+     catch (std::exception& e) {
+       std::cout << "Error parsing model file: " << e.what() << std::endl;
        return 1;
      }
    }
