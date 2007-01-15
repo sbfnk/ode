@@ -26,21 +26,22 @@ void ModelOde::PrtModelPrms() const
    
    cout << "Model parameters:" << endl
         << "-----------------" << endl
-        << "beta_d  = " << p->beta_d << endl
-        << "gamma_d = " << p->gamma_d << endl
-        << "delta_d = " << p->delta_d << endl
-        << "beta_i  = " << p->beta_i << endl
-        << "gamma_i = " << p->gamma_i << endl
-        << "delta_i = " << p->delta_i << endl
-        << "beta_m1 = " << p->beta_m1 << endl
-        << "beta_m2 = " << p->beta_m2 << endl
+        << "beta--  = " << p->beta[0][0] << endl
+        << "beta+-  = " << p->beta[1][0] << endl
+        << "beta-+  = " << p->beta[0][1] << endl
+        << "beta++  = " << p->beta[1][1] << endl
+        << "gamma-  = " << p->gamma[0] << endl
+        << "gamma+  = " << p->gamma[1] << endl
+        << "delta-  = " << p->delta[0] << endl
+        << "delta+  = " << p->delta[1] << endl
         << "alpha   = " << p->alpha << endl
         << "nu      = " << p->nu << endl
-        << "lambda  = " << p->lambda << endl
+        << "lambda+ = " << p->lambda << endl
+        << "omega-  = " << p->omega << endl
         << "Qd      = " << p->Qd << endl
         << "Qi      = " << p->Qi << endl
         << "N       = " << p->N << endl
-        << "R_0 d   = " << (p->beta_d)*(p->Qd)/(p->gamma_d) << endl
+        << "R_0 d   = " << (p->beta[0][0])*(p->Qd)/(p->gamma[0]) << endl
         << "R_0 i   = " << (p->alpha)*(p->Qi)/(p->lambda) << endl
         << endl;
 }
@@ -76,9 +77,9 @@ void ModelOde::PrtGraphPrms() const
 int ModelOde::MFderivs (double t, const double y[], double rhs[], void *params)
 {   
    ModelParams p = *(ModelParams *)params;
-   double bd=p.beta_d, gd=p.gamma_d, dd=p.delta_d;
-   double bi=p.beta_i, gi=p.gamma_i, di=p.delta_i;
-   double bm1=p.beta_m1, bm2=p.beta_m2, al=p.alpha, nu=p.nu, lm=p.lambda;
+   double bd=p.beta[0][0], gd=p.gamma[0], dd=p.delta[0];
+   double bi=p.beta[1][1], gi=p.gamma[1], di=p.delta[1];
+   double bm1=p.beta[1][0], bm2=p.beta[0][1], al=p.alpha, nu=p.nu, lm=p.lambda;
    double Qd=p.Qd, Qi=p.Qi, N=p.N;
    double Qd_N=Qd/N, Qi_N=Qi/N;
    
@@ -178,9 +179,9 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
    ModelParams p = *(static_cast<ModelParams *>(params));   
    
    // local readable short variables
-   double bd=p.beta_d, gd=p.gamma_d, dd=p.delta_d;
-   double bi=p.beta_i, gi=p.gamma_i, di=p.delta_i;
-   double b1=p.beta_m1, b2=p.beta_m2, al=p.alpha, nu=p.nu, lm=p.lambda;
+   double bd=p.beta[0][0], gd=p.gamma[0], dd=p.delta[0];
+   double bi=p.beta[1][1], gi=p.gamma[1], di=p.delta[1];
+   double b1=p.beta[1][0], b2=p.beta[0][1], al=p.alpha, nu=p.nu, lm=p.lambda;
    double Qd=p.Qd, Qi=p.Qi, N=p.N;
    double N_Qd=N/Qd, N_Qi=N/Qi;
    
