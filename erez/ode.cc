@@ -192,7 +192,7 @@ void Ode::Solve()
    unsigned int o_count=1;
    
    ///// main loop /////
-   cout << "... in main loop";   
+   cout << "... in main loop\n";   
    
    while (t < tmax)
    {

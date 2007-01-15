@@ -5,7 +5,7 @@
 //
 // This is the Ode class interface. This class solves ODE systems
 // using GSL - GNU Scientific Library (www.gnu.org/software/gsl).
-// This is a base class, i.e. in order to solve a specific system
+// This is a baes class, i.e. in order to solve a specific system
 // the user must provide a derived class with pointers to two
 // functions, one for calculating the RHS and one for the Jacobian.
 // The user must also provide the relevant parameters of the model.
@@ -166,7 +166,7 @@ class Ode
       // gsl/odeiv solve stuff 
       void Solve();
       void PluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
-                          int (*p2jac)(double,const double *,double *,double *,void *));
+                       int (*p2jac)(double,const double *,double *,double *,void *));
       
       // i/o stuff 
       void PrtOdePrms();
