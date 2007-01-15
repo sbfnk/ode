@@ -3,6 +3,7 @@
 
 #include "model_ode.hh"
 #include "pa_macros.hh"
+#include <iomanip>
 
 using namespace std;
 
@@ -25,22 +26,21 @@ void ModelOde::PrtModelPrms() const
    
    cout << "Model parameters:" << endl
         << "-----------------" << endl
-        << "beta--  = " << p->beta[0][0] << endl
-        << "beta+-  = " << p->beta[1][0] << endl
-        << "beta-+  = " << p->beta[0][1] << endl
-        << "beta++  = " << p->beta[1][1] << endl
-        << "gamma-  = " << p->gamma[0] << endl
-        << "gamma+  = " << p->gamma[1] << endl
-        << "delta-  = " << p->delta[0] << endl
-        << "delta+  = " << p->delta[1] << endl
+        << "beta_d  = " << p->beta_d << endl
+        << "gamma_d = " << p->gamma_d << endl
+        << "delta_d = " << p->delta_d << endl
+        << "beta_i  = " << p->beta_i << endl
+        << "gamma_i = " << p->gamma_i << endl
+        << "delta_i = " << p->delta_i << endl
+        << "beta_m1 = " << p->beta_m1 << endl
+        << "beta_m2 = " << p->beta_m2 << endl
         << "alpha   = " << p->alpha << endl
         << "nu      = " << p->nu << endl
-        << "omega   = " << p->omega << endl
         << "lambda  = " << p->lambda << endl
         << "Qd      = " << p->Qd << endl
         << "Qi      = " << p->Qi << endl
         << "N       = " << p->N << endl
-        << "R_0 d   = " << (p->beta[0][0])*(p->Qd)/(p->gamma[0]) << endl
+        << "R_0 d   = " << (p->beta_d)*(p->Qd)/(p->gamma_d) << endl
         << "R_0 i   = " << (p->alpha)*(p->Qi)/(p->lambda) << endl
         << endl;
 }
@@ -76,9 +76,9 @@ void ModelOde::PrtGraphPrms() const
 int ModelOde::MFderivs (double t, const double y[], double rhs[], void *params)
 {   
    ModelParams p = *(ModelParams *)params;
-   double bd=p.beta[0][0], gd=p.gamma[0], dd=p.delta[0];
-   double bi=p.beta[1][1], gi=p.gamma[1], di=p.delta[1];
-   double bm1=p.beta[1][0], bm2=p.beta[0][1], al=p.alpha, nu=p.nu, lm=p.lambda;
+   double bd=p.beta_d, gd=p.gamma_d, dd=p.delta_d;
+   double bi=p.beta_i, gi=p.gamma_i, di=p.delta_i;
+   double bm1=p.beta_m1, bm2=p.beta_m2, al=p.alpha, nu=p.nu, lm=p.lambda;
    double Qd=p.Qd, Qi=p.Qi, N=p.N;
    double Qd_N=Qd/N, Qi_N=Qi/N;
    
@@ -134,7 +134,13 @@ int ModelOde::MFderivs (double t, const double y[], double rhs[], void *params)
 // Pair Approximation
 double  ModelOde::PA(double kk, double ij, double jk, double j)
 {
-   return kk*((ij*jk)/j);
+   const double eps = 1e-12;
+   
+   //if(j<eps)
+   if(j == 0.0)
+      return 0.0;
+   else
+      return kk*((ij*jk)/j);
 }
 
 /******************************************************************/
@@ -143,7 +149,12 @@ double  ModelOde::PA(double kk, double ij, double jk, double j)
 double  ModelOde::CC(double C_i, double C_d, double ki_i, double ki_d,
                       double ki, double N_Qd, double N_Qi)
 {
-   return ((1 - C_i - C_d) + C_i*N_Qi*ki_i/ki + C_d*N_Qd*ki_d/ki);   
+   const double eps = 1e-12;
+
+   if(ki<eps)
+      return ((1.0 - C_i - C_d));
+   else
+      return ((1.0 - C_i - C_d) + C_i*N_Qi*ki_i/ki + C_d*N_Qd*ki_d/ki);   
 }
 
 /******************************************************************/
@@ -167,9 +178,9 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
    ModelParams p = *(static_cast<ModelParams *>(params));   
    
    // local readable short variables
-   double bd=p.beta[0][0], gd=p.gamma[0], dd=p.delta[0];
-   double bi=p.beta[1][1], gi=p.gamma[1], di=p.delta[1];
-   double b1=p.beta[1][0], b2=p.beta[0][1], al=p.alpha, nu=p.nu, lm=p.lambda;
+   double bd=p.beta_d, gd=p.gamma_d, dd=p.delta_d;
+   double bi=p.beta_i, gi=p.gamma_i, di=p.delta_i;
+   double b1=p.beta_m1, b2=p.beta_m2, al=p.alpha, nu=p.nu, lm=p.lambda;
    double Qd=p.Qd, Qi=p.Qi, N=p.N;
    double N_Qd=N/Qd, N_Qi=N/Qi;
    
@@ -180,7 +191,8 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
    double iii=p.Ciii, iid=p.Ciid;
    double kdd=(Qd-1.0)/Qd, kii=(Qi-1.0)/Qi;
    double kdi=1.0, kid=1.0;
-   
+
+   int jj;
    
    // CHECK si_d, si_i info. loss TERMS FOR FACTOR 2 !!!!!!!!!!!!!!!!!!!!!
 
@@ -205,9 +217,9 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
       - al*(Rs_i + Ri_i +Rr_i) - nu*(RI_i + Ri_i);
    
    s_t =
-      - bi*si_d + b2*sI_d + di*r - lm*s
+      - bi*si_d - b2*sI_d + di*r - lm*s
       + al*(Ss_i + Si_i + Sr_i) + nu*(SI_i + Si_i);
-   
+
    i_t =
       + bi*si_d + b2*sI_d - gi*i - lm*i
       + al*(Is_i + Ii_i + Ir_i) + nu*(II_i + Ii_i);
@@ -459,7 +471,7 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
       + nu*PA(kdi, sI_d, Ii_i,I)*CC(dii, did, si_i, si_d,s*i, N_Qd, N_Qi)
       
       // info. loss
-      - lm*si_d;
+      - 2.0 * lm*si_d;
 
 //----------------
    sr_d_t = 
@@ -491,7 +503,7 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
       + nu*PA(kdi, sR_d, Ri_i,R)*CC(dii, did, si_i, si_d,s*i, N_Qd, N_Qi)
       
       // info. loss
-      - lm*sr_d; // factor 2 ???????????????        
+      - 2.0 * lm*sr_d; 
 
 //----------------
    ii_d_t =
@@ -549,7 +561,7 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
       + nu*PA(kdi, iR_d, Ri_i,R)*CC(dii, did, ii_i, ii_d,i*i, N_Qd, N_Qi)
       
       // info. loss
-      - lm*ir_d;
+      - 2.0 * lm*ir_d;
 
 //----------------
    rr_d_t =
@@ -1110,6 +1122,7 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
       
       // info. source
       + nu*Si_i
+
       + nu*PA(kii, iS_i, Si_i,S)*CC(iii, iid, ii_i, ii_d,i*i, N_Qd, N_Qi)
       + nu*PA(kii, IS_i, Si_i,S)*CC(iii, iid, Ii_i, Ii_d,I*i, N_Qd, N_Qi)
       
@@ -1117,7 +1130,7 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
       + nu*PA(kii, sI_i, Ii_i,I)*CC(iii, iid, si_i, si_d,s*i, N_Qd, N_Qi)
       
       // info. loss
-      - lm*si_i; 
+      - 2.0 * lm*si_i; 
 
 //----------------
    sr_i_t =
@@ -1149,7 +1162,7 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
       + nu*PA(kii, sR_i, Ri_i,R)*CC(iii, iid, si_i, si_d,s*i, N_Qd, N_Qi)
       
       // info. loss
-      - lm*sr_i; 
+      - 2.0 * lm*sr_i; 
    
 //----------------
    ii_i_t =
@@ -1209,7 +1222,7 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
       + nu*PA(kii, iR_i, Ri_i,R)*CC(iii, iid, ii_i, ii_d,i*i, N_Qd, N_Qi)
       
       // info. loss
-      - lm*ir_i; 
+      - 2.0 * lm*ir_i; 
 
 //----------------
    rr_i_t =
@@ -1530,13 +1543,44 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
       // info. source
       + nu*PA(kii, IR_i, RR_i,R)*CC(iii, iid, IR_i, IR_d,I*R, N_Qd, N_Qi)
       + nu*PA(kii, iR_i, RR_i,R)*CC(iii, iid, iR_i, iR_d,i*R, N_Qd, N_Qi)
-
+      
       - nu*PA(kii, rR_i, RI_i,R)*CC(iii, iid, rI_i, rI_d,r*I, N_Qd, N_Qi)
       - nu*PA(kii, rR_i, Ri_i,R)*CC(iii, iid, ri_i, ri_d,r*i, N_Qd, N_Qi)
       
       // info. loss
       + lm*rr_i - lm*rR_i ;
+   
+   
+   
+   // DEBUG
+   double tmp1=0;
+   double tmp2=0;
+   for (jj=0; jj<6; jj++)
+   {
+      tmp1+=y[jj];
+      tmp2+=rhs[jj];
+   }
 
+   double tmp3=0;
+   double tmp4=0;
+   for (jj=6; jj<48; jj++)
+   {
+      tmp3+=y[jj];
+      tmp4+=rhs[jj];
+   }
+   
+   //cout.setf(ios::showpos | ios:: showpoint | ios::left);
+   //cout.setf(ios::scientific | ios::uppercase);
+   cout.precision(5);
+   cout.setf (ios_base::left, ios_base::basefield );
+   cout.setf (ios_base::fixed, ios_base::floatfield );
+   cout.width(12);
+   
+   cout << "single: y= " << setw(12) << tmp1
+        << "   rhs= " << setw(12) << tmp2
+        << "   pair: y= " << setw(12) << tmp3
+        << "   rhs= " << setw(12) << tmp4  << endl;
+   
    return GSL_SUCCESS;
 }
 
