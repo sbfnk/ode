@@ -1,0 +1,11 @@
+# %%% Mean Field Approx Parameters File %%%%%%%%%
+
+# Ode parameters: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+file_id      = try1
+tmax         = 10
+dt           = 1e-6
+nsave        = 1
+step_algo    = rkf45
+abs_tol      = 1e-8
+rel_tol      = 1e-8
+
