@@ -116,12 +116,6 @@ plot 'FILE_ID.pa.dat' u 1:37 title 'sIi' w lp \
 
 #####################################
 
-### CHANGE AS NEEDED !!!!!!!!!!!!!
-N=1e5
-Qd=3
-Qi=3
-### CHANGE AS NEEDED !!!!!!!!!!!!!
-
 set output 'Cxx1.ps'
 set title "Correlation"
 set xrange [0:20]

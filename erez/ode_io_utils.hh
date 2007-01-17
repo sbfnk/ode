@@ -83,9 +83,7 @@ namespace po = boost::program_options;
 int ReadOdeParams(po::variables_map& vm, Ode& obj);
 int ReadModelParams(po::variables_map& vm, ModelOde& obj);
 
-int read_int_val(ifstream& ifile);
-double read_dbl_val(ifstream& ifile);
-const char *read_str_val(ifstream& ifile);
+int WriteGnuPlot(const char* fname, ModelOde& obj, bool verbose = false);
 
 /******************************************************************/
 

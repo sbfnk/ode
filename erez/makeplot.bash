@@ -12,7 +12,8 @@ fixf=fix21.tex
 
 # creating gnuplot script
 echo '... creating gnuplot script'
-sed -e s:FILE_ID:$1:g $gp_script > tmp.gp
+cat $1.gp > tmp.gp
+sed -e s:FILE_ID:$1:g $gp_script >> tmp.gp
 
 # make figs
 echo '... running gnuplot'

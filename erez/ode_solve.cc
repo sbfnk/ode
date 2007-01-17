@@ -33,6 +33,8 @@ int main(int argc, char *argv[])
 //    const char mf_init[] = ".mf.init";
 //    const char pa_init[] = ".pa.init";
 
+   const char gp[] = ".gp";
+
    // for file name manipulations
    char file_id[MAX_STR_LEN];
    char fname[MAX_STR_LEN];
@@ -262,6 +264,11 @@ int main(int argc, char *argv[])
    
    // solve the system    
    Model.Solve();
+
+   // write parameters for gnuplot
+   strcpy(fname, file_id);
+   strcat(fname, gp);
+   WriteGnuPlot(fname, Model, verbose);
 
    if (verbose) std::cout << std::endl;
    
