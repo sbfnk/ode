@@ -10,6 +10,8 @@
 #include "model_ode.hh"
 #include "ode_io_utils.hh"
 
+//#define DEBUG
+
 using namespace std;
 namespace po = boost::program_options;
 
@@ -20,14 +22,14 @@ int main(int argc, char *argv[])
    // constants
    const size_t mf_nvars = 6;
    const size_t pa_nvars = 48;
-
+   
    // suffixes
    const char mf_dat[] = ".mf.dat";
    const char pa_dat[] = ".pa.dat";
    
    const char mf_init[] = ".mf.init";
    const char pa_init[] = ".pa.init";
-
+   
    // for file name manipulations
    char file_id[MAX_STR_LEN];
    char fname[MAX_STR_LEN];
@@ -37,121 +39,129 @@ int main(int argc, char *argv[])
    
    // checking command line arguments
    po::options_description command_line_options
-     ("Usage: ode_solve -p params_file -m model_file [options]... \n\nAllowed options");
-
+      ("Usage: ode_solve -p params_file -m model_file [options]... \n\nAllowed options");
+   
    command_line_options.add_options()
-     ("help,h",
-      "produce help message")
-     ("params-file,p",po::value<std::string>(),
-      "file containing ode parameters")
-     ("model-file,m",po::value<std::string>(),
-      "file containing model parameters")
-     ;
-
+      ("help,h", "produce help message")
+      ("params-file,p",po::value<std::string>(),
+       "file containing ode parameters")
+      ("model-file,m",po::value<std::string>(),
+       "file containing model parameters")
+      ;
+   
    po::options_description ode_options
-     ("ODE parameters");
-
+      ("ODE parameters");
+   
    ode_options.add_options()
-     ("file_id", po::value<std::string>(),
-      "file-id for output files")
-     ("tmax", po::value<double>(),
-      "stopping time")
-     ("dt", po::value<double>(),
-      "size of time step")
-     ("nsave", po::value<unsigned int>(),
-      "save solution every nsave time steps")
-     ("step_algo", po::value<std::string>(),
-      "name of stepping algorithm type")
-     ("abs_tol", po::value<double>(),
-      "absolute tolerance")
-     ("rel_tol", po::value<double>(),
-      "relative tolerance")
-     ;
-
-    po::options_description model_options
-     ("Model parameters");
-
+      ("file_id", po::value<std::string>(),
+       "file-id for output files")
+      ("tmax", po::value<double>(),
+       "stopping time")
+      ("dt", po::value<double>(),
+       "size of time step")
+      ("nsave", po::value<unsigned int>(),
+       "save solution every nsave time steps")
+      ("step_algo", po::value<std::string>(),
+       "name of stepping algorithm type")
+      ("abs_tol", po::value<double>(),
+       "absolute tolerance")
+      ("rel_tol", po::value<double>(),
+       "relative tolerance")
+      ;
+   
+   po::options_description model_options
+      ("Model parameters");
+   
    model_options.add_options()
-     ("beta--", po::value<double>(),
-      "disease transmission rate uninformed->uninformed")
-     ("beta+-", po::value<double>(),
-      "disease transmission rate informed->uninformed")
-     ("beta-+", po::value<double>(),
-      "disease transmission rate uninformed->informed")
-     ("beta++", po::value<double>(),
-      "disease transmission rate informed->informed")
-     ("gamma-", po::value<double>(),
-      "recovery rate of uninformed")
-     ("gamma+", po::value<double>(),
-      "recovery rate of informed")
-     ("delta-", po::value<double>(),
-      "loss of immunity rate of uninformed")
-     ("delta+", po::value<double>(),
-      "loss of immunity rate of informed")
-     ("alpha", po::value<double>(),
-      "information transmission rate")
-     ("nu", po::value<double>(),
-      "information generation rate")
-     ("omega", po::value<double>(),
-      "local information generation rate")
-     ("lambda", po::value<double>(),
-      "loss of information rate")
-     ("N", po::value<double>(),
-      "total number of individuals")
-     ("njac", po::value<double>(),
-      "size of Jacobian (if needed)")
-     ;
-
+      ("beta--", po::value<double>(),
+       "disease transmission rate uninformed->uninformed")
+      ("beta+-", po::value<double>(),
+       "disease transmission rate informed->uninformed")
+      ("beta-+", po::value<double>(),
+       "disease transmission rate uninformed->informed")
+      ("beta++", po::value<double>(),
+       "disease transmission rate informed->informed")
+      ("gamma-", po::value<double>(),
+       "recovery rate of uninformed")
+      ("gamma+", po::value<double>(),
+       "recovery rate of informed")
+      ("delta-", po::value<double>(),
+       "loss of immunity rate of uninformed")
+      ("delta+", po::value<double>(),
+       "loss of immunity rate of informed")
+      ("alpha", po::value<double>(),
+       "information transmission rate")
+      ("nu", po::value<double>(),
+       "information generation rate")
+      ("omega", po::value<double>(),
+       "local information generation rate")
+      ("lambda", po::value<double>(),
+       "loss of information rate")
+      ("N", po::value<double>(),
+       "total number of individuals")
+      ("njac", po::value<double>(),
+       "size of Jacobian (if needed)")
+      ;
+   
    po::options_description all_options;
    all_options.add(command_line_options).add(ode_options).add(model_options);
-  
+   
    po::variables_map vm;
    po::store(po::parse_command_line(argc, argv, all_options), vm);
    po::notify(vm);
-
-   if (vm.count("help")) {
-     std::cout << all_options << std::endl;
-     return 1;
+   
+   if (vm.count("help"))
+   {
+      std::cout << all_options << std::endl;
+      return 1;
    }
-  
-   if (vm.count("params-file")) {
-     std::ifstream ifs(vm["params-file"].as<std::string>().c_str());
-     try {
-       po::store(po::parse_config_file(ifs, all_options), vm);
-     }
-     catch (std::exception& e) {
-       std::cout << "Error parsing params file: " << e.what() << std::endl;
-       return 1;
-     }
+   
+   if (vm.count("params-file"))
+   {
+      std::ifstream ifs(vm["params-file"].as<std::string>().c_str());
+      try
+      {
+         po::store(po::parse_config_file(ifs, all_options), vm);
+      }
+      catch (std::exception& e)
+      {
+         std::cout << "Error parsing params file: " << e.what() << std::endl;
+         return 1;
+      }
    }
-
-   if (vm.count("model-file")) {
-     std::ifstream ifs(vm["model-file"].as<std::string>().c_str());
-     try {
-       po::store(po::parse_config_file(ifs, all_options), vm);
-     }
-     catch (std::exception& e) {
-       std::cout << "Error parsing model file: " << e.what() << std::endl;
-       return 1;
-     }
+   
+   if (vm.count("model-file"))
+   {
+      std::ifstream ifs(vm["model-file"].as<std::string>().c_str());
+      try
+      {
+         po::store(po::parse_config_file(ifs, all_options), vm);
+      }
+      catch (std::exception& e)
+      {
+         std::cout << "Error parsing model file: " << e.what() << std::endl;
+         return 1;
+      }
    }
-
+   
    po::notify(vm);
-
+   
    // reading ode parameters
-   if (ReadOdeParams(vm, Model) != 0) {
-     po::options_description options;
-     options.add(command_line_options).add(ode_options);
-     std::cout << command_line_options << ode_options << std::endl;
-     return 1;
+   if (ReadOdeParams(vm, Model) != 0)
+   {
+      po::options_description options;
+      options.add(command_line_options).add(ode_options);
+      std::cout << command_line_options << ode_options << std::endl;
+      return 1;
    }
    
    // reading model parameters 
-   if (ReadModelParams(vm, Model) != 0) {
-     std::cout << command_line_options << model_options << std::endl;
-     return 1;
+   if (ReadModelParams(vm, Model) != 0)
+   {
+      std::cout << command_line_options << model_options << std::endl;
+      return 1;
    }
-    
+   
    cout << endl
         << "Starting ODE solver\n"
         << "-------------------\n";
@@ -159,8 +169,8 @@ int main(int argc, char *argv[])
    // init stuff from Graph object //
    
    // init Qd, Qd, C...
-   Model.SetQd(3);
-   Model.SetQi(3);
+   Model.SetQd(6);
+   Model.SetQi(6);
    
    Model.SetCddi(0.0);
    Model.SetCddd(0.0);
@@ -197,17 +207,19 @@ int main(int argc, char *argv[])
    
    // solve the system    
    Model.Solve();
-
-    // SOLVING PA //
+   
+   std::cout << std::endl;
+   
+   // SOLVING PA //
    
    // init nvars 
    Model.SetNvars(pa_nvars);
-
+   
    // init file names
    strcpy(fname, file_id);
    strcat(fname, pa_dat);
    Model.SetoFileName(fname);
-
+   
    strcpy(fname, file_id);
    strcat(fname, pa_init);
    Model.SeticFileName(fname); 
@@ -222,6 +234,8 @@ int main(int argc, char *argv[])
    
    // solve the system    
    Model.Solve();
+
+   std::cout << std::endl;
    
    return 0;
 }
