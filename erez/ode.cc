@@ -192,7 +192,7 @@ void Ode::Solve()
    unsigned int o_count=1;
    
    ///// main loop /////
-   cout << "... in main loop\n";   
+   cout << "... in main loop";   
    
    while (t < tmax)
    {
@@ -208,7 +208,7 @@ void Ode::Solve()
          WriteRHS(ofile, t);
    }
    
-   cout << " .................. done\n";
+   cout << ".................. done\n";
    
    CloseoFile(ofile);
    
@@ -282,7 +282,7 @@ const gsl_odeiv_step_type *Ode::SetStepType()
 /******************************************************************/
 
 void Ode::PluginFuncs(int (*p2derivs)(double,const double *,double *,void *),
-                         int (*p2jac)(double,const double *,double *,double *,void *))
+                      int (*p2jac)(double,const double *,double *,double *,void *))
 {
    Ode::p2derivs=p2derivs;
    Ode::p2jac=p2jac;
