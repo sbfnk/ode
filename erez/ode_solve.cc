@@ -27,15 +27,20 @@ int main(int argc, char *argv[])
    const char mf_dat[] = ".mf.dat";
    const char pa_dat[] = ".pa.dat";
    
-   const char mf_init[] = ".mf.init";
-   const char pa_init[] = ".pa.init";
-   
+// use common init file for mean field and pair approximation
+   const char mf_init[] = ".init";
+   const char pa_init[] = ".init";
+//    const char mf_init[] = ".mf.init";
+//    const char pa_init[] = ".pa.init";
+
    // for file name manipulations
    char file_id[MAX_STR_LEN];
    char fname[MAX_STR_LEN];
    
    //MeanField mfa;
    ModelOde Model;
+
+   bool verbose = false;
    
    // checking command line arguments
    po::options_description command_line_options
@@ -43,6 +48,7 @@ int main(int argc, char *argv[])
    
    command_line_options.add_options()
       ("help,h", "produce help message")
+      ("verbose,v", "produce verbose output")
       ("params-file,p",po::value<std::string>(),
        "file containing ode parameters")
       ("model-file,m",po::value<std::string>(),
@@ -54,7 +60,7 @@ int main(int argc, char *argv[])
    
    ode_options.add_options()
       ("file_id", po::value<std::string>(),
-       "file-id for output files")
+       "file id for output files")
       ("tmax", po::value<double>(),
        "stopping time")
       ("dt", po::value<double>(),
@@ -97,7 +103,7 @@ int main(int argc, char *argv[])
        "local information generation rate")
       ("lambda", po::value<double>(),
        "loss of information rate")
-      ("N", po::value<double>(),
+      ("vertices,N", po::value<double>(),
        "total number of individuals")
       ("njac", po::value<double>(),
        "size of Jacobian (if needed)")
@@ -107,13 +113,31 @@ int main(int argc, char *argv[])
    all_options.add(command_line_options).add(ode_options).add(model_options);
    
    po::variables_map vm;
-   po::store(po::parse_command_line(argc, argv, all_options), vm);
+
+   // parse command line options and allow unregistered options
+   po::parsed_options parsed = po::command_line_parser(argc, argv).
+     options(all_options).allow_unregistered().run();
+
+   // remove all unregistered options
+   for (unsigned i = 0; i < parsed.options.size(); i++) {
+     if (parsed.options[i].unregistered) {
+       parsed.options.erase(parsed.options.begin()+i);
+       --i;
+     }
+   }
+   
+   po::store(parsed, vm);
    po::notify(vm);
    
    if (vm.count("help"))
    {
       std::cout << all_options << std::endl;
       return 1;
+   }
+   
+   if (vm.count("verbose"))
+   {
+     verbose = true;
    }
    
    if (vm.count("params-file"))
@@ -162,9 +186,11 @@ int main(int argc, char *argv[])
       return 1;
    }
    
-   cout << endl
-        << "Starting ODE solver\n"
-        << "-------------------\n";
+   if (verbose) {
+     cout << endl
+          << "Starting ODE solver\n"
+          << "-------------------\n";
+   }
    
    // init stuff from Graph object //
    
@@ -200,15 +226,17 @@ int main(int argc, char *argv[])
    // plugin MF derivs   
    Model.PluginMFderivs();
    
-   // printing ode + model parameters 
-   Model.PrtOdePrms();
-   Model.PrtModelPrms();
-   Model.PrtGraphPrms();
+   if (verbose) {
+     // printing ode + model parameters 
+     Model.PrtOdePrms();
+     Model.PrtModelPrms();
+     Model.PrtGraphPrms();
+   }
    
    // solve the system    
    Model.Solve();
    
-   std::cout << std::endl;
+   if (verbose) std::cout << std::endl;
    
    // SOLVING PA //
    
@@ -235,7 +263,7 @@ int main(int argc, char *argv[])
    // solve the system    
    Model.Solve();
 
-   std::cout << std::endl;
+   if (verbose) std::cout << std::endl;
    
    return 0;
 }
