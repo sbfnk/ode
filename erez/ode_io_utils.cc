@@ -154,8 +154,8 @@ int ReadModelParams(po::variables_map& vm, ModelOde& obj)
     std::cerr << "setting to 0" << std::endl;
     model_params->lambda=0;
   }
-  if (vm.count("N")) {
-    model_params->N=vm["N"].as<double>();
+  if (vm.count("vertices")) {
+    model_params->N=vm["vertices"].as<double>();
   } else {
     std::cerr << "ERROR: no N given" << std::endl;
     return 1;
