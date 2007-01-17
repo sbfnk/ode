@@ -39,9 +39,9 @@ set title "Pair Approx"
 plot 'FILE_ID.pa.dat' u 1:8 title 'SSd' w lp \
    , 'FILE_ID.pa.dat' u 1:9 title 'SId' w lp \
    , 'FILE_ID.pa.dat' u 1:10 title 'SRd' w lp \
-   , 'FILE_ID.pa.dat' u 1:11 title 'IId' w lp \
-   , 'FILE_ID.pa.dat' u 1:12 title 'IRd' w lp \
-   , 'FILE_ID.pa.dat' u 1:13 title 'RRd' w lp
+   , 'FILE_ID.pa.dat' u 1:14 title 'IId' w lp \
+   , 'FILE_ID.pa.dat' u 1:15 title 'IRd' w lp \
+   , 'FILE_ID.pa.dat' u 1:19 title 'RRd' w lp
 
 #####################################
 
@@ -50,69 +50,69 @@ set title "Pair Approx"
 plot 'FILE_ID.pa.dat' u 1:29 title 'SSi' w lp \
    , 'FILE_ID.pa.dat' u 1:30 title 'SIi' w lp \
    , 'FILE_ID.pa.dat' u 1:31 title 'SRi' w lp \
-   , 'FILE_ID.pa.dat' u 1:32 title 'IIi' w lp \
-   , 'FILE_ID.pa.dat' u 1:33 title 'IRi' w lp \
-   , 'FILE_ID.pa.dat' u 1:34 title 'RRi' w lp
+   , 'FILE_ID.pa.dat' u 1:35 title 'IIi' w lp \
+   , 'FILE_ID.pa.dat' u 1:36 title 'IRi' w lp \
+   , 'FILE_ID.pa.dat' u 1:40 title 'RRi' w lp
 
 #####################################
 
 set output 'pa3.ps'
 set title "Pair Approx"
-plot 'FILE_ID.pa.dat' u 1:14 title 'ssd' w lp \
-   , 'FILE_ID.pa.dat' u 1:15 title 'sid' w lp \
-   , 'FILE_ID.pa.dat' u 1:16 title 'srd' w lp \
-   , 'FILE_ID.pa.dat' u 1:17 title 'iid' w lp \
-   , 'FILE_ID.pa.dat' u 1:18 title 'ird' w lp \
-   , 'FILE_ID.pa.dat' u 1:19 title 'rrd' w lp
+plot 'FILE_ID.pa.dat' u 1:23 title 'ssd' w lp \
+   , 'FILE_ID.pa.dat' u 1:24 title 'sid' w lp \
+   , 'FILE_ID.pa.dat' u 1:25 title 'srd' w lp \
+   , 'FILE_ID.pa.dat' u 1:26 title 'iid' w lp \
+   , 'FILE_ID.pa.dat' u 1:27 title 'ird' w lp \
+   , 'FILE_ID.pa.dat' u 1:28 title 'rrd' w lp
 
 #####################################
 
 set output 'pa4.ps'
 set title "Pair Approx"
-plot 'FILE_ID.pa.dat' u 1:35 title 'ssi' w lp \
-   , 'FILE_ID.pa.dat' u 1:36 title 'sii' w lp \
-   , 'FILE_ID.pa.dat' u 1:37 title 'sri' w lp \
-   , 'FILE_ID.pa.dat' u 1:38 title 'iii' w lp \
-   , 'FILE_ID.pa.dat' u 1:39 title 'iri' w lp \
-   , 'FILE_ID.pa.dat' u 1:40 title 'rri' w lp
+plot 'FILE_ID.pa.dat' u 1:44 title 'ssi' w lp \
+   , 'FILE_ID.pa.dat' u 1:45 title 'sii' w lp \
+   , 'FILE_ID.pa.dat' u 1:46 title 'sri' w lp \
+   , 'FILE_ID.pa.dat' u 1:47 title 'iii' w lp \
+   , 'FILE_ID.pa.dat' u 1:48 title 'iri' w lp \
+   , 'FILE_ID.pa.dat' u 1:49 title 'rri' w lp
 
 #####################################
 
 set output 'pa5.ps'
 set title "Pair Approx"
-plot 'FILE_ID.pa.dat' u 1:20 title 'Ssd' w lp \
-   , 'FILE_ID.pa.dat' u 1:21 title 'Sid' w lp \
-   , 'FILE_ID.pa.dat' u 1:22 title 'Srd' w lp \
-   , 'FILE_ID.pa.dat' u 1:23 title 'Iid' w lp \
-   , 'FILE_ID.pa.dat' u 1:24 title 'Ird' w lp \
-   , 'FILE_ID.pa.dat' u 1:25 title 'Rrd' w lp
+plot 'FILE_ID.pa.dat' u 1:11 title 'Ssd' w lp \
+   , 'FILE_ID.pa.dat' u 1:12 title 'Sid' w lp \
+   , 'FILE_ID.pa.dat' u 1:13 title 'Srd' w lp \
+   , 'FILE_ID.pa.dat' u 1:17 title 'Iid' w lp \
+   , 'FILE_ID.pa.dat' u 1:18 title 'Ird' w lp \
+   , 'FILE_ID.pa.dat' u 1:22 title 'Rrd' w lp
 
 #####################################
 
 set output 'pa6.ps'
 set title "Pair Approx"
-plot 'FILE_ID.pa.dat' u 1:41 title 'Ssi' w lp \
-   , 'FILE_ID.pa.dat' u 1:42 title 'Sii' w lp \
-   , 'FILE_ID.pa.dat' u 1:43 title 'Sri' w lp \
-   , 'FILE_ID.pa.dat' u 1:44 title 'Iii' w lp \
-   , 'FILE_ID.pa.dat' u 1:45 title 'Iri' w lp \
-   , 'FILE_ID.pa.dat' u 1:46 title 'Rri' w lp
+plot 'FILE_ID.pa.dat' u 1:32 title 'Ssi' w lp \
+   , 'FILE_ID.pa.dat' u 1:33 title 'Sii' w lp \
+   , 'FILE_ID.pa.dat' u 1:34 title 'Sri' w lp \
+   , 'FILE_ID.pa.dat' u 1:38 title 'Iii' w lp \
+   , 'FILE_ID.pa.dat' u 1:39 title 'Iri' w lp \
+   , 'FILE_ID.pa.dat' u 1:43 title 'Rri' w lp
 
 #####################################
 
 set output 'pa7.ps'
 set title "Pair Approx"
-plot 'FILE_ID.pa.dat' u 1:26 title 'sId' w lp \
-   , 'FILE_ID.pa.dat' u 1:27 title 'sRd' w lp \
-   , 'FILE_ID.pa.dat' u 1:28 title 'iRd' w lp \
+plot 'FILE_ID.pa.dat' u 1:16 title 'sId' w lp \
+   , 'FILE_ID.pa.dat' u 1:20 title 'sRd' w lp \
+   , 'FILE_ID.pa.dat' u 1:21 title 'iRd' w lp \
 
 #####################################
 
 set output 'pa8.ps'
 set title "Pair Approx"
-plot 'FILE_ID.pa.dat' u 1:47 title 'sIi' w lp \
-   , 'FILE_ID.pa.dat' u 1:48 title 'sRi' w lp \
-   , 'FILE_ID.pa.dat' u 1:49 title 'iRi' w lp \
+plot 'FILE_ID.pa.dat' u 1:37 title 'sIi' w lp \
+   , 'FILE_ID.pa.dat' u 1:41 title 'sRi' w lp \
+   , 'FILE_ID.pa.dat' u 1:42 title 'iRi' w lp \
 
 #####################################
 
@@ -134,46 +134,46 @@ set key spacing 2
 #   , 'FILE_ID.pa.dat' u 1:($3/N) title 'I' w lp \
 
 # try2:
-#plot 'FILE_ID.pa.dat' u 1:(N*$20/($2*$5)/Qd) title 'CSsd' w lp \
-#   , 'FILE_ID.pa.dat' u 1:(N*$41/($2*$5)/Qi) title 'CSsi' w lp \
+#plot 'FILE_ID.pa.dat' u 1:(N*$11/($2*$5)/Qd) title 'CSsd' w lp \
+#   , 'FILE_ID.pa.dat' u 1:(N*$32/($2*$5)/Qi) title 'CSsi' w lp \
 #   , 'FILE_ID.pa.dat' u 1:(N*$29/($2*$2)/Qi) title 'CSSi' w lp \
 
 # try3:
-#plot 'FILE_ID.pa.dat' u 1:(N*$20/($2*$5)/Qd) title 'CSsd' w lp \
-#   , 'FILE_ID.pa.dat' u 1:(N*$41/($2*$5)/Qi) title 'CSsi' w lp \
+#plot 'FILE_ID.pa.dat' u 1:(N*$11/($2*$5)/Qd) title 'CSsd' w lp \
+#   , 'FILE_ID.pa.dat' u 1:(N*$32/($2*$5)/Qi) title 'CSsi' w lp \
 #   , 'FILE_ID.pa.dat' u 1:(N*$29/($2*$2)/Qi) title 'CSSi' w lp \
 #   , 'FILE_ID.pa.dat' u 1:($5/N) title 's' w lp \
 
 # try4:
-#plot 'FILE_ID.pa.dat' u 1:(N*$26/($5*$3)/Qd) title 'CsId' w lp \
+#plot 'FILE_ID.pa.dat' u 1:(N*$16/($5*$3)/Qd) title 'CsId' w lp \
 #   , 'FILE_ID.pa.dat' u 1:(N*$9/($2*$3)/Qd) title 'CSId' w lp \
-#   , 'FILE_ID.pa.dat' u 1:(N*$41/($2*$5)/Qi) title 'CSsi' w lp \
+#   , 'FILE_ID.pa.dat' u 1:(N*$32/($2*$5)/Qi) title 'CSsi' w lp \
 #   , 'FILE_ID.pa.dat' u 1:(N*$29/($2*$2)/Qi) title 'CSSi' w lp \
 #   , 'FILE_ID.pa.dat' u 1:($3/N) title 'I' w lp \
 
 # try5
-#plot 'FILE_ID.pa.dat' u 1:(N*$15/($5*$6)/Qd) title 'Csid' w lp \
-#   , 'FILE_ID.pa.dat' u 1:(N*$36/($5*$6)/Qi) title 'Csii' w lp \
+#plot 'FILE_ID.pa.dat' u 1:(N*$24/($5*$6)/Qd) title 'Csid' w lp \
+#   , 'FILE_ID.pa.dat' u 1:(N*$45/($5*$6)/Qi) title 'Csii' w lp \
 #   , 'FILE_ID.pa.dat' u 1:($5/N) title 's' w lp \
 #   , 'FILE_ID.pa.dat' u 1:($6/N) title 'i' w lp \
 
 # try6
-#plot 'FILE_ID.pa.dat' u 1:(N*$15/($5*$6)/Qd) title 'Csid' w lp \
-#   , 'FILE_ID.pa.dat' u 1:(N*$36/($5*$6)/Qi) title 'Csii' w lp \
+#plot 'FILE_ID.pa.dat' u 1:(N*$24/($5*$6)/Qd) title 'Csid' w lp \
+#   , 'FILE_ID.pa.dat' u 1:(N*$45/($5*$6)/Qi) title 'Csii' w lp \
 #   , 'FILE_ID.pa.dat' u 1:($3/N) title 'I' w lp \
 #   , 'FILE_ID.pa.dat' u 1:($5/N) title 's' w lp \
 #   , 'FILE_ID.pa.dat' u 1:($6/N) title 'i' w lp \
 
 # try7
-#plot 'FILE_ID.pa.dat' u 1:(N*$15/($5*$6)/Qd) title 'Csid' w lp \
-#   , 'FILE_ID.pa.dat' u 1:(N*$26/($5*$3)/Qd) title 'CsId' w lp \
+#plot 'FILE_ID.pa.dat' u 1:(N*$24/($5*$6)/Qd) title 'Csid' w lp \
+#   , 'FILE_ID.pa.dat' u 1:(N*$45/($5*$3)/Qd) title 'CsId' w lp \
 #   , 'FILE_ID.pa.dat' u 1:(($3+$6)/N) title 'I+i' w lp \
 
 # try10
 plot 'FILE_ID.pa.dat' u 1:(N*$9/($2*$3)/Qd) title 'CSId' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$21/($2*$6)/Qd) title 'CSid' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$26/($5*$3)/Qd) title 'CsId' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$15/($5*$6)/Qd) title 'Csid' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$12/($2*$6)/Qd) title 'CSid' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$16/($5*$3)/Qd) title 'CsId' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$24/($5*$6)/Qd) title 'Csid' w lp \
    , 'FILE_ID.pa.dat' u 1:(($3+$6)/N) title 'I+i' w lp \
 
 set output 'Cxx2.ps'
@@ -183,9 +183,9 @@ set yrange [0:2.5]
 set key spacing 2
 
 plot 'FILE_ID.pa.dat' u 1:(N*$30/($2*$3)/Qi) title 'CSIi' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$42/($2*$6)/Qi) title 'CSii' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$47/($5*$3)/Qi) title 'CsIi' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$36/($5*$6)/Qi) title 'Csii' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$33/($2*$6)/Qi) title 'CSii' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$37/($5*$3)/Qi) title 'CsIi' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$45/($5*$6)/Qi) title 'Csii' w lp \
    , 'FILE_ID.pa.dat' u 1:(($3+$6)/N) title 'I+i' w lp \
 
 set output 'Cxx3.ps'
@@ -195,11 +195,11 @@ set xrange [0:20]
 set key spacing 2
 
 plot 'FILE_ID.pa.dat' u 1:(N*$8/($2*$2)/Qd) title 'CSSd' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$20/($2*$5)/Qd) title 'CSsd' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$14/($5*$5)/Qd) title 'Cssd' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$11/($2*$5)/Qd) title 'CSsd' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$23/($5*$5)/Qd) title 'Cssd' w lp \
    , 'FILE_ID.pa.dat' u 1:(N*$29/($2*$2)/Qi) title 'CSSi' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$41/($2*$5)/Qi) title 'CSsi' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$35/($5*$5)/Qi) title 'Cssi' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$32/($2*$5)/Qi) title 'CSsi' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$44/($5*$5)/Qi) title 'Cssi' w lp \
 
 set output 'Cxx4.ps'
 set title "Correlation"
@@ -207,17 +207,12 @@ set xrange [0:20]
 set yrange [0:2.5]
 set key spacing 2
 
-plot 'FILE_ID.pa.dat' u 1:(N*$11/($3*$3)/Qd) title 'CIId' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$23/($3*$6)/Qd) title 'CIid' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$17/($6*$6)/Qd) title 'Ciid' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$32/($3*$3)/Qi) title 'CIIi' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$44/($3*$6)/Qi) title 'CIii' w lp \
-   , 'FILE_ID.pa.dat' u 1:(N*$38/($6*$6)/Qi) title 'Ciii' w lp \
-
-
-
-
-
+plot 'FILE_ID.pa.dat' u 1:(N*$14/($3*$3)/Qd) title 'CIId' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$17/($3*$6)/Qd) title 'CIid' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$26/($6*$6)/Qd) title 'Ciid' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$35/($3*$3)/Qi) title 'CIIi' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$38/($3*$6)/Qi) title 'CIii' w lp \
+   , 'FILE_ID.pa.dat' u 1:(N*$47/($6*$6)/Qi) title 'Ciii' w lp \
 
 quit
 
