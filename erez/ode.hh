@@ -132,7 +132,7 @@ class Ode
    public:
       
       // constructors and destructors 
-      Ode();
+      Ode(bool v = false);
       //~Ode();
       
       // mutators 
@@ -196,6 +196,8 @@ class Ode
       char file_id[MAX_STR_LEN];      // file identifier 
       char ofile_name[MAX_STR_LEN];   // output file name
       char ic_file_name[MAX_STR_LEN]; // ic input file name
+
+      bool verbose;                // print verbose output
       
       // pointers to rhs and jacobian declaration 
       int (*p2derivs)(double, const double *, double *, void *);

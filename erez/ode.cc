@@ -9,8 +9,8 @@ using namespace std;
 // constructors and destructors 
 
 /******************************************************************/
-Ode::Ode() : nvars(2), nsave(1), abs_tol(1e-6), rel_tol(1e-6), tmax(1.5),
-             dt(1e-6) 
+Ode::Ode(bool v) : nvars(2), nsave(1), abs_tol(1e-6), rel_tol(1e-6),
+                   tmax(1.5), dt(1e-6), verbose(v)
 {
    strcpy(Ode::step_algo,"rkf45");
    strcpy(Ode::ofile_name,"no_ofile_name");
@@ -36,7 +36,7 @@ Ode::Ode() : nvars(2), nsave(1), abs_tol(1e-6), rel_tol(1e-6), tmax(1.5),
 
 void Ode::OpenoFile(ofstream& ofile)
 {
-   cout << "... opening ode output file: " << ofile_name;
+  if (verbose) cout << "... opening ode output file: " << ofile_name;
    
    try
    {
@@ -45,20 +45,20 @@ void Ode::OpenoFile(ofstream& ofile)
    
    catch (exception &e)
    {
-      cout << "... unable to open Ode output file " 
+      cerr << "... unable to open Ode output file " 
            << ofile_name << endl;
-      cout << "... Standard exception: " << e.what() << endl;      
+      cerr << "... Standard exception: " << e.what() << endl;      
       exit(1); // uses cstdlib.h
    }
 
-   cout << " ... done\n";   
+   if (verbose) cout << " ... done\n";   
 }
 
 /******************************************************************/
 
 void Ode::CloseoFile(ofstream& ofile)
 {
-   cout << "... closing ode output file: " << ofile_name;
+   if (verbose) cout << "... closing ode output file: " << ofile_name;
    
    try
    {
@@ -67,13 +67,13 @@ void Ode::CloseoFile(ofstream& ofile)
 
    catch (exception &e)
    {
-      cout << "... unable to close Ode output file " 
+      cerr << "... unable to close Ode output file " 
            << ofile_name << endl;
-      cout << "... Standard exception: " << e.what() << endl;      
+      cerr << "... Standard exception: " << e.what() << endl;      
       exit(1); // uses cstdlib.h
    }
    
-   cout << " ... done\n";
+   if (verbose) cout << " ... done\n";
 }
 
 /******************************************************************/
@@ -85,7 +85,7 @@ void Ode::InitRhsFromFile()
 
    
    // allocating rhs 
-   cout << "... allocating rhs memory";
+   if (verbose) cout << "... allocating rhs memory";
    
    try
    {      
@@ -94,15 +94,15 @@ void Ode::InitRhsFromFile()
    
    catch (exception &e)
    {
-      cout << "... unable to alloc rhs\n"; 
-      cout << "... Standard exception: " << e.what() << endl;      
+      cerr << "... unable to alloc rhs\n"; 
+      cerr << "... Standard exception: " << e.what() << endl;      
       exit(1); // uses cstdlib.h
    }
 
-   cout << " ... done\n";
+   if (verbose) cout << " ... done\n";
    
    // opening ic_file 
-   cout << "... opening ode ic_file: " << ic_file_name;
+   if (verbose) cout << "... opening ode ic_file: " << ic_file_name;
    
    try
    {
@@ -111,26 +111,26 @@ void Ode::InitRhsFromFile()
    
    catch (exception &e)
    {
-      cout << "... unable to open ic_file " 
+      cerr << "... unable to open ic_file " 
            << ic_file_name << endl;
-      cout << "... Standard exception: " << e.what() << endl;      
+      cerr << "... Standard exception: " << e.what() << endl;      
       exit(1); // uses cstdlib.h
    }
    
-   cout << " ... done\n";
+   if (verbose) cout << " ... done\n";
    
    // init rhs from ic_file 
-   cout << "... reading content of ic_file";
+   if (verbose) cout << "... reading content of ic_file";
    
    for(unsigned int i=0; i<nvars; i++)
       ic_file >> rhs_ic[i];
    
    SetRhs(rhs_ic);
 
-   cout << " ... done\n";
+   if (verbose) cout << " ... done\n";
    
    // closing ic_file 
-   cout << "... closing ode ic_file: " << ofile_name;
+   if (verbose) cout << "... closing ode ic_file: " << ofile_name;
    
    try
    {
@@ -139,13 +139,13 @@ void Ode::InitRhsFromFile()
    
    catch (exception &e)
    {
-      cout << "... unable to close ic_file " 
+      cerr << "... unable to close ic_file " 
            << ic_file_name << endl;
-      cout << "... Standard exception: " << e.what() << endl;      
+      cerr << "... Standard exception: " << e.what() << endl;      
       exit(1); // uses cstdlib.h
    }
    
-   cout << " ... done\n";
+   if (verbose) cout << " ... done\n";
 }
 
 /******************************************************************/
@@ -160,8 +160,8 @@ void Ode::Solve()
    int status;
    ofstream ofile;
 
-   cout << "Solving the ode system\n"
-        << "----------------------\n";
+   if (verbose) cout << "Solving the ode system\n"
+                     << "----------------------\n";
 
    // setting step type 
    const gsl_odeiv_step_type *step_type;
@@ -192,7 +192,7 @@ void Ode::Solve()
    unsigned int o_count=1;
    
    ///// main loop /////
-   cout << "... in main loop";   
+   if (verbose) cout << "... in main loop";   
    
    while (t < tmax)
    {
@@ -208,7 +208,7 @@ void Ode::Solve()
          WriteRHS(ofile, t);
    }
    
-   cout << ".................. done\n";
+   if (verbose) cout << ".................. done\n";
    
    CloseoFile(ofile);
    
@@ -227,7 +227,7 @@ const gsl_odeiv_step_type *Ode::SetStepType()
 {
    const gsl_odeiv_step_type *tmp_step_type;
 
-   cout << "... setting stepping algorithm to " << step_algo;
+   if (verbose) cout << "... setting stepping algorithm to " << step_algo;
    
    if(!strcmp(step_algo,"rk2"))
    {   
@@ -271,10 +271,10 @@ const gsl_odeiv_step_type *Ode::SetStepType()
    }
    else
    {
-      cout << "... wrong step_algo value, set to default rkf45\n";
+     if (verbose) cout << "... wrong step_algo value, set to default rkf45\n";
    }
    
-   cout << " ... done\n";
+   if (verbose) cout << " ... done\n";
 
    return tmp_step_type;
 }
