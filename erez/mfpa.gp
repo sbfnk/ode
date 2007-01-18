@@ -13,7 +13,7 @@ set format y "%3.1e"
 #####################################
 
 set output 'mf.ps'
-set title "Mean Filed"
+set title "Mean Field"
 plot 'FILE_ID.mf.dat' u 1:2 title 'S' w lp \
    , 'FILE_ID.mf.dat' u 1:3 title 'I' w lp \
    , 'FILE_ID.mf.dat' u 1:4 title 'R' w lp \
