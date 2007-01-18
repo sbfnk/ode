@@ -22,7 +22,7 @@ int ReadOdeParams(po::variables_map& vm, Ode& obj)
     // tmax 
     obj.SetTmax(vm["tmax"].as<double>());
   } else {
-    std::cerr << "ERROR: no tmax give" << std::endl;
+    std::cerr << "ERROR: no tmax given" << std::endl;
     return 1;
   }
   if (vm.count("dt")) {
