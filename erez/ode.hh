@@ -133,7 +133,8 @@ class Ode
       
       // constructors and destructors 
       Ode(bool v = false);
-      //~Ode();
+      virtual ~Ode() {;}
+  
       
       // mutators 
       void SetNvars(const size_t nvars) { Ode::nvars=nvars; }
@@ -170,6 +171,10 @@ class Ode
       
       // i/o stuff 
       void PrtOdePrms();
+
+   protected:
+
+      double *rhs;                 // rhs[navrs] for the variables
       
    private:
       
@@ -179,14 +184,17 @@ class Ode
       void CloseoFile(ofstream& ofile);
       void InitRhsFromFile();
       void WriteRHS(ofstream& ofile, double t);
-      
+
+      //this can be overridden by derived classes if needed 
+      virtual void InitParameters() {;}
+
+  
       // ode parameters 
       size_t nvars;                // size of the ode system
       unsigned int nsave;          // save solution every nsave time steps
       char step_algo[MAX_STR_LEN]; // name of stepping algorithm type
       double abs_tol, rel_tol;     // absolute/relative tolerances
       double tmax, dt;             // ...
-      double *rhs;                 // rhs[navrs] for the variables
       void *params;                // pointer to model parameters. will be set
                                    // by the user to some specific model
                                    // parameters using the member function
