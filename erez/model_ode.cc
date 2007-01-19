@@ -1627,4 +1627,48 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
 
 /******************************************************************/
 
+void ModelOde::InitParameters()
+{
+  // calculate Qd and Qi in pair approximation
+  if (GetNvars() > 6) {
+    
+    // calculate total number of disease pairs
+    double dPairs =
+      SS_d_t + SI_d_t + SR_d_t + Ss_d_t + Si_d_t + Sr_d_t +
+      II_d_t + IR_d_t + Is_d_t + Ii_d_t + Ir_d_t +
+      RR_d_t + Rs_d_t + Ri_d_t + Rr_d_t +
+      ss_d_t + si_d_t + sr_d_t +
+      ii_d_t + ir_d_t +
+      rr_d_t;
+    
+    SetQd(2*dPairs / GetN());
+    
+    // calculate total number of disease pairs
+    double iPairs =
+      SS_i_t + SI_i_t + SR_i_t + Ss_i_t + Si_i_t + Sr_i_t +
+      II_i_t + IR_i_t + Is_i_t + Ii_i_t + Ir_i_t +
+      RR_i_t + Rs_i_t + Ri_i_t + Rr_i_t +
+      ss_i_t + si_i_t + sr_i_t +
+      ii_i_t + ir_i_t +
+      rr_i_t;
+    
+    SetQi(2*iPairs / GetN());
 
+  } else {
+    SetQd(0);
+    SetQi(0);
+  }
+   
+  SetCddi(0.0);
+  SetCddd(0.0);
+  SetCdii(0.0);
+  SetCdid(0.0);
+  SetCidi(0.0);
+  SetCidd(0.0);
+  SetCiii(0.0);
+  SetCiid(0.0);
+   
+}
+    
+
+/******************************************************************/

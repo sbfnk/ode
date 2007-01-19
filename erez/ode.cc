@@ -170,6 +170,9 @@ void Ode::Solve()
    // allocating rhs and initialize it from ic_file 
    InitRhsFromFile();
 
+   // init additional paramteres if needed
+   InitParameters();
+
    // opening output file 
    OpenoFile(ofile);
 

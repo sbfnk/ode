@@ -65,6 +65,9 @@ class ModelOde : public Ode
       { static_cast<ModelParams *>(GetModelParams())->Qd=Qd; }      
       void SetQi(const double Qi)
       { static_cast<ModelParams *>(GetModelParams())->Qi=Qi; }
+  
+      double GetN()
+      { return static_cast<ModelParams *>(GetModelParams())->N; }
 
       // user supplied functions      
       static int MFderivs(double, const double *, double *, void *);
@@ -82,7 +85,10 @@ class ModelOde : public Ode
       void PluginPAderivs() { PluginFuncs(&PAderivs, NULL); }
       
       void PrtModelPrms() const;
-      void PrtGraphPrms() const;      
+      void PrtGraphPrms() const;
+
+      // init Qd and Qi for pair approximation
+      void InitParameters();
             
 }; // class ModelOde
 
