@@ -194,21 +194,6 @@ int main(int argc, char *argv[])
           << "-------------------\n";
    }
    
-   // init stuff from Graph object //
-   
-   // init Qd, Qd, C...
-   Model.SetQd(6);
-   Model.SetQi(6);
-   
-   Model.SetCddi(0.0);
-   Model.SetCddd(0.0);
-   Model.SetCdii(0.0);
-   Model.SetCdid(0.0);
-   Model.SetCidi(0.0);
-   Model.SetCidd(0.0);
-   Model.SetCiii(0.0);
-   Model.SetCiid(0.0);
-   
    // SOLVING MFA //
    
    // init nvars 
@@ -228,15 +213,15 @@ int main(int argc, char *argv[])
    // plugin MF derivs   
    Model.PluginMFderivs();
    
+   // solve the system    
+   Model.Solve();
+   
    if (verbose) {
      // printing ode + model parameters 
      Model.PrtOdePrms();
      Model.PrtModelPrms();
      Model.PrtGraphPrms();
    }
-   
-   // solve the system    
-   Model.Solve();
    
    if (verbose) std::cout << std::endl;
    
@@ -257,14 +242,16 @@ int main(int argc, char *argv[])
    // plugin MF derivs   
    Model.PluginPAderivs();
    
-   // printing ode + model parameters 
-   //Model.PrtOdePrms();
-   //Model.PrtModelPrms();
-   //Model.PrtGraphPrms();
-   
    // solve the system    
    Model.Solve();
 
+   // printing ode + model parameters 
+   if (verbose) {
+     Model.PrtOdePrms();
+     Model.PrtModelPrms();
+     Model.PrtGraphPrms();
+   }
+   
    // write parameters for gnuplot
    strcpy(fname, file_id);
    strcat(fname, gp);
