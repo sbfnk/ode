@@ -195,6 +195,7 @@ int WriteGnuPlot(const char* fname, ModelOde& obj, bool verbose)
                   << std::endl;
   gpFile << "Qi=" << static_cast<ModelParams *>(obj.GetModelParams())->Qi
                   << std::endl;
+  gpFile << "Tmax=" << obj.GetTmax() << std::endl;
   gpFile << "### end of model parameters" << std::endl;
 
   try

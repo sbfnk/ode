@@ -118,7 +118,7 @@ plot 'FILE_ID.pa.dat' u 1:37 title 'sIi' w l \
 
 set output 'Cxx1.ps'
 set title "Correlation"
-set xrange [0:20]
+set xrange [0:Tmax]
 #set yrange [0:1]
 set key spacing 2
 
@@ -172,7 +172,7 @@ plot 'FILE_ID.pa.dat' u 1:(N*$9/($2*$3)/Qd) title 'CSId' w l \
 
 set output 'Cxx2.ps'
 set title "Correlation"
-set xrange [0:20]
+set xrange [0:Tmax]
 set yrange [0:2.5]
 set key spacing 2
 
@@ -184,7 +184,7 @@ plot 'FILE_ID.pa.dat' u 1:(N*$30/($2*$3)/Qi) title 'CSIi' w l \
 
 set output 'Cxx3.ps'
 set title "Correlation"
-set xrange [0:20]
+set xrange [0:Tmax]
 #set yrange [0:2.5]
 set key spacing 2
 
@@ -197,7 +197,7 @@ plot 'FILE_ID.pa.dat' u 1:(N*$8/($2*$2)/Qd) title 'CSSd' w l \
 
 set output 'Cxx4.ps'
 set title "Correlation"
-set xrange [0:20]
+set xrange [0:Tmax]
 set yrange [0:2.5]
 set key spacing 2
 
