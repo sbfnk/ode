@@ -123,51 +123,51 @@ set xrange [0:Tmax]
 set key spacing 2
 
 # try1:
-#plot 'FILE_ID.pa.dat' u 1:(N*$9/($2*$3)/Qd) title 'CSId' w l \
-#   , 'FILE_ID.pa.dat' u 1:(N*$30/($2*$3)/Qi) title 'CSIi' w l \
+#plot 'FILE_ID.pa.dat' u 1:(2*N*$9/($2*$3)/Qd) title 'CSId' w l \
+#   , 'FILE_ID.pa.dat' u 1:(2*N*$30/($2*$3)/Qi) title 'CSIi' w l \
 #   , 'FILE_ID.pa.dat' u 1:($3/N) title 'I' w l \
 
 # try2:
-#plot 'FILE_ID.pa.dat' u 1:(N*$11/($2*$5)/Qd) title 'CSsd' w l \
-#   , 'FILE_ID.pa.dat' u 1:(N*$32/($2*$5)/Qi) title 'CSsi' w l \
-#   , 'FILE_ID.pa.dat' u 1:(N*$29/($2*$2)/Qi) title 'CSSi' w l \
+#plot 'FILE_ID.pa.dat' u 1:(2*N*$11/($2*$5)/Qd) title 'CSsd' w l \
+#   , 'FILE_ID.pa.dat' u 1:(2*N*$32/($2*$5)/Qi) title 'CSsi' w l \
+#   , 'FILE_ID.pa.dat' u 1:(2*N*$29/($2*$2)/Qi) title 'CSSi' w l \
 
 # try3:
-#plot 'FILE_ID.pa.dat' u 1:(N*$11/($2*$5)/Qd) title 'CSsd' w l \
-#   , 'FILE_ID.pa.dat' u 1:(N*$32/($2*$5)/Qi) title 'CSsi' w l \
-#   , 'FILE_ID.pa.dat' u 1:(N*$29/($2*$2)/Qi) title 'CSSi' w l \
+#plot 'FILE_ID.pa.dat' u 1:(2*N*$11/($2*$5)/Qd) title 'CSsd' w l \
+#   , 'FILE_ID.pa.dat' u 1:(2*N*$32/($2*$5)/Qi) title 'CSsi' w l \
+#   , 'FILE_ID.pa.dat' u 1:(2*N*$29/($2*$2)/Qi) title 'CSSi' w l \
 #   , 'FILE_ID.pa.dat' u 1:($5/N) title 's' w l \
 
 # try4:
-#plot 'FILE_ID.pa.dat' u 1:(N*$16/($5*$3)/Qd) title 'CsId' w l \
-#   , 'FILE_ID.pa.dat' u 1:(N*$9/($2*$3)/Qd) title 'CSId' w l \
-#   , 'FILE_ID.pa.dat' u 1:(N*$32/($2*$5)/Qi) title 'CSsi' w l \
-#   , 'FILE_ID.pa.dat' u 1:(N*$29/($2*$2)/Qi) title 'CSSi' w l \
+#plot 'FILE_ID.pa.dat' u 1:(2*N*$16/($5*$3)/Qd) title 'CsId' w l \
+#   , 'FILE_ID.pa.dat' u 1:(2*N*$9/($2*$3)/Qd) title 'CSId' w l \
+#   , 'FILE_ID.pa.dat' u 1:(2*N*$32/($2*$5)/Qi) title 'CSsi' w l \
+#   , 'FILE_ID.pa.dat' u 1:(2*N*$29/($2*$2)/Qi) title 'CSSi' w l \
 #   , 'FILE_ID.pa.dat' u 1:($3/N) title 'I' w l \
 
 # try5
-#plot 'FILE_ID.pa.dat' u 1:(N*$24/($5*$6)/Qd) title 'Csid' w l \
-#   , 'FILE_ID.pa.dat' u 1:(N*$45/($5*$6)/Qi) title 'Csii' w l \
+#plot 'FILE_ID.pa.dat' u 1:(2*N*$24/($5*$6)/Qd) title 'Csid' w l \
+#   , 'FILE_ID.pa.dat' u 1:(2*N*$45/($5*$6)/Qi) title 'Csii' w l \
 #   , 'FILE_ID.pa.dat' u 1:($5/N) title 's' w l \
 #   , 'FILE_ID.pa.dat' u 1:($6/N) title 'i' w l \
 
 # try6
-#plot 'FILE_ID.pa.dat' u 1:(N*$24/($5*$6)/Qd) title 'Csid' w l \
-#   , 'FILE_ID.pa.dat' u 1:(N*$45/($5*$6)/Qi) title 'Csii' w l \
+#plot 'FILE_ID.pa.dat' u 1:(2*N*$24/($5*$6)/Qd) title 'Csid' w l \
+#   , 'FILE_ID.pa.dat' u 1:(2*N*$45/($5*$6)/Qi) title 'Csii' w l \
 #   , 'FILE_ID.pa.dat' u 1:($3/N) title 'I' w l \
 #   , 'FILE_ID.pa.dat' u 1:($5/N) title 's' w l \
 #   , 'FILE_ID.pa.dat' u 1:($6/N) title 'i' w l \
 
 # try7
-#plot 'FILE_ID.pa.dat' u 1:(N*$24/($5*$6)/Qd) title 'Csid' w l \
-#   , 'FILE_ID.pa.dat' u 1:(N*$45/($5*$3)/Qd) title 'CsId' w l \
+#plot 'FILE_ID.pa.dat' u 1:(2*N*$24/($5*$6)/Qd) title 'Csid' w l \
+#   , 'FILE_ID.pa.dat' u 1:(2*N*$45/($5*$3)/Qd) title 'CsId' w l \
 #   , 'FILE_ID.pa.dat' u 1:(($3+$6)/N) title 'I+i' w l \
 
 # try10
-plot 'FILE_ID.pa.dat' u 1:(N*$9/($2*$3)/Qd) title 'CSId' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$12/($2*$6)/Qd) title 'CSid' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$16/($5*$3)/Qd) title 'CsId' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$24/($5*$6)/Qd) title 'Csid' w l \
+plot 'FILE_ID.pa.dat' u 1:(2*N*$9/($2*$3)/Qd) title 'CSId' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$12/($2*$6)/Qd) title 'CSid' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$16/($5*$3)/Qd) title 'CsId' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$24/($5*$6)/Qd) title 'Csid' w l \
    , 'FILE_ID.pa.dat' u 1:(($3+$6)/N) title 'I+i' w l \
 
 set output 'Cxx2.ps'
@@ -176,10 +176,10 @@ set xrange [0:Tmax]
 set yrange [0:2.5]
 set key spacing 2
 
-plot 'FILE_ID.pa.dat' u 1:(N*$30/($2*$3)/Qi) title 'CSIi' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$33/($2*$6)/Qi) title 'CSii' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$37/($5*$3)/Qi) title 'CsIi' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$45/($5*$6)/Qi) title 'Csii' w l \
+plot 'FILE_ID.pa.dat' u 1:(2*N*$30/($2*$3)/Qi) title 'CSIi' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$33/($2*$6)/Qi) title 'CSii' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$37/($5*$3)/Qi) title 'CsIi' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$45/($5*$6)/Qi) title 'Csii' w l \
    , 'FILE_ID.pa.dat' u 1:(($3+$6)/N) title 'I+i' w l \
 
 set output 'Cxx3.ps'
@@ -188,12 +188,12 @@ set xrange [0:Tmax]
 #set yrange [0:2.5]
 set key spacing 2
 
-plot 'FILE_ID.pa.dat' u 1:(N*$8/($2*$2)/Qd) title 'CSSd' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$11/($2*$5)/Qd) title 'CSsd' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$23/($5*$5)/Qd) title 'Cssd' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$29/($2*$2)/Qi) title 'CSSi' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$32/($2*$5)/Qi) title 'CSsi' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$44/($5*$5)/Qi) title 'Cssi' w l \
+plot 'FILE_ID.pa.dat' u 1:(2*N*$8/($2*$2)/Qd) title 'CSSd' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$11/($2*$5)/Qd) title 'CSsd' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$23/($5*$5)/Qd) title 'Cssd' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$29/($2*$2)/Qi) title 'CSSi' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$32/($2*$5)/Qi) title 'CSsi' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$44/($5*$5)/Qi) title 'Cssi' w l \
 
 set output 'Cxx4.ps'
 set title "Correlation"
@@ -201,12 +201,12 @@ set xrange [0:Tmax]
 set yrange [0:2.5]
 set key spacing 2
 
-plot 'FILE_ID.pa.dat' u 1:(N*$14/($3*$3)/Qd) title 'CIId' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$17/($3*$6)/Qd) title 'CIid' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$26/($6*$6)/Qd) title 'Ciid' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$35/($3*$3)/Qi) title 'CIIi' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$38/($3*$6)/Qi) title 'CIii' w l \
-   , 'FILE_ID.pa.dat' u 1:(N*$47/($6*$6)/Qi) title 'Ciii' w l \
+plot 'FILE_ID.pa.dat' u 1:(2*N*$14/($3*$3)/Qd) title 'CIId' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$17/($3*$6)/Qd) title 'CIid' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$26/($6*$6)/Qd) title 'Ciid' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$35/($3*$3)/Qi) title 'CIIi' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$38/($3*$6)/Qi) title 'CIii' w l \
+   , 'FILE_ID.pa.dat' u 1:(2*N*$47/($6*$6)/Qi) title 'Ciii' w l \
 
 quit
 
