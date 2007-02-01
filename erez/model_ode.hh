@@ -14,6 +14,8 @@
 
 /******************************************************************/
 
+#include <fstream>
+
 #include "ode.hh"
 
 using namespace std;
@@ -28,7 +30,7 @@ struct ModelParams
       double omega;
 
       // Graph properties
-      double Qd, Qi, N;
+      double Qd, Qi, Qdi, N;
 
       // clustering
       double Cidi, Cidd, Cdii, Cdid;
@@ -65,6 +67,8 @@ class ModelOde : public Ode
       { static_cast<ModelParams *>(GetModelParams())->Qd=Qd; }      
       void SetQi(const double Qi)
       { static_cast<ModelParams *>(GetModelParams())->Qi=Qi; }
+      void SetQdi(const double Qdi)
+      { static_cast<ModelParams *>(GetModelParams())->Qdi=Qdi; }
   
       double GetN()
       { return static_cast<ModelParams *>(GetModelParams())->N; }
@@ -87,7 +91,7 @@ class ModelOde : public Ode
       void PrtModelPrms() const;
       void PrtGraphPrms() const;
 
-      // init Qd and Qi for pair approximation
+      // init Qd and Qi
       void InitParameters();
             
 }; // class ModelOde

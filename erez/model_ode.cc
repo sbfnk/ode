@@ -26,23 +26,27 @@ void ModelOde::PrtModelPrms() const
    
    cout << "Model parameters:" << endl
         << "-----------------" << endl
-        << "beta--  = " << p->beta[0][0] << endl
-        << "beta+-  = " << p->beta[1][0] << endl
-        << "beta-+  = " << p->beta[0][1] << endl
-        << "beta++  = " << p->beta[1][1] << endl
-        << "gamma-  = " << p->gamma[0] << endl
-        << "gamma+  = " << p->gamma[1] << endl
-        << "delta-  = " << p->delta[0] << endl
-        << "delta+  = " << p->delta[1] << endl
-        << "alpha   = " << p->alpha << endl
-        << "nu      = " << p->nu << endl
-        << "lambda+ = " << p->lambda << endl
-        << "omega-  = " << p->omega << endl
-        << "Qd      = " << p->Qd << endl
-        << "Qi      = " << p->Qi << endl
-        << "N       = " << p->N << endl
-        << "R_0 d   = " << (p->beta[0][0])*(p->Qd)/(p->gamma[0]) << endl
-        << "R_0 i   = " << (p->alpha)*(p->Qi)/(p->lambda) << endl
+        << "beta--   = " << p->beta[0][0] << endl
+        << "beta+-   = " << p->beta[1][0] << endl
+        << "beta-+   = " << p->beta[0][1] << endl
+        << "beta++   = " << p->beta[1][1] << endl
+        << "gamma-   = " << p->gamma[0] << endl
+        << "gamma+   = " << p->gamma[1] << endl
+        << "delta-   = " << p->delta[0] << endl
+        << "delta+   = " << p->delta[1] << endl
+        << "alpha    = " << p->alpha << endl
+        << "nu       = " << p->nu << endl
+        << "lambda+  = " << p->lambda << endl
+        << "omega-   = " << p->omega << endl
+        << "Qd       = " << p->Qd << endl
+        << "Qi       = " << p->Qi << endl
+        << "Qdi      = " << p->Qdi << endl
+        << "N        = " << p->N << endl
+        << "R_0 d -- = " << (p->beta[0][0])*(p->Qd)/(p->gamma[0]) << endl
+        << "R_0 d -+ = " << (p->beta[1][0])*(p->Qd)/(p->gamma[1]) << endl
+        << "R_0 d +- = " << (p->beta[0][1])*(p->Qd)/(p->gamma[0]) << endl
+        << "R_0 d ++ = " << (p->beta[1][1])*(p->Qd)/(p->gamma[1]) << endl
+        << "R_0 i    = " << (p->alpha)*(p->Qi)/(p->lambda) << endl
         << endl;
 }
 
