@@ -1658,6 +1658,8 @@ void ModelOde::InitParameters()
     SetQd(0);
     SetQi(0);
   }
+
+  SetQdi(Q_di);
    
   SetCddi(0.0);
   SetCddd(0.0);
