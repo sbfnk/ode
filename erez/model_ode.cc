@@ -49,7 +49,7 @@ void ModelOde::PrtModelPrms() const
         << "R_0 i    = " << (p->alpha)*(p->Qi)/(p->lambda) << endl
         << endl;
 }
-
+ 
 /******************************************************************/ 
 
 void ModelOde::PrtGraphPrms() const
