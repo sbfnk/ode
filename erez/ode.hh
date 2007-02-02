@@ -138,6 +138,7 @@ class Ode
       
       // mutators 
       void SetNvars(const size_t nvars) { Ode::nvars=nvars; }
+      void SetNinit(const size_t ninit) { Ode::ninit=ninit; }
       void SetNsave(const unsigned int nsave) { Ode::nsave=nsave; }
       void SetStepAlgo(const char *step_algo) { strcpy(Ode::step_algo,step_algo); }
       void SetAbsTol(const double abs_tol) { Ode::abs_tol=abs_tol; }
@@ -152,6 +153,7 @@ class Ode
       
       // accessors 
       size_t GetNvars() const { return nvars; }
+      size_t GetNinit() const { return ninit; }
       unsigned int GetNsave() const { return nsave; }
       const char *GetStepAlgo() const { return step_algo; }
       double GetAtol() const { return abs_tol; }
@@ -191,6 +193,7 @@ class Ode
   
       // ode parameters 
       size_t nvars;                // size of the ode system
+      size_t ninit;                // number of initial conditions
       unsigned int nsave;          // save solution every nsave time steps
       char step_algo[MAX_STR_LEN]; // name of stepping algorithm type
       double abs_tol, rel_tol;     // absolute/relative tolerances

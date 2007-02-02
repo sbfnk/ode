@@ -89,7 +89,7 @@ void Ode::InitRhsFromFile()
    
    try
    {      
-      rhs_ic=new double[nvars]; // will be deleted in destructor
+      rhs_ic=new double[ninit]; // will be deleted in destructor
    }
    
    catch (exception &e)
@@ -122,7 +122,7 @@ void Ode::InitRhsFromFile()
    // init rhs from ic_file 
    if (verbose) cout << "... reading content of ic_file";
    
-   for(unsigned int i=0; i<nvars; i++)
+   for(unsigned int i=0; i<ninit; i++)
       ic_file >> rhs_ic[i];
    
    SetRhs(rhs_ic);
@@ -188,7 +188,7 @@ void Ode::Solve()
    // defining the system 
    gsl_odeiv_system sys = {p2derivs, p2jac, nvars, params};
 
-   // write t=0 rhs 
+   // write t=0 rhs
    t=0;
    WriteRHS(ofile, t);
 
@@ -299,6 +299,7 @@ void Ode::PrtOdePrms()
         << "Ode parameters:" << endl
         << "---------------" << endl
         << "nvars        = " << GetNvars() << endl
+        << "ninit        = " << GetNinit() << endl
         << "nsave        = " << GetNsave() << endl
         << "step type    = " << GetStepAlgo() << endl
         << "abs_tol      = " << GetAtol() << endl
