@@ -19,10 +19,14 @@ namespace po = boost::program_options;
 
 int main(int argc, char *argv[])
 {
-   // constants
-   const size_t mf_nvars = 48;
-   const size_t pa_nvars = 49;
-   
+   // variables
+   const size_t mf_nvars = 6;
+   const size_t pa_nvars = 48;
+
+   // initial conditions
+   const size_t mf_ninit = 48;
+   const size_t pa_ninit = 49;
+
    // suffixes
    const char mf_dat[] = ".mf.dat";
    const char pa_dat[] = ".pa.dat";
@@ -34,14 +38,12 @@ int main(int argc, char *argv[])
 //    const char pa_init[] = ".pa.init";
 
    const char gp[] = ".gp";
+   const char params[] = ".prm.txt";
 
    // for file name manipulations
    char file_id[MAX_STR_LEN];
    char fname[MAX_STR_LEN];
    
-   //MeanField mfa;
-   ModelOde Model;
-
    bool verbose = false;
    
    // checking command line arguments
@@ -172,6 +174,9 @@ int main(int argc, char *argv[])
    
    po::notify(vm);
    
+   //MeanField mfa;
+   ModelOde Model(verbose);
+
    // reading ode parameters
    if (ReadOdeParams(vm, Model) != 0)
    {
@@ -198,6 +203,7 @@ int main(int argc, char *argv[])
    
    // init nvars 
    Model.SetNvars(mf_nvars);
+   Model.SetNinit(mf_ninit);
 
    // init file names
    strcpy(file_id, Model.GetFileId());
@@ -229,6 +235,7 @@ int main(int argc, char *argv[])
    
    // init nvars 
    Model.SetNvars(pa_nvars);
+   Model.SetNinit(pa_ninit);
    
    // init file names
    strcpy(fname, file_id);
@@ -246,17 +253,22 @@ int main(int argc, char *argv[])
    Model.Solve();
 
    // printing ode + model parameters 
-   if (verbose) {
-     Model.PrtOdePrms();
-     Model.PrtModelPrms();
-     Model.PrtGraphPrms();
-   }
+//    if (verbose) {
+//      Model.PrtOdePrms();
+//      Model.PrtModelPrms();
+//      Model.PrtGraphPrms();
+//    }
    
    // write parameters for gnuplot
    strcpy(fname, file_id);
    strcat(fname, gp);
    WriteGnuPlot(fname, Model, verbose);
 
+   // write model parameters to file
+   strcpy(fname, file_id);
+   strcat(fname, params);
+   WriteModelParams(fname, Model, verbose);
+   
    if (verbose) std::cout << std::endl;
    
    return 0;
