@@ -43,7 +43,7 @@ struct ModelParams
 class ModelOde : public Ode
 {
    public:
-      ModelOde(); 
+      ModelOde(bool v = false); 
       ~ModelOde();
       
       // mutators
@@ -88,7 +88,7 @@ class ModelOde : public Ode
       void PluginMFderivs() { PluginFuncs(&MFderivs, NULL); }
       void PluginPAderivs() { PluginFuncs(&PAderivs, NULL); }
       
-      void PrtModelPrms() const;
+      void PrtModelPrms(ofstream* file = 0) const;
       void PrtGraphPrms() const;
 
       // init Qd and Qi

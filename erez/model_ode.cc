@@ -4,12 +4,13 @@
 #include "model_ode.hh"
 #include "pa_macros.hh"
 #include <iomanip>
+#include <sstream>
 
 using namespace std;
 
 /******************************************************************/
 
-ModelOde::ModelOde() : Ode() {}
+ModelOde::ModelOde(bool v) : Ode(v) {}
 
 /******************************************************************/
 
@@ -20,34 +21,43 @@ ModelOde::~ModelOde()
 
 /******************************************************************/
 
-void ModelOde::PrtModelPrms() const
+void ModelOde::PrtModelPrms(ofstream* file) const
 {
    ModelParams *p=static_cast<ModelParams *>(GetModelParams());
+
+   std::stringstream output;
    
-   cout << "Model parameters:" << endl
-        << "-----------------" << endl
-        << "beta--   = " << p->beta[0][0] << endl
-        << "beta+-   = " << p->beta[1][0] << endl
-        << "beta-+   = " << p->beta[0][1] << endl
-        << "beta++   = " << p->beta[1][1] << endl
-        << "gamma-   = " << p->gamma[0] << endl
-        << "gamma+   = " << p->gamma[1] << endl
-        << "delta-   = " << p->delta[0] << endl
-        << "delta+   = " << p->delta[1] << endl
-        << "alpha    = " << p->alpha << endl
-        << "nu       = " << p->nu << endl
-        << "lambda+  = " << p->lambda << endl
-        << "omega-   = " << p->omega << endl
-        << "Qd       = " << p->Qd << endl
-        << "Qi       = " << p->Qi << endl
-        << "Qdi      = " << p->Qdi << endl
-        << "N        = " << p->N << endl
-        << "R_0 d -- = " << (p->beta[0][0])*(p->Qd)/(p->gamma[0]) << endl
-        << "R_0 d -+ = " << (p->beta[1][0])*(p->Qd)/(p->gamma[1]) << endl
-        << "R_0 d +- = " << (p->beta[0][1])*(p->Qd)/(p->gamma[0]) << endl
-        << "R_0 d ++ = " << (p->beta[1][1])*(p->Qd)/(p->gamma[1]) << endl
-        << "R_0 i    = " << (p->alpha)*(p->Qi)/(p->lambda) << endl
-        << endl;
+   output << "Model parameters:" << endl
+          << "-----------------" << endl
+          << "beta--   = " << p->beta[0][0]*(p->Qd) << endl
+          << "beta+-   = " << p->beta[1][0]*(p->Qd) << endl
+          << "beta-+   = " << p->beta[0][1]*(p->Qd) << endl
+          << "beta++   = " << p->beta[1][1]*(p->Qd) << endl
+          << "gamma-   = " << p->gamma[0] << endl
+          << "gamma+   = " << p->gamma[1] << endl
+          << "delta-   = " << p->delta[0] << endl
+          << "delta+   = " << p->delta[1] << endl
+          << "alpha    = " << p->alpha*(p->Qi) << endl
+          << "nu       = " << p->nu*(p->Qi) << endl
+          << "lambda+  = " << p->lambda << endl
+          << "omega-   = " << p->omega << endl
+          << "Qd       = " << p->Qd << endl
+          << "Qi       = " << p->Qi << endl
+          << "Qdi      = " << p->Qdi << endl
+          << "N        = " << p->N << endl
+          << "R_0 d -- = " << (p->beta[0][0])*(p->Qd)/(p->gamma[0]) << endl
+          << "R_0 d -+ = " << (p->beta[1][0])*(p->Qd)/(p->gamma[1]) << endl
+          << "R_0 d +- = " << (p->beta[0][1])*(p->Qd)/(p->gamma[0]) << endl
+          << "R_0 d ++ = " << (p->beta[1][1])*(p->Qd)/(p->gamma[1]) << endl
+          << "R_0 i    = " << (p->alpha)*(p->Qi)/(p->lambda) << endl
+          << endl;
+
+   if (file) {
+     (*file) << output.str();
+   } else {
+     cout << output.str();
+   }
+
 }
  
 /******************************************************************/ 
