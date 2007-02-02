@@ -85,8 +85,8 @@ int ModelOde::MFderivs (double t, const double y[], double rhs[], void *params)
    double bi=p.beta[1][1], gi=p.gamma[1], di=p.delta[1];
    double bm1=p.beta[0][1], bm2=p.beta[1][0], al=p.alpha, nu=p.nu, lm=p.lambda;
    double Qd=p.Qd, Qi=p.Qi, N=p.N;
-   //double Qd_N=Qd/N, Qi_N=Qi/N;
-   double Qd_N=1./(double)N, Qi_N=1./double(N);
+   double Qd_N=Qd/N, Qi_N=Qi/N;
+   //double Qd_N=1./(double)N, Qi_N=1./double(N);
    
    rhs[0] = -(Qd_N) * ( bd*y[1] + bm1*y[4] ) * y[0] + dd * y[2]
       - al * (Qi_N) * ( y[3] + y[4] + y[5] ) * y[0] + lm * y[3]
