@@ -1644,7 +1644,7 @@ int ModelOde::PAderivs (double t, const double y[], double rhs[], void *params)
 void ModelOde::InitParameters()
 {
   // calculate Qd and Qi in pair approximation
-  if (GetNvars() > 6) {
+  if (GetNinit() > 6) {
     
     // calculate total number of disease pairs
     double dPairs =
