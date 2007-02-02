@@ -84,6 +84,7 @@ int ReadOdeParams(po::variables_map& vm, Ode& obj);
 int ReadModelParams(po::variables_map& vm, ModelOde& obj);
 
 int WriteGnuPlot(const char* fname, ModelOde& obj, bool verbose = false);
+int WriteModelParams(const char* fname, ModelOde& obj, bool verbose = false);
 
 /******************************************************************/
 

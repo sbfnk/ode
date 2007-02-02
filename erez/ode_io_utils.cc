@@ -182,7 +182,7 @@ int WriteGnuPlot(const char* fname, ModelOde& obj, bool verbose)
   
   catch (exception &e)
     {
-      cerr << "... unable to open Ode output file " 
+      cerr << "... unable to open gnuplot output file " 
            << fname << endl;
       cerr << "... Standard exception: " << e.what() << endl;      
       return 1; // uses cstdlib.h
@@ -216,3 +216,40 @@ int WriteGnuPlot(const char* fname, ModelOde& obj, bool verbose)
 
 }
 
+int WriteModelParams(const char* fname, ModelOde& obj, bool verbose)
+{
+  ofstream mpFile;
+  if (verbose) cout << "... writing model parameters file: " << fname;
+  
+  try
+    {
+      mpFile.open(fname, ios::out);
+    }
+  
+  catch (exception &e)
+    {
+      cerr << "... unable to open model parameters output file " 
+           << fname << endl;
+      cerr << "... Standard exception: " << e.what() << endl;      
+      return 1; // uses cstdlib.h
+    }
+
+  obj.PrtModelPrms(&mpFile);
+
+  try
+    {
+      mpFile.close();
+    }
+  
+  catch (exception &e)
+    {
+      cerr << "... unable to close model parameters file " 
+           << fname << endl;
+      cerr << "... Standard exception: " << e.what() << endl;      
+      return 1; // uses cstdlib.h
+    }
+
+  if (verbose) cout << " ... done\n";
+  return 0;
+
+}
