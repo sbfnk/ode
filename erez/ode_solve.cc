@@ -20,7 +20,7 @@ namespace po = boost::program_options;
 int main(int argc, char *argv[])
 {
    // constants
-   const size_t mf_nvars = 6;
+   const size_t mf_nvars = 48;
    const size_t pa_nvars = 49;
    
    // suffixes
