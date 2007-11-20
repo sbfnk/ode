@@ -1,0 +1,1 @@
+bin/solve_ode.x -p params/ode.prm -m params/model.prm --file-id=test --tmax=15 --verbose --clustering=.123 --nsave=10 --check-convergence --Qd=6 --Qi=4 --qdi=.8 --qid=.8
