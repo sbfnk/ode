@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # usage message
 usage="Usage: odesolve.sh file_id [-m model_params_file] [-o ode_params_file]"
