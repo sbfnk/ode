@@ -1,26 +1,10 @@
 #------ GNU g++ -----------------------------------------------------
 
 CC         = g++
-CPPFLAGS     = -Wall -g  
-#OPTFLAGS   = -O3 -ipo -tpp2 -fnsplit -ip -ftz 
-OPTFLAGS   = 
+CPPFLAGS     = -Wall -O3 -g -I${CODEDIR} -Iinclude
 
 LINKER      = g++
-LDFLAGS   = -lgsl -lcblas -lm 
-
-#------ Intel icpc  --------------------------------------------------
-
-#CC         = icpc
-#CPPFLAGS     = -g -Wall
-#OPTFLAGS   = -O3 -ipo -fnsplit -ip -ftz -funroll-loops
-#OPTFLAGS   = -static
-#OPTFLAGS   = -fast / -mp / 
-#OPTFLAGS   = 
-
-#LINKER      = icpc
-#LDFLAGS   = -lm -lscs -lmkl 
-#LDFLAGS   = -i-dynamic/static
-#LDFLAGS     = 
+LDFLAGS     = -lboost_program_options -lgsl 
 
 #--------------------------------------------------------------------
 
@@ -29,41 +13,48 @@ DEPENDFLAGS = -m
 
 #--------------------------------------------------------------------
 
-SOURCES     = main.cpp ode.cpp io_utils.cpp van_der_pol.cpp
-OBJECTS     = $(SOURCES:.cpp=.o)
-EXEC        = out
+SOURCES     = solve_ode.cc
+OBJECTS     = $(patsubst %.cc,obj/%.o,${SOURCES})
 
+EXEC        = solve_ode.x
 #--------------------------------------------------------------------
 
-all:  $(EXEC)
+all:  bin/$(EXEC)
 
-$(EXEC): $(OBJECTS) 
-	@echo ... linking:
-	$(LINKER) $(LDFLAGS) $(OPTFLAGS) $(CPPFLAGS) $(OBJECTS) -o $@.x
+bin/$(EXEC): $(OBJECTS) 
+	@echo ... linking: 
+	$(LINKER) $(LDFLAGS) $(OPTFLAGS) $(CPPFLAGS) $(OBJECTS) -o $@
 	@echo
 
-%.o : %.cpp
+obj/%.o : src/%.cc include/%.hh
+#out/%.o : src/%.cc 
 	@echo ... compiling $<:
 	$(CC) -c $(CPPFLAGS) $(OPTFLAGS) $< -o $@
 	@echo
 
 depend:
-	$(MAKEDEPEND) $(DEPENDFLAGS) *.cpp
+	$(MAKEDEPEND) $(DEPENDFLAGS) src/*.cc
+
+htmldoc:
+	doxygen
+
+pdfdoc: htmldoc
+	$(MAKE) -C doc/latex pdf
 
 clean:
-	@echo ... cleaning $(OBJECTS)
-	@rm -f $(OBJECTS)
+	@echo ... cleaning $(OBJECTS) $(EXEC)
+	@rm -f bin/* obj/*
 	@echo ... done
 
 cleaner:
-	@echo '... cleaning also *~ and gmon.out'
-	@rm -f $(OBJECTS) *~ gmon.out
+	@echo '... cleaning also *~'
+	@rm -f bin/* obj/* *~ .#*
 	@echo ... done
 
 #-------------------------------------------------------------------
 # DO NOT DELETE
 
-io_utils.o: io_utils.h ode.h van_der_pol.h
-main.o: io_utils.h ode.h van_der_pol.h  
-ode.o: ode.h 
-van_der_pol: van_der_pol.h ode.h
+obj/solve_ode.o: include/ode_solver.hh include/InfoSIRSmf.hh \
+                 include/InfoSIRSpa.hh include/ode_io_utils.hh \
+		 include/convergence.hh include/pa_macros.hh
+
