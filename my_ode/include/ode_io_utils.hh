@@ -35,12 +35,6 @@ int read_comm_line_args(int argc, char* argv[], po::variables_map& vm)
      "file containing ode parameters")
     ("model-params-file,m",po::value<std::string>(),
      "file containing model parameters")
-    ("di-model",
-     "solve di model")
-    ("mf-model",
-     "solve mean field model")
-    ("no-gp-file",
-     "do not write gnuplot script params file")
     ("check-convergence",
      "check for convergence and stop before Tmax")
 
@@ -74,46 +68,24 @@ int read_comm_line_args(int argc, char* argv[], po::variables_map& vm)
     ("Model parameters");
    
   model_options.add_options()
-    ("tau--", po::value<double>(),
-     "disease transmission rate uninformed->uninformed")
-    ("tau+-", po::value<double>(),
-     "disease transmission rate informed->uninformed")
-    ("tau-+", po::value<double>(),
-     "disease transmission rate uninformed->informed")
-    ("tau++", po::value<double>(),
-     "disease transmission rate informed->informed")
-    ("gamma-", po::value<double>(),
-     "recovery rate of uninformed")
-    ("gamma+", po::value<double>(),
-     "recovery rate of informed")
-    ("delta-", po::value<double>(),
-     "loss of immunity rate of uninformed")
-    ("delta+", po::value<double>(),
-     "loss of immunity rate of informed")
     ("alpha", po::value<double>(),
      "information transmission rate")
-    ("nu", po::value<double>(),
-     "information generation rate")
-    ("omega", po::value<double>(),
-     "local information generation rate")
+    ("beta", po::value<double>(),
+     "disease transmission rate")
+    ("gamma", po::value<double>(),
+     "rate of transition stage 1->2")
+    ("delta", po::value<double>(),
+     "loss of immunity rate")
     ("lambda", po::value<double>(),
-     "loss of information rate")
-    ("sigma", po::value<double>(),
-     "ratio between uninformed/uninformed susceptibilities")
-    ("vertices,N", po::value<double>(),
-     "total number of individuals")
-    ("nvars", po::value<int>(),
-     "total number of equations")
-    ("clustering", po::value<double>(),
-     "clustering coefficient value for all coefficients")
-    ("beta--", po::value<double>(),
-     "disease transmission rate uninformed->uninformed")
-    ("beta+-", po::value<double>(),
-     "disease transmission rate informed->uninformed")
-    ("beta-+", po::value<double>(),
-     "disease transmission rate uninformed->informed")
-    ("beta++", po::value<double>(),
-     "disease transmission rate informed->informed")
+     "rate of forgetting")
+    ("omega", po::value<double>(),
+     "rate of information generation")
+    ("rho", po::value<double>(),
+     "fractional loss of information at transmission of forgetting")
+    ("N", po::value<unsigned int>(),
+     "size of the population")
+    ("M", po::value<unsigned int>(),
+     "number of generations to consider")
     ;
   
   // all options
@@ -268,82 +240,26 @@ int init_model_params_from_comm_line(po::variables_map& vm,
 {
   ModelParams* model_params = x.get_model_params(); 
   
-  if (vm.count("tau--")) {
-    model_params->tau[0][0]=vm["tau--"].as<double>();
+  if (vm.count("beta")) {
+    model_params->beta=vm["beta"].as<double>();
   } else {
-    std::cerr << "WARNING: no tau-- given" << std::endl;
+    std::cerr << "WARNING: no beta given" << std::endl;
     std::cerr << "setting to 0" << std::endl;
-    model_params->tau[0][0]=0;
+    model_params->beta=0;
   }
-  if (vm.count("tau+-")) {
-    model_params->tau[1][0]=vm["tau+-"].as<double>();
+  if (vm.count("gamma")) {
+    model_params->gamma=vm["gamma"].as<double>();
   } else {
-    std::cerr << "WARNING: no tau+- given" << std::endl;
+    std::cerr << "WARNING: no gamma given" << std::endl;
     std::cerr << "setting to 0" << std::endl;
-    model_params->tau[1][0]=0;
+    model_params->gamma=0;
   }
-  if (vm.count("tau-+")) {
-    model_params->tau[0][1]=vm["tau-+"].as<double>();
+  if (vm.count("delta")) {
+    model_params->delta=vm["delta"].as<double>();
   } else {
-    std::cerr << "WARNING: no tau-+ given" << std::endl;
+    std::cerr << "WARNING: no delta given" << std::endl;
     std::cerr << "setting to 0" << std::endl;
-    model_params->tau[0][1]=0;
-  }
-  if (vm.count("tau++")) {
-    model_params->tau[1][1]=vm["tau++"].as<double>();
-  } else {
-    std::cerr << "WARNING: no tau++ given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->tau[1][1]=0;
-  }
-  if (vm.count("gamma-")) {
-    model_params->gamma[0]=vm["gamma-"].as<double>();
-  } else {
-    std::cerr << "WARNING: no gamma- given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->gamma[0]=0;
-  }
-  if (vm.count("gamma+")) {
-    model_params->gamma[1]=vm["gamma+"].as<double>();
-  } else {
-    std::cerr << "WARNING: no gamma+ given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->gamma[1]=0;
-  }
-  if (vm.count("delta-")) {
-    model_params->delta[0]=vm["delta-"].as<double>();
-  } else {
-    std::cerr << "WARNING: no delta- given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->delta[0]=0;
-  }
-  if (vm.count("delta+")) {
-    model_params->delta[1]=vm["delta+"].as<double>();
-  } else {
-    std::cerr << "WARNING: no delta+ given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->delta[1]=0;
-  }
-  if (vm.count("alpha")) {
-    model_params->alpha=vm["alpha"].as<double>();
-  } else {
-    std::cerr << "WARNING: no alpha given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->alpha=0;
-  }
-  if (vm.count("nu")) {
-    model_params->nu=vm["nu"].as<double>();
-  } else {
-    std::cerr << "WARNING: no nu given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->nu=0;
-  }
-  if (vm.count("omega")) {
-    model_params->omega=vm["omega"].as<double>();
-  } else {
-    std::cerr << "WARNING: no omega given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->omega=0;
+    model_params->delta=0;
   }
   if (vm.count("lambda")) {
     model_params->lambda=vm["lambda"].as<double>();
@@ -352,94 +268,37 @@ int init_model_params_from_comm_line(po::variables_map& vm,
     std::cerr << "setting to 0" << std::endl;
     model_params->lambda=0;
   }
-  if (vm.count("sigma")) {
-    model_params->lambda=vm["sigma"].as<double>();
-  }
-  if (vm.count("vertices")) {
-    model_params->N=vm["vertices"].as<double>();
+  if (vm.count("omega")) {
+    model_params->omega=vm["omega"].as<double>();
   } else {
-    std::cerr << "ERROR: no N given" << std::endl;
-    return 1;
-  }
-  if (vm.count("nvars")) {
-    model_params->nvars=vm["nvars"].as<int>();
-  }
-  if (vm.count("clustering")) {
-    int i,j,k;
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
-        for (k = 0; k < 3; k++)
-          model_params->C[i][j][k] = vm["clustering"].as<double>();
-  } else {
-    std::cerr << "WARNING: no cluster-coefficient given" << std::endl;
+    std::cerr << "WARNING: no omega given" << std::endl;
     std::cerr << "setting to 0" << std::endl;
-    int i,j,k;
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
-        for (k = 0; k < 3; k++)
-          model_params->C[i][j][k] = 0.0;
+    model_params->omega=0;
   }
-  
- 
-  if (vm.count("beta--")) 
-    model_params->tau[0][0]=vm["beta--"].as<double>();
-  
-  if (vm.count("beta+-")) 
-    model_params->tau[1][0]=vm["beta+-"].as<double>();
-
-  if (vm.count("beta-+")) 
-    model_params->tau[0][1]=vm["beta-+"].as<double>();
-  
-  if (vm.count("beta++")) 
-    model_params->tau[1][1]=vm["beta++"].as<double>();
+  if (vm.count("rho")) {
+    model_params->rho=vm["rho"].as<double>();
+  } else {
+    std::cerr << "WARNING: no rho given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->rho=0;
+  }
+  if (vm.count("M")) {
+    model_params->M=vm["M"].as<unsigned int>();
+  } else {
+    std::cerr << "WARNING: no M given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->M=0;
+  }
+  if (vm.count("N")) {
+    model_params->N=vm["N"].as<unsigned int>();
+  } else {
+    std::cerr << "WARNING: no N given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->N=0;
+  }
+  model_params->nvars=(model_params->M+1) * 3;
 
   return 0;
 }
-
-//------------------------------------------------------------
-
-int write_gp_script(std::string fname, double Qd, double Qi, double Qb,
-                    double tmax, double N, bool verbose)
-{   
-  std::ofstream gpFile;
-  std::string gpFileName = fname + ".gp";
-  if (verbose) std::cout << "... writing gnuplot output file: "
-                         << gpFileName;
-   
-  try {
-    gpFile.open(gpFileName.c_str(), std::ios::out);
-  }
-   
-  catch (std::exception &e) {
-    std::cerr << "... unable to open gnuplot output file " 
-              << gpFileName << std::endl;
-    std::cerr << "... Standard exception: " << e.what() << std::endl;      
-    return 1; 
-  }
-   
-  gpFile << "### model parameters generated by ode_solver" << std::endl;
-  gpFile << "N=" << N << std::endl;
-  gpFile << "Qd=" << Qd << std::endl;
-  gpFile << "Qi=" << Qi << std::endl;
-  gpFile << "Qb=" << Qb << std::endl;
-  gpFile << "Tmax=" << tmax << std::endl;
-  gpFile << "### end of model parameters" << std::endl << std::endl;
-   
-  try {
-    gpFile.close();
-  }
-   
-  catch (std::exception &e) {
-    std::cerr << "... unable to close gnuplot output file " 
-              << gpFileName << std::endl;
-    std::cerr << "... Standard exception: " << e.what() << std::endl;      
-    return 1; 
-  }
-   
-  if (verbose) std::cout << " ... done\n";
-  return 0;   
-}
-
-//------------------------------------------------------------
 
 #endif // ODE_IO_UTILS_H
