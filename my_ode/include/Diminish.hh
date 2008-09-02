@@ -117,11 +117,13 @@ struct Diminish
 
 
       rhs[Sindex] = -(1-pow(rho, i))*beta*S_i/N*IfullSum +
+//      rhs[Sindex] = -(pow(rho, i))*beta*S_i/N*IfullSum +
         delta*R_i -
         alpha*S_i/N*Nsum +
         alpha*N_im1/N*Ssum + 
         lambda*S_im1;
       rhs[Iindex] = +(1-pow(rho, i))*beta*S_i/N*IfullSum -
+//      rhs[Iindex] = +(pow(rho, i))*beta*S_i/N*IfullSum -
         gamma*I_i -
         alpha*I_i/N*Nsum +
         alpha*N_im1/N*Isum +
