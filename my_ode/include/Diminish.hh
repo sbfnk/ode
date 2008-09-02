@@ -92,9 +92,9 @@ struct Diminish
       Ssum += y[3*i];
       Isum += y[3*i+1];
       Rsum += y[3*i+2];
-      std::cout << "S[" << i << "]=" << y[3*i] << "  ";
-      std::cout << "I[" << i << "]=" << y[3*i+1] << "  ";
-      std::cout << "R[" << i << "]=" << y[3*i+2] << std::endl;
+//      std::cout << "S[" << i << "]=" << y[3*i] << "  ";
+//      std::cout << "I[" << i << "]=" << y[3*i+1] << "  ";
+//      std::cout << "R[" << i << "]=" << y[3*i+2] << std::endl;
     }
 
     std::cout << "S=" << Ssum << "  ";
@@ -144,9 +144,9 @@ struct Diminish
         rhs[Iindex] -= omega * I_i;
       }
 
-      std::cout << "S'[" << i << "]=" << rhs[Sindex] << " ";
-      std::cout << "I'[" << i << "]=" << rhs[Iindex] << " ";
-      std::cout << "R'[" << i << "]=" << rhs[Rindex] << std::endl;
+//      std::cout << "S'[" << i << "]=" << rhs[Sindex] << " ";
+//      std::cout << "I'[" << i << "]=" << rhs[Iindex] << " ";
+//      std::cout << "R'[" << i << "]=" << rhs[Rindex] << std::endl;
 
       Nsum += S_i + I_i + R_i;
       Ssum -= S_i;
