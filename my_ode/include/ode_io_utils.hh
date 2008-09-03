@@ -240,6 +240,13 @@ int init_model_params_from_comm_line(po::variables_map& vm,
 {
   ModelParams* model_params = x.get_model_params(); 
   
+  if (vm.count("alpha")) {
+    model_params->alpha=vm["alpha"].as<double>();
+  } else {
+    std::cerr << "WARNING: no alpha given" << std::endl;
+    std::cerr << "setting to 0" << std::endl;
+    model_params->alpha=0;
+  }
   if (vm.count("beta")) {
     model_params->beta=vm["beta"].as<double>();
   } else {
