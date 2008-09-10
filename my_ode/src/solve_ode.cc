@@ -4,7 +4,8 @@
 
 #include "ode_solver.hh"
 //#include "Sleep.hh"
-#include "Diminish.hh"
+//#include "Diminish.hh"
+#include "Chaos.hh"
 #include "ode_io_utils.hh"
 
 //------------------------------------------------------------
@@ -16,7 +17,8 @@ int main(int argc, char* argv[])
   
   // ode solvers
 //  ode::OdeSolver<SleepParams, Sleep> solver;
-  ode::OdeSolver<DiminishParams, Diminish> solver;
+//  ode::OdeSolver<DiminishParams, Diminish> solver;
+  ode::OdeSolver<ChaosParams, Chaos> solver;
   
   // variables map for command line args
   po::variables_map vm;

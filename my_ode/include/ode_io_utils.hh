@@ -76,16 +76,18 @@ int read_comm_line_args(int argc, char* argv[], po::variables_map& vm)
      "rate of transition stage 1->2")
     ("delta", po::value<double>(),
      "loss of immunity rate")
-    ("lambda", po::value<double>(),
-     "rate of forgetting")
-    ("omega", po::value<double>(),
-     "rate of information generation")
-    ("rho", po::value<double>(),
-     "fractional loss of information at transmission of forgetting")
+//     ("lambda", po::value<double>(),
+//      "rate of forgetting")
+//     ("omega", po::value<double>(),
+//      "rate of information generation")
+//     ("rho", po::value<double>(),
+//      "fractional loss of information at transmission of forgetting")
     ("N", po::value<unsigned int>(),
      "size of the population")
-    ("M", po::value<unsigned int>(),
-     "number of generations to consider")
+//     ("M", po::value<unsigned int>(),
+//      "number of generations to consider")
+    ("n", po::value<unsigned int>(),
+     "power for I")
     ;
   
   // all options
@@ -268,33 +270,40 @@ int init_model_params_from_comm_line(po::variables_map& vm,
     std::cerr << "setting to 0" << std::endl;
     model_params->delta=0;
   }
-  if (vm.count("lambda")) {
-    model_params->lambda=vm["lambda"].as<double>();
+//   if (vm.count("lambda")) {
+//     model_params->lambda=vm["lambda"].as<double>();
+//   } else {
+//     std::cerr << "WARNING: no lambda given" << std::endl;
+//     std::cerr << "setting to 0" << std::endl;
+//     model_params->lambda=0;
+//   }
+//   if (vm.count("omega")) {
+//     model_params->omega=vm["omega"].as<double>();
+//   } else {
+//     std::cerr << "WARNING: no omega given" << std::endl;
+//     std::cerr << "setting to 0" << std::endl;
+//     model_params->omega=0;
+//   }
+//   if (vm.count("rho")) {
+//     model_params->rho=vm["rho"].as<double>();
+//   } else {
+//     std::cerr << "WARNING: no rho given" << std::endl;
+//     std::cerr << "setting to 0" << std::endl;
+//     model_params->rho=0;
+//   }
+//   if (vm.count("M")) {
+//     model_params->M=vm["M"].as<unsigned int>();
+//   } else {
+//     std::cerr << "WARNING: no M given" << std::endl;
+//     std::cerr << "setting to 0" << std::endl;
+//     model_params->M=0;
+//   }
+  if (vm.count("n")) {
+    model_params->n=vm["n"].as<unsigned int>();
   } else {
-    std::cerr << "WARNING: no lambda given" << std::endl;
+    std::cerr << "WARNING: no n given" << std::endl;
     std::cerr << "setting to 0" << std::endl;
-    model_params->lambda=0;
-  }
-  if (vm.count("omega")) {
-    model_params->omega=vm["omega"].as<double>();
-  } else {
-    std::cerr << "WARNING: no omega given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->omega=0;
-  }
-  if (vm.count("rho")) {
-    model_params->rho=vm["rho"].as<double>();
-  } else {
-    std::cerr << "WARNING: no rho given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->rho=0;
-  }
-  if (vm.count("M")) {
-    model_params->M=vm["M"].as<unsigned int>();
-  } else {
-    std::cerr << "WARNING: no M given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->M=0;
+    model_params->n=0;
   }
   if (vm.count("N")) {
     model_params->N=vm["N"].as<unsigned int>();
@@ -303,7 +312,8 @@ int init_model_params_from_comm_line(po::variables_map& vm,
     std::cerr << "setting to 0" << std::endl;
     model_params->N=0;
   }
-  model_params->nvars=(model_params->M+1) * 3;
+//   model_params->nvars=(model_params->M+1) * 3;
+  model_params->nvars=3;
 
   return 0;
 }
