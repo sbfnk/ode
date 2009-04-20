@@ -175,13 +175,14 @@ bool SleepParams::read_sigma_file(std::string fileName)
       std::vector<std::string> strs;
       boost::split(strs, line, boost::is_any_of("\t "));
       if (strs.size() > 1) {
-        double time, sigma;
-        std::istringstream iss;
-        iss.str(strs[0]);
-        iss >> time;
-        iss.str(strs[1]);
-        iss >> sigma;
-        sigma_vector.push_back(std::make_pair(time, sigma));
+        double time;
+        double line_sigma;
+        std::istringstream iss1,iss2;
+        iss1.str(strs[0]);
+        iss1 >> time;
+        iss2.str(strs[1]);
+        iss2 >> line_sigma;
+        sigma_vector.push_back(std::make_pair(time, line_sigma));
       }
     }
     next_sigma=0;
@@ -232,19 +233,25 @@ struct Sleep
   // rhs function
   static int rhs_eval (double t, const double y[], double rhs[], void* params)
   {         
-    SleepParams p = *(static_cast<SleepParams*>(params));
+    SleepParams* p = static_cast<SleepParams*>(params);
     
     // local readable short variables
-    double beta=p.beta, gamma=p.gamma, delta=p.delta;
-    double rho=p.rho, sigma=p.sigma, epsilon=p.epsilon;
-    unsigned int N=p.N;
-    std::vector<std::pair<double, double> > sigma_vector=p.sigma_vector;
-    unsigned int next_sigma=p.next_sigma;
+    double beta=p->beta, gamma=p->gamma, delta=p->delta;
+    double rho=p->rho, sigma=p->sigma, epsilon=p->epsilon;
+    unsigned int N=p->N;
+    std::vector<std::pair<double, double> > sigma_vector=p->sigma_vector;
+    unsigned int next_sigma=p->next_sigma;
 
     if (sigma_vector.size() > 0) {
       if (sigma_vector[next_sigma].first < t) {
+        std::cout << "change sigma " << next_sigma
+                  << " "
+                  << sigma_vector[next_sigma].first
+                  << " "
+                  << sigma_vector[next_sigma].second << std::endl;
         sigma = sigma_vector[next_sigma].second;
         ++next_sigma;
+        p->next_sigma = next_sigma;
       }
     }
 
