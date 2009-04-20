@@ -2,7 +2,7 @@
 file-id      = test
 ic-file      = sleep.ic
 t0           = 0
-tmax         = 100
+tmax         = 140
 dt           = 1
 nsave        = 1
 step-algo    = rkf45
