@@ -70,7 +70,7 @@ po::options_description SleepParams::get_command_line_params()
      "death rate of infected")
     ("rho", po::value<double>(),
      "rate of recognition in the absence of surveillance")
-    ("epsilon", po::value<double>(),
+    ("epsilon", po::value<double>()->default_value(1.),
      "efficiency of screening")
     ("sigma", po::value<double>(),
      "rate of screening")
@@ -174,19 +174,23 @@ bool SleepParams::read_sigma_file(std::string fileName)
       getline(file, line);
       std::vector<std::string> strs;
       boost::split(strs, line, boost::is_any_of("\t "));
-      double time, sigma;
-      std::istringstream iss;
-      iss.str(strs[0]);
-      iss >> time;
-      iss.str(strs[1]);
-      iss >> sigma;
-      sigma_vector.push_back(std::make_pair(time, sigma));
+      if (strs.size() > 1) {
+        double time, sigma;
+        std::istringstream iss;
+        iss.str(strs[0]);
+        iss >> time;
+        iss.str(strs[1]);
+        iss >> sigma;
+        sigma_vector.push_back(std::make_pair(time, sigma));
+      }
     }
     next_sigma=0;
     sigma=0;
     
     file.close();
   }
+
+  return true;
   
 }
 
