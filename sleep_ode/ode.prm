@@ -1,8 +1,9 @@
 # Ode parameters: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-file-id      = try1
-ic-file      = try1.ode.init
-tmax         = 280
-dt           = 1e-6
+file-id      = test
+ic-file      = sleep.ic
+t0           = 0
+tmax         = 100
+dt           = 1
 nsave        = 1
 step-algo    = rkf45
 abs-tol      = 1e-8

@@ -52,6 +52,7 @@ namespace ode
     { strcpy(OdeSolver::step_algo, step_algo); }
     void set_abs_tol(const double abs_tol) { OdeSolver::abs_tol = abs_tol; }
     void set_rel_tol(const double rel_tol) { OdeSolver::rel_tol = rel_tol; } 
+    void set_t0(const double t0) { OdeSolver::t0 = t0; }
     void set_tmax(const double tmax) { OdeSolver::tmax = tmax; }
     void set_dt(const double dt) { OdeSolver::dt = dt; }
     void set_convergence_check(const bool b) { OdeSolver::check_if_converged = b; }
@@ -70,6 +71,7 @@ namespace ode
     const char* get_step_algo() const { return step_algo; }
     double get_abs_tol() const { return abs_tol; }
     double get_rel_tol() const { return rel_tol; }
+    double get_t0() const { return t0; }
     double get_tmax() const { return tmax; }
     double get_dt() const { return dt; }
     bool get_convergence_check() const { return check_if_converged; }
@@ -105,7 +107,7 @@ namespace ode
     size_t nsave;          // save solution every nsave time steps
     char step_algo[MAX_STR_LEN]; // name of stepping algorithm type
     double abs_tol, rel_tol;     // absolute/relative tolerances
-    double tmax, dt;             // ...
+    double t0, tmax, dt;             // ...
          
     // output file
     char file_id[MAX_STR_LEN];      // file identifier 
@@ -133,7 +135,8 @@ namespace ode
    
   template <class ModelParams, class ModelDerivs>
   OdeSolver<ModelParams, ModelDerivs>::OdeSolver() : nsave(1), abs_tol(1e-6),
-                                                     rel_tol(1e-6), tmax(10), dt(1e-6),
+                                                     rel_tol(1e-6), t0(0),
+                                                     tmax(10), dt(1e-6),
                                                      verbose(false),
                                                      check_if_converged(false)
   {
@@ -151,7 +154,7 @@ namespace ode
   template <class ModelParams, class ModelDerivs>
   OdeSolver<ModelParams, ModelDerivs>::~OdeSolver()
   {
-    delete [] model_params;
+    delete model_params;
     delete [] rhs;
       
   } // ~OdeSolver 
@@ -247,8 +250,8 @@ namespace ode
     gsl_odeiv_system sys =
       {&(model_derivs.rhs_eval), NULL, nv, static_cast<void*>(model_params) };
       
-    // write t=0 rhs
-    t=0;
+    // write t=t0 rhs
+    t=t0;
     write_rhs(data.fs, t);
       
     size_t o_count = 1;
@@ -385,6 +388,7 @@ namespace ode
            << "step type .......... " << x.get_step_algo() << std::endl
            << "abs tol ............ " << x.get_abs_tol() << std::endl
            << "rel tol ............ " << x.get_rel_tol() << std::endl
+           << "t0.. ............... " << x.get_t0() << std::endl
            << "tmax ............... " << x.get_tmax() << std::endl
            << "dt ................. " << x.get_dt() << std::endl
            << "nsave .............. " << x.get_nsave() << std::endl
@@ -412,6 +416,7 @@ namespace ode
     nsave   = x.get_nsave();
     abs_tol = x.get_abs_tol();
     rel_tol = x.get_rel_tol();
+    t0      = x.get_t0();
     tmax    = x.get_tmax();
     dt      = x.get_dt();
     verbose = x.get_verbose();

@@ -3,9 +3,7 @@
 #include <boost/program_options.hpp>
 
 #include "ode_solver.hh"
-//#include "Sleep.hh"
-//#include "Diminish.hh"
-#include "Chaos.hh"
+#include "Sleep.hh"
 #include "ode_io_utils.hh"
 
 //------------------------------------------------------------
@@ -15,16 +13,14 @@ int main(int argc, char* argv[])
   // some constants
   const std::string suffix = ".dat" ;
   
-  // ode solvers
-//  ode::OdeSolver<SleepParams, Sleep> solver;
-//  ode::OdeSolver<DiminishParams, Diminish> solver;
-  ode::OdeSolver<ChaosParams, Chaos> solver;
+  // ode solver
+  ode::OdeSolver<SleepParams, Sleep> solver;
   
   // variables map for command line args
   po::variables_map vm;
   
   // reading command line args
-  if (read_comm_line_args(argc, argv, vm)) // something is wrong - return 1
+  if (read_comm_line_args(argc, argv, vm, solver)) // something is wrong - return 1
     return 1;
   
   // initializing ode parameters

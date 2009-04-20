@@ -20,9 +20,13 @@ namespace fio = file_io_utils;
 
 //------------------------------------------------------------
 
-int read_comm_line_args(int argc, char* argv[], po::variables_map& vm)
+template <class ModelParams, class ModelDerivs>
+int read_comm_line_args(int argc, char* argv[], po::variables_map& vm,
+                        ode::OdeSolver<ModelParams, ModelDerivs>& x)
 {
    
+  ModelParams* model_params = x.get_model_params(); 
+
   // checking command line arguments
   po::options_description command_line_options
     ("Usage: ode_solve -p ode_params_file -m model_params_file [options]...\n\nAllowed options");
@@ -49,7 +53,7 @@ int read_comm_line_args(int argc, char* argv[], po::variables_map& vm)
      "file id for output files")
     ("ic-file", po::value<std::string>(),
      "initial conditions file")
-    ("t0", po::value<double>(),
+    ("t0", po::value<double>()->default_value(0.),
      "starting time")
     ("tmax", po::value<double>(),
      "stopping time")
@@ -67,23 +71,8 @@ int read_comm_line_args(int argc, char* argv[], po::variables_map& vm)
 
   // model command line options
   po::options_description model_options
-    ("Model parameters");
+    = model_params->get_command_line_params();
    
-  model_options.add_options()
-    ("alpha", po::value<double>(),
-     "information transmission rate")
-    ("beta", po::value<double>(),
-     "disease transmission rate")
-    ("gamma", po::value<double>(),
-     "rate of transition stage 1->2")
-    ("delta", po::value<double>(),
-     "loss of immunity rate")
-    ("N", po::value<unsigned int>(),
-     "size of the population")
-    ("n", po::value<unsigned int>(),
-     "power for I")
-    ;
-  
   // all options
   po::options_description all_options;
   all_options.add(command_line_options).add(ode_options).add(model_options);
@@ -174,6 +163,13 @@ int init_ode_params_from_comm_line(po::variables_map& vm,
     std::cerr << "ERROR: no ic-file given" << std::endl;
     return 1;
   }   
+  if (vm.count("t0")) {
+    // t0 
+    x.set_t0(vm["t0"].as<double>());
+  } else {
+    std::cerr << "ERROR: no t0 given" << std::endl;
+    return 1;
+  }
   if (vm.count("tmax")) {
     // tmax 
     x.set_tmax(vm["tmax"].as<double>());
@@ -234,80 +230,8 @@ template <class ModelParams, class ModelDerivs>
 int init_model_params_from_comm_line(po::variables_map& vm,
                                      ode::OdeSolver<ModelParams, ModelDerivs>& x)
 {
-  ModelParams* model_params = x.get_model_params(); 
-  
-  if (vm.count("alpha")) {
-    model_params->alpha=vm["alpha"].as<double>();
-  } else {
-    std::cerr << "WARNING: no alpha given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->alpha=0;
-  }
-  if (vm.count("beta")) {
-    model_params->beta=vm["beta"].as<double>();
-  } else {
-    std::cerr << "WARNING: no beta given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->beta=0;
-  }
-  if (vm.count("gamma")) {
-    model_params->gamma=vm["gamma"].as<double>();
-  } else {
-    std::cerr << "WARNING: no gamma given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->gamma=0;
-  }
-  if (vm.count("delta")) {
-    model_params->delta=vm["delta"].as<double>();
-  } else {
-    std::cerr << "WARNING: no delta given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->delta=0;
-  }
-//   if (vm.count("lambda")) {
-//     model_params->lambda=vm["lambda"].as<double>();
-//   } else {
-//     std::cerr << "WARNING: no lambda given" << std::endl;
-//     std::cerr << "setting to 0" << std::endl;
-//     model_params->lambda=0;
-//   }
-//   if (vm.count("omega")) {
-//     model_params->omega=vm["omega"].as<double>();
-//   } else {
-//     std::cerr << "WARNING: no omega given" << std::endl;
-//     std::cerr << "setting to 0" << std::endl;
-//     model_params->omega=0;
-//   }
-//   if (vm.count("rho")) {
-//     model_params->rho=vm["rho"].as<double>();
-//   } else {
-//     std::cerr << "WARNING: no rho given" << std::endl;
-//     std::cerr << "setting to 0" << std::endl;
-//     model_params->rho=0;
-//   }
-//   if (vm.count("M")) {
-//     model_params->M=vm["M"].as<unsigned int>();
-//   } else {
-//     std::cerr << "WARNING: no M given" << std::endl;
-//     std::cerr << "setting to 0" << std::endl;
-//     model_params->M=0;
-//   }
-  if (vm.count("n")) {
-    model_params->n=vm["n"].as<unsigned int>();
-  } else {
-    std::cerr << "WARNING: no n given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->n=0;
-  }
-  if (vm.count("N")) {
-    model_params->N=vm["N"].as<unsigned int>();
-  } else {
-    std::cerr << "WARNING: no N given" << std::endl;
-    std::cerr << "setting to 0" << std::endl;
-    model_params->N=0;
-  }
-//   model_params->nvars=(model_params->M+1) * 3;
-  model_params->nvars=3;
+  ModelParams* model_params = x.get_model_params();
+  model_params->init_model_params(vm);
 
   return 0;
 }
