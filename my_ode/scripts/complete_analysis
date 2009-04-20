@@ -14,42 +14,43 @@ if [ ! -f "$FILENAME" ] ; then
 fi
 
 if [ -z $RHO ] ; then
-  RHO=0.9
+  RHO=0.8
 fi
 
 if [ -z $N ] ; then 
-  N=1
+  N=10000
 fi
 
 SUMSNAME=`basename $FILENAME .dat`.sums.dat
 INFONAME=`basename $FILENAME .dat`.info.dat
-HISTDIR=Hists_`basename $FILENAME .dat`
+#HISTDIR=Hists_`basename $FILENAME .dat`
 
-mkdir $HISTDIR
+#mkdir $HISTDIR
 
 echo Summing up states...
-$CODEDIR/funk/my_ode/analyse_ode_dat.pl $FILENAME $RHO > $SUMSNAME
+$CODEDIR/my_ode/analyse_ode_dat.pl $FILENAME $RHO > $SUMSNAME
 echo Generating plot...
-$CODEDIR/funk/my_ode/plot_ode $SUMSNAME
+$CODEDIR/my_ode/plot_ode $SUMSNAME
+$CODEDIR/my_ode/plot_ode2 $SUMSNAME
 
-ENDTIME=`tail -1 $FILENAME | awk '{print $1}' | sed 's/\..*//g'`
+ENDTIME=`tail -1 $FILENAME | awk '{print $1}'`
 
-echo Generating information distributions...
-for ((i=0;i<=$ENDTIME;i++))
-do
-  $CODEDIR/funk/my_ode/info_dist.pl $FILENAME $i > $HISTDIR/hist$i.dat
-done
-for ((i=0;i<10;i++))
-do
-  mv $HISTDIR/hist$i.dat $HISTDIR/hist00$i.dat
-done
-for ((i=10;i<100;i++))
-do
-  mv $HISTDIR/hist$i.dat $HISTDIR/hist0$i.dat
-done
-echo Generating plots...
-for I in $HISTDIR/*.dat
-do
-  $CODEDIR/funk/my_ode/plot_hist $I $N
-done
+#echo Generating information distributions...
+#for ((i=0;i<=$ENDTIME;i++))
+#do
+#  $CODEDIR/my_ode/info_dist.pl $FILENAME $i > $HISTDIR/hist$i.dat
+#done
+#for ((i=0;i<10;i++))
+#do
+#  mv $HISTDIR/hist$i.dat $HISTDIR/hist00$i.dat
+#done
+#for ((i=10;i<100;i++))
+#do
+#  mv $HISTDIR/hist$i.dat $HISTDIR/hist0$i.dat
+#done
+#echo Generating plots...
+#for I in $HISTDIR/*.dat
+#do
+#  $CODEDIR/my_ode/plot_hist $I $N
+#done
 echo ...done
