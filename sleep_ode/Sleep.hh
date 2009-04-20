@@ -242,15 +242,11 @@ struct Sleep
     std::vector<std::pair<double, double> > sigma_vector=p->sigma_vector;
     unsigned int next_sigma=p->next_sigma;
 
-    if (sigma_vector.size() > 0) {
+    if (sigma_vector.size() > next_sigma) {
       if (sigma_vector[next_sigma].first < t) {
-        std::cout << "change sigma " << next_sigma
-                  << " "
-                  << sigma_vector[next_sigma].first
-                  << " "
-                  << sigma_vector[next_sigma].second << std::endl;
         sigma = sigma_vector[next_sigma].second;
         ++next_sigma;
+        p->sigma = sigma;
         p->next_sigma = next_sigma;
       }
     }
