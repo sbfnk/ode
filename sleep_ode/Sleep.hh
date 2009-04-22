@@ -251,8 +251,8 @@ struct Sleep
       }
     }
 
-    rhs[0] = -beta*y[0]*y[1]/N + (rho+sigma+gamma)*y[1];
-    rhs[1] = beta*y[0]*y[1]/N - (rho+sigma+gamma)*y[1];
+    rhs[0] = -beta*y[0]*y[1]/N + (rho+epsilon*sigma+gamma)*y[1];
+    rhs[1] = beta*y[0]*y[1]/N - (rho+epsilon*sigma+gamma)*y[1];
     rhs[2] = (rho+sigma)*y[1] - delta*y[2];
 
     return GSL_SUCCESS;         
