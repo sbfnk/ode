@@ -6,7 +6,7 @@ OPTFLAGS   = -O3
 #OPTFLAGS   = 
 
 LINKER      = g++
-LDFLAGS   = -lgsl -lgslcblas -lm -lboost_program_options
+LDFLAGS   = -lgsl -lgslcblas -lm -lboost_program_options-mt
 
 #------ Intel icpc  --------------------------------------------------
 
