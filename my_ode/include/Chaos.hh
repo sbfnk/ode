@@ -16,9 +16,9 @@ struct ChaosParams
   // No. of equations
   unsigned int nvars;
   
-  double alpha, beta, gamma, delta, n;
+  double alpha, beta, gamma, delta;
 
-  unsigned int N;
+  unsigned int N, n;
   
   // overloading operator<<
   friend std::ostream& operator <<
