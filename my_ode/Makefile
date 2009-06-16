@@ -1,26 +1,10 @@
 #------ GNU g++ -----------------------------------------------------
 
 CC         = g++
-#CPPFLAGS     = -Wall -g  
-OPTFLAGS   = -O3  
-#OPTFLAGS   = 
+CPPFLAGS     = -Wall -O3 -g -I${CODEDIR} -Iinclude
 
 LINKER      = g++
-LDFLAGS   = -lgsl -lgslcblas -lm -lboost_program_options
-
-#------ Intel icpc  --------------------------------------------------
-
-#CC         = icpc
-#CPPFLAGS     = -g -Wall
-#OPTFLAGS   = -O3 -ipo -fnsplit -ip -ftz -funroll-loops
-#OPTFLAGS   = -static
-#OPTFLAGS   = -fast / -mp / 
-#OPTFLAGS   = 
-
-#LINKER      = icpc
-#LDFLAGS   = -lm -lscs -lmkl 
-#LDFLAGS   = -i-dynamic/static
-#LDFLAGS     = 
+LDFLAGS     = -lboost_program_options -lgsl 
 
 #--------------------------------------------------------------------
 
@@ -29,43 +13,47 @@ DEPENDFLAGS = -m
 
 #--------------------------------------------------------------------
 
-#SOURCES     = mfa_solve.cc ode.cc ode_io_utils.cc mfa.cc 
-#OBJECTS     = $(SOURCES:.cc=.o)
-
-SOURCES     = solve_ode.cc 
-OBJECTS     = $(SOURCES:.cc=.o)
+SOURCES     = solve_ode.cc
+OBJECTS     = $(patsubst %.cc,out/%.o,${SOURCES})
 
 EXEC        = solve_ode.x
 #--------------------------------------------------------------------
 
-all:  $(EXEC)
+all: bin/$(EXEC)
 
-$(EXEC): $(OBJECTS) 
-	@echo ... linking:
+bin/$(EXEC): $(OBJECTS) 
+	@echo ... linking $<: 
+	@echo $(OBJECTS)
 	$(LINKER) $(LDFLAGS) $(OPTFLAGS) $(CPPFLAGS) $(OBJECTS) -o $@
 	@echo
 
-%.o : %.cc
+out/%.o: src/%.cc include/%.hh
 	@echo ... compiling $<:
 	$(CC) -c $(CPPFLAGS) $(OPTFLAGS) $< -o $@
 	@echo
 
 depend:
-	$(MAKEDEPEND) $(DEPENDFLAGS) $(SOURCES)
+	$(MAKEDEPEND) $(DEPENDFLAGS) src/*.cc
+
+htmldoc:
+	doxygen
+
+pdfdoc: htmldoc
+	$(MAKE) -C doc/latex pdf
 
 clean:
-	@echo ... cleaning $(OBJECTS)
-	@rm -f $(OBJECTS)
+	@echo ... cleaning $(OBJECTS) $(EXEC)
+	@rm -f bin/* out/*
 	@echo ... done
 
 cleaner:
-	@echo '... cleaning also *~, *.x, gmon.out and '$(EXEC)
-	@rm -f $(OBJECTS) *~ *.x gmon.out $(EXEC)
+	@echo '... cleaning also *~'
+	@rm -f bin/* out/* *~ .#*
 	@echo ... done
 
 #-------------------------------------------------------------------
 # DO NOT DELETE
 
-solve_ode.o: file_io.hh Sleep.hh pa_macros.hh \
-             ode_solver.hh ode_io_utils.hh convergence.hh \
-             Diminish.hh
+#out/solve_ode.o: include/file_io.hh include/Sleep.hh include/pa_macros.hh \
+#                 include/ode_solver.hh include/ode_io_utils.hh include/convergence.hh \
+#                 include/Diminish.hh include/InfoSIRSmf.hh

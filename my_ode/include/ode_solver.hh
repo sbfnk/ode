@@ -10,17 +10,12 @@
 #include <sstream>
 #include <exception>
 #include <gsl/gsl_errno.h>
-#include <gsl/gsl_matrix.h>
 #include <gsl/gsl_odeiv.h>
 
-#include "file_io.hh"
 #include "convergence.hh"
 
 //------------------------------------------------------------
 
-const size_t MAX_STR_LEN=128; 
-
-namespace fio = file_io_utils;
 namespace cv = convergence;
 
 //------------------------------------------------------------
@@ -31,257 +26,276 @@ namespace ode
   // declarations (needed for template friend function
   // see C++ FAQ lite [35.16]:
   // http://www.parashift.com/c++-faq-lite/templates.html
-   
-  template <class ModelParams, class ModelDerivs> class OdeSolver;
-  template <class ModelParams, class ModelDerivs> std::ostream& operator<<
-    (std::ostream& os, const OdeSolver<ModelParams, ModelDerivs>& x);
-   
+  
+  template <class Params, class Eqs>
+  class OdeSolver;
+
+  template <class Params, class Eqs>
+  std::ostream& operator<<
+    (std::ostream& os, const OdeSolver<Params, Eqs>& x);
+  
   //------------------------------------------------------------
-   
-  template <class ModelParams, class ModelDerivs> class OdeSolver
+  
+  template <class Params, class Eqs>
+  class OdeSolver
   {
   public:
-         
+    
     // constructors and destructors 
     OdeSolver();
     ~OdeSolver();
-         
+    
     // mutators 
     void set_nsave(const size_t nsave) { OdeSolver::nsave = nsave; }
-    void set_step_algo(const char *step_algo)
-    { strcpy(OdeSolver::step_algo, step_algo); }
+    void set_step_algo(std::string step_algo)
+    { OdeSolver::step_algo = step_algo; }
     void set_abs_tol(const double abs_tol) { OdeSolver::abs_tol = abs_tol; }
     void set_rel_tol(const double rel_tol) { OdeSolver::rel_tol = rel_tol; } 
     void set_tmax(const double tmax) { OdeSolver::tmax = tmax; }
     void set_dt(const double dt) { OdeSolver::dt = dt; }
-    void set_convergence_check(const bool b) { OdeSolver::check_if_converged = b; }
-    void set_file_id(const char *file_id)
-    { std::strcpy(OdeSolver::file_id, file_id); }
-    void set_output_file_name(const char *output_file_name)
-    { std::strcpy(OdeSolver::output_file_name, output_file_name); }
-    void set_ic_file_name(const char *ic_file_name)
-    { std::strcpy(OdeSolver::ic_file_name, ic_file_name); } 
+    void set_convergence_check(const bool b)
+    { OdeSolver::check_if_converged = b; }
+    void set_file_id(std::string file_id) { OdeSolver::file_id = file_id; }
     void set_rhs(double *rhs_ic) { OdeSolver::rhs = rhs_ic; }
     void set_verbose(const bool verbose)
     { OdeSolver::verbose = verbose; }
-         
+    
     // accessors 
     size_t get_nsave() const { return nsave; }
-    const char* get_step_algo() const { return step_algo; }
+    std::string get_step_algo() const { return step_algo; }
     double get_abs_tol() const { return abs_tol; }
     double get_rel_tol() const { return rel_tol; }
     double get_tmax() const { return tmax; }
     double get_dt() const { return dt; }
     bool get_convergence_check() const { return check_if_converged; }
     double* get_rhs() const { return rhs; }
-    const char* get_file_id() const {return file_id; }
-    const char* get_output_file_name() const {return output_file_name; }
-    const char* get_ic_file_name() const {return ic_file_name; }
+    std::string get_file_id() const {return file_id; }
     bool get_verbose() const { return verbose; }
-    ModelParams* get_model_params() const { return model_params; }
-    ModelDerivs get_model_derivs() const { return model_derivs; }
-         
+    Params* get_model_params() const { return model_params; }
+    Eqs get_model_eqs() const { return model_eqs; }
+    
     // gsl/odeiv solve stuff 
+    void init_rhs();    
     void solve();
-         
+    
     // overloding operators
-    friend std::ostream& operator<< <ModelParams, ModelDerivs>
-    (std::ostream& os, const OdeSolver<ModelParams, ModelDerivs>& x);
-
-    template <class OtherDerivs>
-    void operator= (const OdeSolver<ModelParams, OtherDerivs>& x);
-         
+    friend std::ostream& operator<< <Params, Eqs>
+    (std::ostream& os, const OdeSolver<Params, Eqs>& x);
+    
   private:
     double *rhs;                 // rhs[navrs] for the variables
-         
-    // gsl/odeiv solve stuff 
-    const gsl_odeiv_step_type* set_step_type();
-    void init_rhs();
-    void init_Q();
+    
+    // gsl/odeiv solve stuff
+    const gsl_odeiv_step_type* set_step_type();    
+    //    void init_Q();
     void write_rhs(std::ofstream& output_file, double t);
     void write_last_line();
          
     // ode parameters 
     size_t nsave;          // save solution every nsave time steps
-    char step_algo[MAX_STR_LEN]; // name of stepping algorithm type
+    std::string step_algo; // name of stepping algorithm type
     double abs_tol, rel_tol;     // absolute/relative tolerances
     double tmax, dt;             // ...
-         
-    // output file
-    char file_id[MAX_STR_LEN];      // file identifier 
-         
-    // CREATE FROM FILE_ID --- IN MODEL !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    char output_file_name[MAX_STR_LEN];   // output file name
-    char ic_file_name[MAX_STR_LEN]; // ic input file name
-         
     bool verbose;                // print verbose output
-    bool check_if_converged;
-         
-    // pointers to rhs and jacobian declaration 
-    //int (*p2derivs)(double, const double *, double *, void *);
-    //int (*p2jac)(double, const double *, double *, double *, void *);
-         
+    bool check_if_converged;     // convergence check
+    
+    // output file
+    std::string file_id; // file identifier
+    
     // Model object
-    ModelParams* model_params;
-    ModelDerivs model_derivs;
+    Params* model_params;
+    Eqs model_eqs;
          
-  }; /* class OdeSolver */
+  }; // class OdeSolver 
 
   //------------------------------------------------------------
    
   // constructors and destructors 
    
-  template <class ModelParams, class ModelDerivs>
-  OdeSolver<ModelParams, ModelDerivs>::OdeSolver() : nsave(1), abs_tol(1e-6),
-                                                     rel_tol(1e-6), tmax(10), dt(1e-6),
-                                                     verbose(false),
-                                                     check_if_converged(false)
+  template <class Params, class Eqs>
+  OdeSolver<Params, Eqs>::OdeSolver() : nsave(1), abs_tol(1e-6),
+                                        rel_tol(1e-6), tmax(10), dt(1e-6),
+                                        verbose(0),
+                                        check_if_converged(false)
   {
-    std::strcpy(step_algo,"rkf45");
-    std::strcpy(file_id,"no_file_id");
-    std::strcpy(output_file_name,"no_ofile_name");
-    std::strcpy(ic_file_name,"no_ic_file_name");
+    step_algo = "rkf45";
+    file_id = "no_file_id";
     rhs=NULL;
-    model_params = new ModelParams;
-      
+    model_params = new Params;
+    
   } // OdeSolver 
    
   //------------------------------------------------------------
    
-  template <class ModelParams, class ModelDerivs>
-  OdeSolver<ModelParams, ModelDerivs>::~OdeSolver()
+  template <class Params, class Eqs>
+  OdeSolver<Params, Eqs>::~OdeSolver()
   {
-    delete [] model_params;
+    delete model_params;
     delete [] rhs;
-      
+    
   } // ~OdeSolver 
-   
+  
   //------------------------------------------------------------
-   
-  template <class ModelParams, class ModelDerivs>
-  void OdeSolver<ModelParams, ModelDerivs>::init_rhs()
-  {
-    // opening ic_file 
-    fio::File<std::ifstream> ic(ic_file_name, verbose);
-      
-    double *rhs_ic;
-    unsigned int nv = model_params->nvars;
-      
-    // allocating rhs 
-    if (verbose) std::cout << "... allocating rhs memory";      
-    try {      
-      rhs_ic = new double[nv]; // will be deleted in destructor
-    }      
-    catch (std::exception &e) {
-      std::cerr << "... unable to alloc rhs\n"
-                << "... Standard exception: " << e.what() << std::endl;      
-      std::exit(1); 
-    }      
-    if (verbose) std::cout << " ... done\n";
-      
-    // init rhs from ic_file 
-    if (verbose) std::cout << "... reading content of ic-file";
-      
-    for(unsigned int i = 0; i < nv; i++)
-      ic.fs >> rhs_ic[i];
-
-    if (nv == 69) // dib model
-      for (unsigned int i = 48; i < 69; i++) {
-        rhs_ic[i - 21] -= rhs_ic[i];
-        rhs_ic[i - 42] -= rhs_ic[i];
-      }
-
-    set_rhs(rhs_ic);
-      
-    if (verbose) std::cout << " ... done\n";
-      
-    // closing ic_file 
-    ic.close(ic_file_name);
-      
-  } // init_rhs
-   
+  
+   template <class Params, class Eqs>
+   void OdeSolver<Params, Eqs>::init_rhs()
+   {
+     double *rhs_ic;
+     unsigned int nv = model_params->nvars;     
+     
+     // opening ic_file
+     std::string fname = file_id + ".init";
+     std::ifstream ic;
+     try {
+       ic.open(fname.c_str(), std::ios::in);
+     }   
+     catch (std::exception &e) {
+       std::cerr << "... unable to open init file " << std::endl
+                 << "... Standard exception: " << e.what() << std::endl;
+       std::exit(1); 
+     }
+     
+     // allocating rhs 
+     if (verbose) std::cout << "... allocating rhs memory";      
+     try {      
+       rhs_ic = new double[nv]; // will be deleted in destructor
+     }      
+     catch (std::exception &e) {
+       std::cerr << "... unable to alloc rhs\n"
+                 << "... Standard exception: " << e.what() << std::endl;      
+       std::exit(1); 
+     }      
+     if (verbose) std::cout << " ... done\n";
+     
+     // init rhs from ic_file 
+     if (verbose) std::cout << "... reading content of ic-file";
+     
+     for(unsigned int i = 0; i < nv; i++)
+       ic >> rhs_ic[i];
+     
+     set_rhs(rhs_ic);
+     
+     if (verbose) std::cout << " ... done\n";
+     
+     // closing ic_file 
+     ic.close();
+     
+   } // init_rhs
+  
   //------------------------------------------------------------
-   
-  template <class ModelParams, class ModelDerivs>
-  void OdeSolver<ModelParams, ModelDerivs>::solve()
+  
+  template <class Params, class Eqs>
+  void OdeSolver<Params, Eqs>::solve()
   {
+    // some variables
     double t;
     int status;
     int nv = model_params->nvars;
-
+    
     // convergence check object
     cv::ConvergenceCheck conv(nv);
-
-    // print message    
-    if (verbose) std::cout << std::endl 
-                           << "\n----------------------\n"
-                           << " FILE ID = " << file_id 
-                           << "\n----------------------\n"
-                           << "\nSolving the ode system\n"
-                           << "----------------------\n";
     
-    // opening output file 
-    fio::File<std::ofstream> data(output_file_name, verbose);
-      
+    // opening output file
+    std::string fname = file_id + ".dat";
+    std::ofstream output_file;
+    
+    if (nsave > 0) {
+      try {
+        output_file.open(fname.c_str(), std::ios::out);
+      }   
+      catch (std::exception &e) {
+        std::cerr << "... unable to open output file " << std::endl
+                  << "... Standard exception: " << e.what() << std::endl;
+        std::exit(1); 
+      }
+    }
+    
     // setting step type 
-    const gsl_odeiv_step_type *step_type;
-    step_type = set_step_type();
-      
-    // allocating rhs and initialize it from ic_file 
-    init_rhs();
+    const gsl_odeiv_step_type *step_type = set_step_type();
+    
+    // init additional paramteres if needed - Qi, Qd, Qb      
+    //     model_params->init_Q(rhs, verbose);
     
     // printing
-    if (verbose)
-      std::cout << *this ;
-      
+    //if (verbose)
+    //  std::cout << *this ;
+    
     // allocating stepping function 
     gsl_odeiv_step *step = gsl_odeiv_step_alloc(step_type, nv);
-      
+    
     // allocating control function 
     gsl_odeiv_control *control = gsl_odeiv_control_y_new(abs_tol,rel_tol);
-      
+//     gsl_odeiv_control *control = gsl_odeiv_control_yp_new(abs_tol,rel_tol);
+//     gsl_odeiv_control *control = gsl_odeiv_control_standard_new(abs_tol,rel_tol,10,1000);
+    
     // allocating evolution function 
     gsl_odeiv_evolve *evolve  = gsl_odeiv_evolve_alloc(nv);
-
+    
     // defining the system 
     gsl_odeiv_system sys =
-      {&(model_derivs.rhs_eval), NULL, nv, static_cast<void*>(model_params) };
-      
+      {&(model_eqs.rhs_eval), NULL, nv, static_cast<void*>(model_params) };
+    
     // write t=0 rhs
     t=0;
-    write_rhs(data.fs, t);
-      
+    if (nsave > 0)
+      write_rhs(output_file, t);
+    
     size_t o_count = 1;
-
+    
+    if (verbose) 
+      std::cout << std::endl << "Initial conditions at t = 0:\n"
+                <<              "============================\n"
+                << "\033[00;32mS-\033[0m" << " = " << rhs[0] << std::endl
+                << "\033[00;31mI-\033[0m" << " = " << rhs[1] << std::endl
+                << "\033[00;34mR-\033[0m" << " = " << rhs[2] << std::endl
+                << "\033[01;32mS+\033[0m" << " = " << rhs[3] << std::endl
+                << "\033[01;31mI+\033[0m" << " = " << rhs[4] << std::endl
+                << "\033[01;34mR+\033[0m" << " = " << rhs[5] << std::endl
+                << std::endl;
+    
+    
     //--- main loop ---//
     if (verbose) std::cout << "... doing main loop !!!\n";   
     
+    double t_prev = 0;
+    bool not_converged = true;
     while (t < tmax)
       {
-        // stepping solution 
+        // stepping solution
         status = gsl_odeiv_evolve_apply (evolve, control, step, &sys, &t, tmax,
                                          &dt, rhs);      
         
-        if(status != GSL_SUCCESS)
+        if (status != GSL_SUCCESS)
           exit(1);
         
-        // writing RHS to ofile 
-        if(!(o_count % nsave))
-          write_rhs(data.fs, t);
-
+        // writing RHS to ofile
+        if (nsave > 0)
+          if (!(o_count % nsave)) 
+            write_rhs(output_file, t);
+               
         // check convergence
         if (check_if_converged)
-          if (!(o_count % conv.get_samples_interval()))
-            if(conv.check(rhs)) {
+          if ((t - t_prev) > conv.get_samples_interval()) {
+            if (conv.check(rhs)) {
               std::cout << "... Ode_Solver converged at t = "
                         << t << " !!!" << std::endl;
-              break;
+              not_converged = false;
+              break;              
             }
+            
+            t_prev = t;
+          }
+        
         
         // advance counter
         ++o_count;        
         
       }
+
+    if (check_if_converged)
+      if (not_converged)
+        std::cout << "... Ode_Solver did not converge at t = tmax = "
+                  << tmax << std::endl;
     
     if (verbose) std::cout << "... writing last line ";
     write_last_line();
@@ -289,8 +303,20 @@ namespace ode
     
     if (verbose) std::cout << "... done ode\n";
     
+    if (verbose) 
+      std::cout << std::endl << "Summary for t = " << t << std::endl
+                <<              "=======================\n"
+                << "\033[00;32mS-\033[0m" << " = " << rhs[0] << std::endl
+                << "\033[00;31mI-\033[0m" << " = " << rhs[1] << std::endl
+                << "\033[00;34mR-\033[0m" << " = " << rhs[2] << std::endl
+                << "\033[01;32mS+\033[0m" << " = " << rhs[3] << std::endl
+                << "\033[01;31mI+\033[0m" << " = " << rhs[4] << std::endl
+                << "\033[01;34mR+\033[0m" << " = " << rhs[5] << std::endl
+                << std::endl;
+    
     // closing output file
-    data.close(output_file_name);
+    if (nsave > 0)
+      output_file.close();
     
     // free allocated memory 
     gsl_odeiv_evolve_free(evolve);
@@ -301,45 +327,35 @@ namespace ode
   
   //------------------------------------------------------------
    
-  template <class ModelParams, class ModelDerivs>
-  const gsl_odeiv_step_type* OdeSolver<ModelParams, ModelDerivs>::set_step_type()
+  template <class Params, class Eqs>
+  const gsl_odeiv_step_type* OdeSolver<Params, Eqs>::set_step_type()
   {
-    if (verbose) std::cout << "... setting stepping algorithm to " << step_algo
-                           << std::endl;
-      
-    if(!strcmp(step_algo,"rk2")) {
-      return gsl_odeiv_step_rk2; }
-    else if(!strcmp(step_algo,"rk4")) {         
-      return gsl_odeiv_step_rk2; }
-    else if(!strcmp(step_algo,"rkf45")) {
-      return gsl_odeiv_step_rkf45; }
-    else if(!strcmp(step_algo,"rkck")) {
-      return gsl_odeiv_step_rkck; }
-    else if(!strcmp(step_algo,"rk8pd")) {
-      return gsl_odeiv_step_rk8pd; }
-    else if(!strcmp(step_algo,"rk2imp")) {
-      return gsl_odeiv_step_rk2imp; }
-    else if(!strcmp(step_algo,"rk4imp")) {
-      return gsl_odeiv_step_rk4imp; }
-    else if(!strcmp(step_algo,"bsimp")) {
-      return gsl_odeiv_step_bsimp; }
-    else if(!strcmp(step_algo,"gear1")) {
-      return gsl_odeiv_step_gear1; }
-    else if(!strcmp(step_algo,"gear2")) {
-      return gsl_odeiv_step_gear2; }
-    else {
-      if (verbose)
-        std::cout << "... wrong step_algo value, set to default rkf45\n"; 
 
-      return gsl_odeiv_step_rkf45;
-    }
-              
+    if (verbose)
+      std::cout << "... setting stepping algorithm to "
+                << step_algo << std::endl;
+      
+    if (step_algo == "rk2") return gsl_odeiv_step_rk2; 
+    if (step_algo == "rk4") return gsl_odeiv_step_rk2; 
+    if (step_algo == "rkf45") return gsl_odeiv_step_rkf45; 
+    if (step_algo == "rkck") return gsl_odeiv_step_rkck; 
+    if (step_algo == "rk8pd") return gsl_odeiv_step_rk8pd; 
+    if (step_algo == "rk2imp") return gsl_odeiv_step_rk2imp; 
+    if (step_algo == "rk4imp")return gsl_odeiv_step_rk4imp; 
+    if (step_algo == "bsimp") return gsl_odeiv_step_bsimp; 
+    if (step_algo == "gear1") return gsl_odeiv_step_gear1; 
+    if (step_algo == "gear2") return gsl_odeiv_step_gear2; 
+    
+    if (verbose)
+      std::cout << "... wrong step_algo value, set to default rkf45\n";     
+    return gsl_odeiv_step_rkf45;
+    
   } // get_step_type
 
   //------------------------------------------------------------
    
-  template <class ModelParams, class ModelDerivs>
-  void OdeSolver<ModelParams, ModelDerivs>::write_rhs(std::ofstream& ofile, double t)
+  template <class Params, class Eqs>
+  void OdeSolver<Params, Eqs>::write_rhs(std::ofstream& ofile, double t)
   {
     int nv = model_params->nvars;
     
@@ -352,14 +368,12 @@ namespace ode
    
   //------------------------------------------------------------
 
-  template <class ModelParams, class ModelDerivs>
-  void OdeSolver<ModelParams, ModelDerivs>::write_last_line()
-  {
+  template <class Params, class Eqs>
+  void OdeSolver<Params, Eqs>::write_last_line()
+  {    
     int nv = model_params->nvars;
-    std::string lastLineFileName(file_id);
-
-    lastLineFileName += ".final";
-
+    std::string lastLineFileName(file_id + ".final");
+    
     // open file_id.final
     std::ofstream lastLine(lastLineFileName.c_str(), std::ios::out);
     
@@ -367,32 +381,32 @@ namespace ode
     for(int i = 0; i < nv; i++)
       lastLine << rhs[i] << '\t';
     lastLine << std::endl;
-
-    lastLine.close();
+    
+    lastLine.close();           
     
   } // write_last_line
   
   //------------------------------------------------------------
    
   // overloding ode::operator<<
-  template <class ModelParams, class ModelDerivs>
+  template <class Params, class Eqs>
   std::ostream& operator<< (std::ostream& output,
-                            const OdeSolver<ModelParams, ModelDerivs>& x)   
+                            const OdeSolver<Params, Eqs>& x)   
   {
     output << std::endl
            << "Ode solver parameters:" << std::endl
-           << "----------------------" << std::endl
+           << "======================" << std::endl
+           << "file id ............ " << x.get_file_id() << std::endl
+           << "tmax ............... " << x.get_tmax() << std::endl
+           << "nsave .............. " << x.get_nsave() << std::endl
+           << "verbose mode ....... " << x.get_verbose() << std::endl
+           << "convergence check .. " << x.get_convergence_check() << std::endl
+           << "output file ........ " << x.get_file_id()+".dat" << std::endl
+           << "ic file ............ " << x.get_file_id()+".init" << std::endl
+           << "dt ................. " << x.get_dt() << std::endl
            << "step type .......... " << x.get_step_algo() << std::endl
            << "abs tol ............ " << x.get_abs_tol() << std::endl
            << "rel tol ............ " << x.get_rel_tol() << std::endl
-           << "tmax ............... " << x.get_tmax() << std::endl
-           << "dt ................. " << x.get_dt() << std::endl
-           << "nsave .............. " << x.get_nsave() << std::endl
-           << "file id ............ " << x.get_file_id() << std::endl
-           << "output file ........ " << x.get_output_file_name() << std::endl
-           << "ic file ............ " << x.get_ic_file_name() << std::endl
-           << "verbose mode ....... " << x.get_verbose() << std::endl
-           << "convergence check .. " << x.get_convergence_check() << std::endl
            << *(x.model_params);
             
     return output;
@@ -400,36 +414,8 @@ namespace ode
   } /* operator<< */
    
   //------------------------------------------------------------
-   
-  // overloding ode::operator=
-  template <class ModelParams, class ModelDerivs>
-  template <class OtherDerivs>
-  void OdeSolver<ModelParams, ModelDerivs>::operator=
-  (const OdeSolver<ModelParams, OtherDerivs>& x)
-  {
 
-    // ode parameters
-    nsave   = x.get_nsave();
-    abs_tol = x.get_abs_tol();
-    rel_tol = x.get_rel_tol();
-    tmax    = x.get_tmax();
-    dt      = x.get_dt();
-    verbose = x.get_verbose();
-    check_if_converged = x.get_convergence_check();
-      
-    strcpy(step_algo, x.get_step_algo());
-    strcpy(file_id, x.get_file_id());
-    strcpy(ic_file_name, x.get_ic_file_name());
-      
-    // model parameters
-      
-    *model_params = *(x.get_model_params());
-      
-  } /* operator= */
-   
-  //------------------------------------------------------------
-   
-} /* namespace ode */
+}
 
 //------------------------------------------------------------
 
