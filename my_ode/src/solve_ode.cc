@@ -6,15 +6,15 @@
 
 #include "ode_solver.hh"
 #include "InfoSIRSmf.hh"
-//#include "InfoSIRSpa.hh"
+#include "InfoSIRSpa.hh"
 #include "ode_io_utils.hh"
 
 namespace mf = InfoSIRSmf;
-//namespace pa = InfoSIRSpa;
+namespace pa = InfoSIRSpa;
 
 // for overloading generate_..._options functions
 using namespace mf;
-// using namespace pa;
+using namespace pa;
 
 //------------------------------------------------------------
 
@@ -28,19 +28,19 @@ int main(int argc, char* argv[])
   int status;
   
   // parse command line looking just for --ode-model=mf/pa  
-//   std::string ode_type = find_ode_type(argc, argv);
+  std::string ode_type = find_ode_type(argc, argv);
   
-//   if ((ode_type != "mf") && (ode_type != "pa")) {
-//     std::cerr << "ERROR: ode-type is niether mf nor pa" << std::endl;
-//     return 1;
-//   }
+  if ((ode_type != "mf") && (ode_type != "pa")) {
+    std::cerr << "ERROR: ode-type is neither mf nor pa" << std::endl;
+    return 1;
+  }
   
   // define Model variable
-//   if (ode_type == "mf") {
+  if (ode_type == "mf") {
     status = solve_ode_system<ode::OdeSolver<mf::Params, mf::Eqs> >(argc, argv);
-//   } else {    
-//     status = solve_ode_system<ode::OdeSolver<pa::Params, pa::Eqs> >(argc, argv);
-//   }
+  } else {    
+    status = solve_ode_system<ode::OdeSolver<pa::Params, pa::Eqs> >(argc, argv);
+  }
   
   return status;
   

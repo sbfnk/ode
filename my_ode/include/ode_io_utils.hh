@@ -20,6 +20,26 @@ namespace fio = file_io_utils;
 
 //------------------------------------------------------------
 
+std::string find_ode_type(int argc, char* argv[])
+{
+  std::string type("no type specified");
+
+  int i;
+  for (i = 1; i < argc; ++i) {
+    if (!strcmp(argv[i],"--ode-type=mf")) {
+      type = "mf";
+      break;
+    } else if (!strcmp(argv[i],"--ode-type=pa")) {
+      type = "pa";
+      break;
+    }
+  }
+
+  return type;
+}
+
+//------------------------------------------------------------
+
 po::options_description* generate_main_options()
 {
   po::options_description* opt =
