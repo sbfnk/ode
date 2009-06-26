@@ -1,0 +1,10 @@
+# Ode parameters: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+file-id      = angola
+ic-file      = angola.ic
+t0           = 1994
+tmax         = 1998
+dt           = 1e-6
+nsave        = 10
+step-algo    = rkf45
+abs-tol      = 1e-8
+rel-tol      = 1e-8
