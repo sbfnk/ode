@@ -1,7 +1,7 @@
 #------ GNU g++ -----------------------------------------------------
 
 CC         = g++
-#CPPFLAGS     = -Wall -g  
+CPPFLAGS     = -Wall -g  
 OPTFLAGS   = -O3  
 #OPTFLAGS   = 
 
