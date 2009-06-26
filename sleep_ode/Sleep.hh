@@ -15,7 +15,7 @@ namespace po = boost::program_options;
 
 struct SleepParams
 {
-  SleepParams() : nvars(3) {};
+  SleepParams() : nvars(3),perDay(false) {};
   
   // No. of equations
   unsigned int nvars;
@@ -24,6 +24,8 @@ struct SleepParams
   double rho, epsilon, sigma;
 
   unsigned int N;
+
+  bool perDay;
 
   std::vector<std::pair<double, double> > sigma_vector;
   unsigned int next_sigma;
@@ -80,6 +82,8 @@ po::options_description SleepParams::get_command_line_params()
      "size of the population")
     ("sigma-file", po::value<std::string>(),
      "file containing screening rates for different years")
+    ("per-day", 
+     "rates are given per day (with screening from file per year)")
     ;
 
   return model_options;
@@ -150,6 +154,9 @@ void SleepParams::init_model_params(po::variables_map& vm)
     std::cerr << "setting to 0" << std::endl;
     N=0;
   }
+  if (vm.count("per-day")) {
+    perDay = true;
+  }
   nvars=3;
   
 }
@@ -210,6 +217,7 @@ std::ostream& operator<< (std::ostream& os, const SleepParams& x)
      << "rho     = " << x.rho << std::endl
      << "epsilon = " << x.epsilon << std::endl
      << "N       = " << x.N << std::endl
+     << "perDay  = " << x.perDay << std::endl
      << std::endl;
   
   return os;
@@ -246,14 +254,14 @@ struct Sleep
       if (sigma_vector[next_sigma].first < t) {
         sigma = sigma_vector[next_sigma].second;
         ++next_sigma;
-        p->sigma = sigma;
+        p->sigma = sigma / (p->perDay == true ? 365 : 1);
         p->next_sigma = next_sigma;
       }
     }
 
-    rhs[0] = -beta*y[0]*y[1]/N + (rho+epsilon*sigma+gamma)*y[1];
+    rhs[0] = -beta*y[0]*y[1]/N;
     rhs[1] = beta*y[0]*y[1]/N - (rho+epsilon*sigma+gamma)*y[1];
-    rhs[2] = (rho+sigma)*y[1] - delta*y[2];
+    rhs[2] = (rho*epsilon+sigma)*y[1] - delta*y[2];
 
     return GSL_SUCCESS;         
   }
