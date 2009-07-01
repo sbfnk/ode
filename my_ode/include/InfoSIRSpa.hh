@@ -183,14 +183,15 @@ namespace InfoSIRSpa
     
     // clustering correction
     static double cc(double C_i, double C_d, double ki_i, double ki_d,
-                     double ki, double N_Qd, double N_Qi)
+                     double ki, double N_Qd, double N_Qi, double nd,
+                     double ni)
     {
       const double eps = 1e-1;
       
       if(ki < eps)
-        return ((1.0 - C_i - C_d));
+        return ((1.0 - ni*C_i - nd*C_d));
       else
-        return ((1.0 - C_i - C_d) + C_i*N_Qi*ki_i/ki + C_d*N_Qd*ki_d/ki);
+        return ((1.0 - ni*C_i - nd*C_d) + ni*C_i*N_Qi*ki_i/ki + nd*C_d*N_Qd*ki_d/ki);
     }           
     
     // rhs function
@@ -205,6 +206,7 @@ namespace InfoSIRSpa
       double lm=p.lambda, om=p.omega;
       double N=p.N, Qd=p.Qd, Qi=p.Qi;
       double N_Qd=N/Qd, N_Qi=N/Qi;
+      double nd=Qd/(Qd+Qi), ni=1-nd;
 
       // Clustering corrections
       double idi=p.Cidi, idd=p.Cidd;
@@ -279,552 +281,552 @@ namespace InfoSIRSpa
         + mu*Ri_i;
  
       SS_d_t = 2*(
-                  - tmm*pa(kdd, SS_d, SI_d, S)*cc(ddi, ddd, SI_i, SI_d, S*I, N_Qd, N_Qi)
-                  - tmp*pa(kdd, SS_d, Si_d, S)*cc(ddi, ddd, Si_i, Si_d, S*i, N_Qd, N_Qi)
+                  - tmm*pa(kdd, SS_d, SI_d, S)*cc(ddi, ddd, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+                  - tmp*pa(kdd, SS_d, Si_d, S)*cc(ddi, ddd, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
                   + dm*SR_d
                   + lm*Ss_d
-                  - chi*pa(kdi, SS_d, Ss_i, S)*cc(dii, did, Ss_i, Ss_d, S*s, N_Qd, N_Qi)
-                  - chi*pa(kdi, SS_d, Si_i, S)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi)
-                  - chi*pa(kdi, SS_d, Sr_i, S)*cc(dii, did, Sr_i, Sr_d, S*r, N_Qd, N_Qi)
-                  - mu*pa(kdi, SS_d, SI_i, S)*cc(dii, did, SI_i, SI_d, S*I, N_Qd, N_Qi)
-                  - mu*pa(kdi, SS_d, Si_i, S)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi)
+                  - chi*pa(kdi, SS_d, Ss_i, S)*cc(dii, did, Ss_i, Ss_d, S*s, N_Qd, N_Qi, nd, ni)
+                  - chi*pa(kdi, SS_d, Si_i, S)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+                  - chi*pa(kdi, SS_d, Sr_i, S)*cc(dii, did, Sr_i, Sr_d, S*r, N_Qd, N_Qi, nd, ni)
+                  - mu*pa(kdi, SS_d, SI_i, S)*cc(dii, did, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+                  - mu*pa(kdi, SS_d, Si_i, S)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
                   );
 
       SS_i_t = 2*(
-                  - tmm*pa(kid, SS_i, SI_d, S)*cc(idi, idd, SI_i, SI_d, S*I, N_Qd, N_Qi)
-                  - tmp*pa(kid, SS_i, Si_d, S)*cc(idi, idd, Si_i, Si_d, S*i, N_Qd, N_Qi)
+                  - tmm*pa(kid, SS_i, SI_d, S)*cc(idi, idd, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+                  - tmp*pa(kid, SS_i, Si_d, S)*cc(idi, idd, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
                   + dm*SR_i
                   + lm*Ss_i
-                  - chi*pa(kii, SS_i, Ss_i, S)*cc(iii, iid, Ss_i, Ss_d, S*s, N_Qd, N_Qi)
-                  - chi*pa(kii, SS_i, Si_i, S)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi)
-                  - chi*pa(kii, SS_i, Sr_i, S)*cc(iii, iid, Sr_i, Sr_d, S*r, N_Qd, N_Qi)
-                  - mu*pa(kii, SS_i, SI_i, S)*cc(iii, iid, SI_i, SI_d, S*I, N_Qd, N_Qi)
-                  - mu*pa(kii, SS_i, Si_i, S)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi)
+                  - chi*pa(kii, SS_i, Ss_i, S)*cc(iii, iid, Ss_i, Ss_d, S*s, N_Qd, N_Qi, nd, ni)
+                  - chi*pa(kii, SS_i, Si_i, S)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+                  - chi*pa(kii, SS_i, Sr_i, S)*cc(iii, iid, Sr_i, Sr_d, S*r, N_Qd, N_Qi, nd, ni)
+                  - mu*pa(kii, SS_i, SI_i, S)*cc(iii, iid, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+                  - mu*pa(kii, SS_i, Si_i, S)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
                   );
 
       SI_d_t = - tmm*SI_d
-        + tmm*pa(kdd, SS_d, SI_d, S)*cc(ddi, ddd, SI_i, SI_d, S*I, N_Qd, N_Qi)
-        - tmm*pa(kdd, IS_d, SI_d, S)*cc(ddi, ddd, II_i, II_d, I*I, N_Qd, N_Qi)
-        + tmp*pa(kdd, SS_d, Si_d, S)*cc(ddi, ddd, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - tmp*pa(kdd, iS_d, SI_d, S)*cc(ddi, ddd, iI_i, iI_d, i*I, N_Qd, N_Qi)
+        + tmm*pa(kdd, SS_d, SI_d, S)*cc(ddi, ddd, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+        - tmm*pa(kdd, IS_d, SI_d, S)*cc(ddi, ddd, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+        + tmp*pa(kdd, SS_d, Si_d, S)*cc(ddi, ddd, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - tmp*pa(kdd, iS_d, SI_d, S)*cc(ddi, ddd, iI_i, iI_d, i*I, N_Qd, N_Qi, nd, ni)
         - gm*SI_d
         + dm*IR_d
         + lm*Is_d
         + lm*Si_d
         - om*SI_d
-        - chi*pa(kid, sS_i, SI_d, S)*cc(idi, idd, sI_i, sI_d, s*I, N_Qd, N_Qi)
-        - chi*pa(kid, iS_i, SI_d, S)*cc(idi, idd, iI_i, iI_d, i*I, N_Qd, N_Qi)
-        - chi*pa(kid, rS_i, SI_d, S)*cc(idi, idd, rI_i, rI_d, r*I, N_Qd, N_Qi)
-        - chi*pa(kdi, SI_d, Is_i, I)*cc(dii, did, Ss_i, Ss_d, S*s, N_Qd, N_Qi)
-        - chi*pa(kdi, SI_d, Ii_i, I)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - chi*pa(kdi, SI_d, Ir_i, I)*cc(dii, did, Sr_i, Sr_d, S*r, N_Qd, N_Qi)
-        - mu*pa(kid, IS_i, SI_d, S)*cc(idi, idd, II_i, II_d, I*I, N_Qd, N_Qi)
-        - mu*pa(kdi, SI_d, II_i, I)*cc(dii, did, SI_i, SI_d, S*I, N_Qd, N_Qi)
-        - mu*pa(kid, iS_i, SI_d, S)*cc(idi, idd, iI_i, iI_d, i*I, N_Qd, N_Qi)
-        - mu*pa(kdi, SI_d, Ii_i, I)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi)
+        - chi*pa(kid, sS_i, SI_d, S)*cc(idi, idd, sI_i, sI_d, s*I, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, iS_i, SI_d, S)*cc(idi, idd, iI_i, iI_d, i*I, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, rS_i, SI_d, S)*cc(idi, idd, rI_i, rI_d, r*I, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kdi, SI_d, Is_i, I)*cc(dii, did, Ss_i, Ss_d, S*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kdi, SI_d, Ii_i, I)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kdi, SI_d, Ir_i, I)*cc(dii, did, Sr_i, Sr_d, S*r, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, IS_i, SI_d, S)*cc(idi, idd, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kdi, SI_d, II_i, I)*cc(dii, did, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, iS_i, SI_d, S)*cc(idi, idd, iI_i, iI_d, i*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kdi, SI_d, Ii_i, I)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
         - qid*mu*SI_d;
 
-      SI_i_t = + tmm*pa(kid, SS_i, SI_d, S)*cc(idi, idd, SI_i, SI_d, S*I, N_Qd, N_Qi)
-        - tmm*pa(kdi, IS_d, SI_i, S)*cc(dii, did, II_i, II_d, I*I, N_Qd, N_Qi)
-        + tmp*pa(kid, SS_i, Si_d, S)*cc(idi, idd, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - tmp*pa(kdi, iS_d, SI_i, S)*cc(dii, did, iI_i, iI_d, i*I, N_Qd, N_Qi)
+      SI_i_t = + tmm*pa(kid, SS_i, SI_d, S)*cc(idi, idd, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+        - tmm*pa(kdi, IS_d, SI_i, S)*cc(dii, did, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+        + tmp*pa(kid, SS_i, Si_d, S)*cc(idi, idd, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - tmp*pa(kdi, iS_d, SI_i, S)*cc(dii, did, iI_i, iI_d, i*I, N_Qd, N_Qi, nd, ni)
         - gm*SI_i
         + dm*IR_i
         + lm*Is_i
         + lm*Si_i
         - om*SI_i
-        - chi*pa(kii, sS_i, SI_i, S)*cc(iii, iid, sI_i, sI_d, s*I, N_Qd, N_Qi)
-        - chi*pa(kii, iS_i, SI_i, S)*cc(iii, iid, iI_i, iI_d, i*I, N_Qd, N_Qi)
-        - chi*pa(kii, rS_i, SI_i, S)*cc(iii, iid, rI_i, rI_d, r*I, N_Qd, N_Qi)
-        - chi*pa(kii, SI_i, Is_i, I)*cc(iii, iid, Ss_i, Ss_d, S*s, N_Qd, N_Qi)
-        - chi*pa(kii, SI_i, Ii_i, I)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - chi*pa(kii, SI_i, Ir_i, I)*cc(iii, iid, Sr_i, Sr_d, S*r, N_Qd, N_Qi)
+        - chi*pa(kii, sS_i, SI_i, S)*cc(iii, iid, sI_i, sI_d, s*I, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, iS_i, SI_i, S)*cc(iii, iid, iI_i, iI_d, i*I, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, rS_i, SI_i, S)*cc(iii, iid, rI_i, rI_d, r*I, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, SI_i, Is_i, I)*cc(iii, iid, Ss_i, Ss_d, S*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, SI_i, Ii_i, I)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, SI_i, Ir_i, I)*cc(iii, iid, Sr_i, Sr_d, S*r, N_Qd, N_Qi, nd, ni)
         - mu*SI_i
-        - mu*pa(kii, IS_i, SI_i, S)*cc(iii, iid, II_i, II_d, I*I, N_Qd, N_Qi)
-        - mu*pa(kii, SI_i, II_i, I)*cc(iii, iid, SI_i, SI_d, S*I, N_Qd, N_Qi)
-        - mu*pa(kii, iS_i, SI_i, S)*cc(iii, iid, iI_i, iI_d, i*I, N_Qd, N_Qi)
-        - mu*pa(kii, SI_i, Ii_i, I)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi)
+        - mu*pa(kii, IS_i, SI_i, S)*cc(iii, iid, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, SI_i, II_i, I)*cc(iii, iid, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, iS_i, SI_i, S)*cc(iii, iid, iI_i, iI_d, i*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, SI_i, Ii_i, I)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
         - qdi*tmm*SI_i;
 
-      SR_d_t = - tmm*pa(kdd, IS_d, SR_d, S)*cc(ddi, ddd, IR_i, IR_d, I*R, N_Qd, N_Qi)
-        - tmp*pa(kdd, iS_d, SR_d, S)*cc(ddi, ddd, iR_i, iR_d, i*R, N_Qd, N_Qi)
+      SR_d_t = - tmm*pa(kdd, IS_d, SR_d, S)*cc(ddi, ddd, IR_i, IR_d, I*R, N_Qd, N_Qi, nd, ni)
+        - tmp*pa(kdd, iS_d, SR_d, S)*cc(ddi, ddd, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
         + gm*SI_d
         - dm*SR_d
         + dm*RR_d
         + lm*Rs_d
         + lm*Sr_d
-        - chi*pa(kid, sS_i, SR_d, S)*cc(idi, idd, sR_i, sR_d, s*R, N_Qd, N_Qi)
-        - chi*pa(kid, iS_i, SR_d, S)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        - chi*pa(kid, rS_i, SR_d, S)*cc(idi, idd, rR_i, rR_d, r*R, N_Qd, N_Qi)
-        - chi*pa(kdi, SR_d, Rs_i, R)*cc(dii, did, Ss_i, Ss_d, S*s, N_Qd, N_Qi)
-        - chi*pa(kdi, SR_d, Ri_i, R)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - chi*pa(kdi, SR_d, Rr_i, R)*cc(dii, did, Sr_i, Sr_d, S*r, N_Qd, N_Qi)
-        - mu*pa(kid, IS_i, SR_d, S)*cc(idi, idd, IR_i, IR_d, I*R, N_Qd, N_Qi)
-        - mu*pa(kdi, SR_d, RI_i, R)*cc(dii, did, SI_i, SI_d, S*I, N_Qd, N_Qi)
-        - mu*pa(kid, iS_i, SR_d, S)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        - mu*pa(kdi, SR_d, Ri_i, R)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi)
+        - chi*pa(kid, sS_i, SR_d, S)*cc(idi, idd, sR_i, sR_d, s*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, iS_i, SR_d, S)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, rS_i, SR_d, S)*cc(idi, idd, rR_i, rR_d, r*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kdi, SR_d, Rs_i, R)*cc(dii, did, Ss_i, Ss_d, S*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kdi, SR_d, Ri_i, R)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kdi, SR_d, Rr_i, R)*cc(dii, did, Sr_i, Sr_d, S*r, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, IS_i, SR_d, S)*cc(idi, idd, IR_i, IR_d, I*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kdi, SR_d, RI_i, R)*cc(dii, did, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, iS_i, SR_d, S)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kdi, SR_d, Ri_i, R)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
         ;
 
-      SR_i_t = - tmm*pa(kdi, IS_d, SR_i, S)*cc(dii, did, IR_i, IR_d, I*R, N_Qd, N_Qi)
-        - tmp*pa(kdi, iS_d, SR_i, S)*cc(dii, did, iR_i, iR_d, i*R, N_Qd, N_Qi)
+      SR_i_t = - tmm*pa(kdi, IS_d, SR_i, S)*cc(dii, did, IR_i, IR_d, I*R, N_Qd, N_Qi, nd, ni)
+        - tmp*pa(kdi, iS_d, SR_i, S)*cc(dii, did, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
         + gm*SI_i
         - dm*SR_i
         + dm*RR_i
         + lm*Rs_i
         + lm*Sr_i
-        - chi*pa(kii, sS_i, SR_i, S)*cc(iii, iid, sR_i, sR_d, s*R, N_Qd, N_Qi)
-        - chi*pa(kii, iS_i, SR_i, S)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        - chi*pa(kii, rS_i, SR_i, S)*cc(iii, iid, rR_i, rR_d, r*R, N_Qd, N_Qi)
-        - chi*pa(kii, SR_i, Rs_i, R)*cc(iii, iid, Ss_i, Ss_d, S*s, N_Qd, N_Qi)
-        - chi*pa(kii, SR_i, Ri_i, R)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - chi*pa(kii, SR_i, Rr_i, R)*cc(iii, iid, Sr_i, Sr_d, S*r, N_Qd, N_Qi)
-        - mu*pa(kii, IS_i, SR_i, S)*cc(iii, iid, IR_i, IR_d, I*R, N_Qd, N_Qi)
-        - mu*pa(kii, SR_i, RI_i, R)*cc(iii, iid, SI_i, SI_d, S*I, N_Qd, N_Qi)
-        - mu*pa(kii, iS_i, SR_i, S)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        - mu*pa(kii, SR_i, Ri_i, R)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi)
+        - chi*pa(kii, sS_i, SR_i, S)*cc(iii, iid, sR_i, sR_d, s*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, iS_i, SR_i, S)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, rS_i, SR_i, S)*cc(iii, iid, rR_i, rR_d, r*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, SR_i, Rs_i, R)*cc(iii, iid, Ss_i, Ss_d, S*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, SR_i, Ri_i, R)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, SR_i, Rr_i, R)*cc(iii, iid, Sr_i, Sr_d, S*r, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, IS_i, SR_i, S)*cc(iii, iid, IR_i, IR_d, I*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, SR_i, RI_i, R)*cc(iii, iid, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, iS_i, SR_i, S)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, SR_i, Ri_i, R)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
         ;
             
-      Ss_d_t = - tmm*pa(kdd, IS_d, Ss_d, S)*cc(ddi, ddd, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        - tpp*pa(kdd, Ss_d, si_d, s)*cc(ddi, ddd, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - tmp*pa(kdd, iS_d, Ss_d, S)*cc(ddi, ddd, is_i, is_d, i*s, N_Qd, N_Qi)
-        - tpm*pa(kdd, Ss_d, sI_d, s)*cc(ddi, ddd, SI_i, SI_d, S*I, N_Qd, N_Qi)
+      Ss_d_t = - tmm*pa(kdd, IS_d, Ss_d, S)*cc(ddi, ddd, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        - tpp*pa(kdd, Ss_d, si_d, s)*cc(ddi, ddd, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - tmp*pa(kdd, iS_d, Ss_d, S)*cc(ddi, ddd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        - tpm*pa(kdd, Ss_d, sI_d, s)*cc(ddi, ddd, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
         + dm*Rs_d
         + dp*Sr_d
         - lm*Ss_d
         + lm*ss_d
-        + chi*pa(kdi, SS_d, Ss_i, S)*cc(dii, did, Ss_i, Ss_d, S*s, N_Qd, N_Qi)
-        - chi*pa(kid, sS_i, Ss_d, S)*cc(idi, idd, ss_i, ss_d, s*s, N_Qd, N_Qi)
-        + chi*pa(kdi, SS_d, Si_i, S)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - chi*pa(kid, iS_i, Ss_d, S)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi)
-        + chi*pa(kdi, SS_d, Sr_i, S)*cc(dii, did, Sr_i, Sr_d, S*r, N_Qd, N_Qi)
-        - chi*pa(kid, rS_i, Ss_d, S)*cc(idi, idd, rs_i, rs_d, r*s, N_Qd, N_Qi)
-        + mu*pa(kdi, SS_d, SI_i, S)*cc(dii, did, SI_i, SI_d, S*I, N_Qd, N_Qi)
-        - mu*pa(kid, IS_i, Ss_d, S)*cc(idi, idd, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        + mu*pa(kdi, SS_d, Si_i, S)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - mu*pa(kid, iS_i, Ss_d, S)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi)
+        + chi*pa(kdi, SS_d, Ss_i, S)*cc(dii, did, Ss_i, Ss_d, S*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, sS_i, Ss_d, S)*cc(idi, idd, ss_i, ss_d, s*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, SS_d, Si_i, S)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, iS_i, Ss_d, S)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, SS_d, Sr_i, S)*cc(dii, did, Sr_i, Sr_d, S*r, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, rS_i, Ss_d, S)*cc(idi, idd, rs_i, rs_d, r*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kdi, SS_d, SI_i, S)*cc(dii, did, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, IS_i, Ss_d, S)*cc(idi, idd, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kdi, SS_d, Si_i, S)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, iS_i, Ss_d, S)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
         - qid*chi*Ss_d;
                
-      Ss_i_t = - tmm*pa(kdi, IS_d, Ss_i, S)*cc(dii, did, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        - tpp*pa(kid, Ss_i, si_d, s)*cc(idi, idd, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - tmp*pa(kdi, iS_d, Ss_i, S)*cc(dii, did, is_i, is_d, i*s, N_Qd, N_Qi)
-        - tpm*pa(kid, Ss_i, sI_d, s)*cc(idi, idd, SI_i, SI_d, S*I, N_Qd, N_Qi)
+      Ss_i_t = - tmm*pa(kdi, IS_d, Ss_i, S)*cc(dii, did, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        - tpp*pa(kid, Ss_i, si_d, s)*cc(idi, idd, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - tmp*pa(kdi, iS_d, Ss_i, S)*cc(dii, did, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        - tpm*pa(kid, Ss_i, sI_d, s)*cc(idi, idd, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
         + dm*Rs_i
         + dp*Sr_i
         - lm*Ss_i
         + lm*ss_i
         - chi*Ss_i
-        + chi*pa(kii, SS_i, Ss_i, S)*cc(iii, iid, Ss_i, Ss_d, S*s, N_Qd, N_Qi)
-        - chi*pa(kii, sS_i, Ss_i, S)*cc(iii, iid, ss_i, ss_d, s*s, N_Qd, N_Qi)
-        + chi*pa(kii, SS_i, Si_i, S)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - chi*pa(kii, iS_i, Ss_i, S)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi)
-        + chi*pa(kii, SS_i, Sr_i, S)*cc(iii, iid, Sr_i, Sr_d, S*r, N_Qd, N_Qi)
-        - chi*pa(kii, rS_i, Ss_i, S)*cc(iii, iid, rs_i, rs_d, r*s, N_Qd, N_Qi)
-        + mu*pa(kii, SS_i, SI_i, S)*cc(iii, iid, SI_i, SI_d, S*I, N_Qd, N_Qi)
-        - mu*pa(kii, IS_i, Ss_i, S)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        + mu*pa(kii, SS_i, Si_i, S)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - mu*pa(kii, iS_i, Ss_i, S)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi)
+        + chi*pa(kii, SS_i, Ss_i, S)*cc(iii, iid, Ss_i, Ss_d, S*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, sS_i, Ss_i, S)*cc(iii, iid, ss_i, ss_d, s*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, SS_i, Si_i, S)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, iS_i, Ss_i, S)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, SS_i, Sr_i, S)*cc(iii, iid, Sr_i, Sr_d, S*r, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, rS_i, Ss_i, S)*cc(iii, iid, rs_i, rs_d, r*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, SS_i, SI_i, S)*cc(iii, iid, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, IS_i, Ss_i, S)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, SS_i, Si_i, S)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, iS_i, Ss_i, S)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
         ;
             
-      Si_d_t = - tmm*pa(kdd, IS_d, Si_d, S)*cc(ddi, ddd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + tpp*pa(kdd, Ss_d, si_d, s)*cc(ddi, ddd, Si_i, Si_d, S*i, N_Qd, N_Qi)
+      Si_d_t = - tmm*pa(kdd, IS_d, Si_d, S)*cc(ddi, ddd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + tpp*pa(kdd, Ss_d, si_d, s)*cc(ddi, ddd, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
         - tmp*Si_d
-        - tmp*pa(kdd, iS_d, Si_d, S)*cc(ddi, ddd, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + tpm*pa(kdd, Ss_d, sI_d, s)*cc(ddi, ddd, SI_i, SI_d, S*I, N_Qd, N_Qi)
+        - tmp*pa(kdd, iS_d, Si_d, S)*cc(ddi, ddd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + tpm*pa(kdd, Ss_d, sI_d, s)*cc(ddi, ddd, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
         - gp*Si_d
         + dm*Ri_d
         + lm*si_d
         - lm*Si_d
         + om*SI_d
-        - chi*pa(kid, sS_i, Si_d, S)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi)
-        - chi*pa(kid, iS_i, Si_d, S)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        - chi*pa(kid, rS_i, Si_d, S)*cc(idi, idd, ri_i, ri_d, r*i, N_Qd, N_Qi)
-        + chi*pa(kdi, SI_d, Is_i, I)*cc(dii, did, Ss_i, Ss_d, S*s, N_Qd, N_Qi)
-        + chi*pa(kdi, SI_d, Ii_i, I)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        + chi*pa(kdi, SI_d, Ir_i, I)*cc(dii, did, Sr_i, Sr_d, S*r, N_Qd, N_Qi)
-        - mu*pa(kid, IS_i, Si_d, S)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + mu*pa(kdi, SI_d, II_i, I)*cc(dii, did, SI_i, SI_d, S*I, N_Qd, N_Qi)
-        - mu*pa(kid, iS_i, Si_d, S)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + mu*pa(kdi, SI_d, Ii_i, I)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi)
+        - chi*pa(kid, sS_i, Si_d, S)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, iS_i, Si_d, S)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, rS_i, Si_d, S)*cc(idi, idd, ri_i, ri_d, r*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, SI_d, Is_i, I)*cc(dii, did, Ss_i, Ss_d, S*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, SI_d, Ii_i, I)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, SI_d, Ir_i, I)*cc(dii, did, Sr_i, Sr_d, S*r, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, IS_i, Si_d, S)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kdi, SI_d, II_i, I)*cc(dii, did, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, iS_i, Si_d, S)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kdi, SI_d, Ii_i, I)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
         - qid*chi*Si_d
         - qid*mu*Si_d
         ;
             
-      Si_i_t = - tmm*pa(kdi, IS_d, Si_i, S)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + tpp*pa(kid, Ss_i, si_d, s)*cc(idi, idd, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        - tmp*pa(kdi, iS_d, Si_i, S)*cc(dii, did, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + tpm*pa(kid, Ss_i, sI_d, s)*cc(idi, idd, SI_i, SI_d, S*I, N_Qd, N_Qi)
+      Si_i_t = - tmm*pa(kdi, IS_d, Si_i, S)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + tpp*pa(kid, Ss_i, si_d, s)*cc(idi, idd, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        - tmp*pa(kdi, iS_d, Si_i, S)*cc(dii, did, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + tpm*pa(kid, Ss_i, sI_d, s)*cc(idi, idd, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
         - gp*Si_i
         + dm*Ri_i
         + lm*si_i
         - lm*Si_i
         + om*SI_i
-        - chi*pa(kii, sS_i, Si_i, S)*cc(iii, iid, si_i, si_d, s*i, N_Qd, N_Qi)
+        - chi*pa(kii, sS_i, Si_i, S)*cc(iii, iid, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
         - chi*Si_i
-        - chi*pa(kii, iS_i, Si_i, S)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        - chi*pa(kii, rS_i, Si_i, S)*cc(iii, iid, ri_i, ri_d, r*i, N_Qd, N_Qi)
-        + chi*pa(kii, SI_i, Is_i, I)*cc(iii, iid, Ss_i, Ss_d, S*s, N_Qd, N_Qi)
-        + chi*pa(kii, SI_i, Ii_i, I)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        + chi*pa(kii, SI_i, Ir_i, I)*cc(iii, iid, Sr_i, Sr_d, S*r, N_Qd, N_Qi)
-        - mu*pa(kii, IS_i, Si_i, S)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + mu*pa(kii, SI_i, II_i, I)*cc(iii, iid, SI_i, SI_d, S*I, N_Qd, N_Qi)
+        - chi*pa(kii, iS_i, Si_i, S)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, rS_i, Si_i, S)*cc(iii, iid, ri_i, ri_d, r*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, SI_i, Is_i, I)*cc(iii, iid, Ss_i, Ss_d, S*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, SI_i, Ii_i, I)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, SI_i, Ir_i, I)*cc(iii, iid, Sr_i, Sr_d, S*r, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, IS_i, Si_i, S)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, SI_i, II_i, I)*cc(iii, iid, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
         - mu*Si_i
-        - mu*pa(kii, iS_i, Si_i, S)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + mu*pa(kii, SI_i, Ii_i, I)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi)
+        - mu*pa(kii, iS_i, Si_i, S)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, SI_i, Ii_i, I)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
         - qdi*tmp*Si_i;
 
-      Sr_d_t = - tmm*pa(kdd, IS_d, Sr_d, S)*cc(ddi, ddd, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        - tmp*pa(kdd, iS_d, Sr_d, S)*cc(ddi, ddd, ir_i, ir_d, i*r, N_Qd, N_Qi)
+      Sr_d_t = - tmm*pa(kdd, IS_d, Sr_d, S)*cc(ddi, ddd, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        - tmp*pa(kdd, iS_d, Sr_d, S)*cc(ddi, ddd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
         + gp*Si_d
         + dm*Rr_d
         - dp*Sr_d
         + lm*sr_d
         - lm*Sr_d
-        - chi*pa(kid, sS_i, Sr_d, S)*cc(idi, idd, sr_i, sr_d, s*r, N_Qd, N_Qi)
-        - chi*pa(kid, iS_i, Sr_d, S)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        - chi*pa(kid, rS_i, Sr_d, S)*cc(idi, idd, rr_i, rr_d, r*r, N_Qd, N_Qi)
-        + chi*pa(kdi, SR_d, Rs_i, R)*cc(dii, did, Ss_i, Ss_d, S*s, N_Qd, N_Qi)
-        + chi*pa(kdi, SR_d, Ri_i, R)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        + chi*pa(kdi, SR_d, Rr_i, R)*cc(dii, did, Sr_i, Sr_d, S*r, N_Qd, N_Qi)
-        - mu*pa(kid, IS_i, Sr_d, S)*cc(idi, idd, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        + mu*pa(kdi, SR_d, RI_i, R)*cc(dii, did, SI_i, SI_d, S*I, N_Qd, N_Qi)
-        - mu*pa(kid, iS_i, Sr_d, S)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        + mu*pa(kdi, SR_d, Ri_i, R)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi)
+        - chi*pa(kid, sS_i, Sr_d, S)*cc(idi, idd, sr_i, sr_d, s*r, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, iS_i, Sr_d, S)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, rS_i, Sr_d, S)*cc(idi, idd, rr_i, rr_d, r*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, SR_d, Rs_i, R)*cc(dii, did, Ss_i, Ss_d, S*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, SR_d, Ri_i, R)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, SR_d, Rr_i, R)*cc(dii, did, Sr_i, Sr_d, S*r, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, IS_i, Sr_d, S)*cc(idi, idd, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kdi, SR_d, RI_i, R)*cc(dii, did, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, iS_i, Sr_d, S)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kdi, SR_d, Ri_i, R)*cc(dii, did, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
         - qid*chi*Sr_d;
 
-      Sr_i_t = - tmm*pa(kdi, IS_d, Sr_i, S)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        - tmp*pa(kdi, iS_d, Sr_i, S)*cc(dii, did, ir_i, ir_d, i*r, N_Qd, N_Qi)
+      Sr_i_t = - tmm*pa(kdi, IS_d, Sr_i, S)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        - tmp*pa(kdi, iS_d, Sr_i, S)*cc(dii, did, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
         + gp*Si_i
         + dm*Rr_i
         - dp*Sr_i
         + lm*sr_i
         - lm*Sr_i
-        - chi*pa(kii, sS_i, Sr_i, S)*cc(iii, iid, sr_i, sr_d, s*r, N_Qd, N_Qi)
-        - chi*pa(kii, iS_i, Sr_i, S)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi)
+        - chi*pa(kii, sS_i, Sr_i, S)*cc(iii, iid, sr_i, sr_d, s*r, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, iS_i, Sr_i, S)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
         - chi*Sr_i
-        - chi*pa(kii, rS_i, Sr_i, S)*cc(iii, iid, rr_i, rr_d, r*r, N_Qd, N_Qi)
-        + chi*pa(kii, SR_i, Rs_i, R)*cc(iii, iid, Ss_i, Ss_d, S*s, N_Qd, N_Qi)
-        + chi*pa(kii, SR_i, Ri_i, R)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi)
-        + chi*pa(kii, SR_i, Rr_i, R)*cc(iii, iid, Sr_i, Sr_d, S*r, N_Qd, N_Qi)
-        - mu*pa(kii, IS_i, Sr_i, S)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        + mu*pa(kii, SR_i, RI_i, R)*cc(iii, iid, SI_i, SI_d, S*I, N_Qd, N_Qi)
-        - mu*pa(kii, iS_i, Sr_i, S)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        + mu*pa(kii, SR_i, Ri_i, R)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi)
+        - chi*pa(kii, rS_i, Sr_i, S)*cc(iii, iid, rr_i, rr_d, r*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, SR_i, Rs_i, R)*cc(iii, iid, Ss_i, Ss_d, S*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, SR_i, Ri_i, R)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, SR_i, Rr_i, R)*cc(iii, iid, Sr_i, Sr_d, S*r, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, IS_i, Sr_i, S)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, SR_i, RI_i, R)*cc(iii, iid, SI_i, SI_d, S*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, iS_i, Sr_i, S)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, SR_i, Ri_i, R)*cc(iii, iid, Si_i, Si_d, S*i, N_Qd, N_Qi, nd, ni)
         ;
             
       II_d_t = 2*(
                   + tmm*SI_d
-                  + tmm*pa(kdd, IS_d, SI_d, S)*cc(ddi, ddd, II_i, II_d, I*I, N_Qd, N_Qi)
-                  + tmp*pa(kdd, iS_d, SI_d, S)*cc(ddi, ddd, iI_i, iI_d, i*I, N_Qd, N_Qi)
+                  + tmm*pa(kdd, IS_d, SI_d, S)*cc(ddi, ddd, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+                  + tmp*pa(kdd, iS_d, SI_d, S)*cc(ddi, ddd, iI_i, iI_d, i*I, N_Qd, N_Qi, nd, ni)
                   - gm*II_d
                   + lm*Ii_d
                   - om*II_d
-                  - chi*pa(kdi, II_d, Is_i, I)*cc(dii, did, Is_i, Is_d, I*s, N_Qd, N_Qi)
-                  - chi*pa(kdi, II_d, Ii_i, I)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-                  - chi*pa(kdi, II_d, Ir_i, I)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-                  - mu*pa(kdi, II_d, II_i, I)*cc(dii, did, II_i, II_d, I*I, N_Qd, N_Qi)
-                  - mu*pa(kdi, II_d, Ii_i, I)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+                  - chi*pa(kdi, II_d, Is_i, I)*cc(dii, did, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+                  - chi*pa(kdi, II_d, Ii_i, I)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+                  - chi*pa(kdi, II_d, Ir_i, I)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+                  - mu*pa(kdi, II_d, II_i, I)*cc(dii, did, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+                  - mu*pa(kdi, II_d, Ii_i, I)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
                   - qid*mu*II_d
                   );
 
       II_i_t = 2*(
-                  + tmm*pa(kdi, IS_d, SI_i, S)*cc(dii, did, II_i, II_d, I*I, N_Qd, N_Qi)
-                  + tmp*pa(kdi, iS_d, SI_i, S)*cc(dii, did, iI_i, iI_d, i*I, N_Qd, N_Qi)
+                  + tmm*pa(kdi, IS_d, SI_i, S)*cc(dii, did, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+                  + tmp*pa(kdi, iS_d, SI_i, S)*cc(dii, did, iI_i, iI_d, i*I, N_Qd, N_Qi, nd, ni)
                   - gm*II_i
                   + lm*Ii_i
                   - om*II_i
-                  - chi*pa(kii, II_i, Is_i, I)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi)
-                  - chi*pa(kii, II_i, Ii_i, I)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-                  - chi*pa(kii, II_i, Ir_i, I)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
+                  - chi*pa(kii, II_i, Is_i, I)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+                  - chi*pa(kii, II_i, Ii_i, I)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+                  - chi*pa(kii, II_i, Ir_i, I)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
                   - mu*II_i
-                  - mu*pa(kii, II_i, II_i, I)*cc(iii, iid, II_i, II_d, I*I, N_Qd, N_Qi)
-                  - mu*pa(kii, II_i, Ii_i, I)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+                  - mu*pa(kii, II_i, II_i, I)*cc(iii, iid, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+                  - mu*pa(kii, II_i, Ii_i, I)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
                   + qdi*tmm*SI_i
                   );
 
-      IR_d_t = + tmm*pa(kdd, IS_d, SR_d, S)*cc(ddi, ddd, IR_i, IR_d, I*R, N_Qd, N_Qi)
-        + tmp*pa(kdd, iS_d, SR_d, S)*cc(ddi, ddd, iR_i, iR_d, i*R, N_Qd, N_Qi)
+      IR_d_t = + tmm*pa(kdd, IS_d, SR_d, S)*cc(ddi, ddd, IR_i, IR_d, I*R, N_Qd, N_Qi, nd, ni)
+        + tmp*pa(kdd, iS_d, SR_d, S)*cc(ddi, ddd, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
         + gm*II_d
         - gm*IR_d
         - dm*IR_d
         + lm*Ri_d
         + lm*Ir_d
         - om*IR_d
-        - chi*pa(kid, sI_i, IR_d, I)*cc(idi, idd, sR_i, sR_d, s*R, N_Qd, N_Qi)
-        - chi*pa(kid, iI_i, IR_d, I)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        - chi*pa(kid, rI_i, IR_d, I)*cc(idi, idd, rR_i, rR_d, r*R, N_Qd, N_Qi)
-        - chi*pa(kdi, IR_d, Rs_i, R)*cc(dii, did, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        - chi*pa(kdi, IR_d, Ri_i, R)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        - chi*pa(kdi, IR_d, Rr_i, R)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        - mu*pa(kid, II_i, IR_d, I)*cc(idi, idd, IR_i, IR_d, I*R, N_Qd, N_Qi)
-        - mu*pa(kdi, IR_d, RI_i, R)*cc(dii, did, II_i, II_d, I*I, N_Qd, N_Qi)
-        - mu*pa(kid, iI_i, IR_d, I)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        - mu*pa(kdi, IR_d, Ri_i, R)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+        - chi*pa(kid, sI_i, IR_d, I)*cc(idi, idd, sR_i, sR_d, s*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, iI_i, IR_d, I)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, rI_i, IR_d, I)*cc(idi, idd, rR_i, rR_d, r*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kdi, IR_d, Rs_i, R)*cc(dii, did, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kdi, IR_d, Ri_i, R)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kdi, IR_d, Rr_i, R)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, II_i, IR_d, I)*cc(idi, idd, IR_i, IR_d, I*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kdi, IR_d, RI_i, R)*cc(dii, did, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, iI_i, IR_d, I)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kdi, IR_d, Ri_i, R)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
         - qid*mu*IR_d;
 
-      IR_i_t = + tmm*pa(kdi, IS_d, SR_i, S)*cc(dii, did, IR_i, IR_d, I*R, N_Qd, N_Qi)
-        + tmp*pa(kdi, iS_d, SR_i, S)*cc(dii, did, iR_i, iR_d, i*R, N_Qd, N_Qi)
+      IR_i_t = + tmm*pa(kdi, IS_d, SR_i, S)*cc(dii, did, IR_i, IR_d, I*R, N_Qd, N_Qi, nd, ni)
+        + tmp*pa(kdi, iS_d, SR_i, S)*cc(dii, did, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
         + gm*II_i
         - gm*IR_i
         - dm*IR_i
         + lm*Ri_i
         + lm*Ir_i
         - om*IR_i
-        - chi*pa(kii, sI_i, IR_i, I)*cc(iii, iid, sR_i, sR_d, s*R, N_Qd, N_Qi)
-        - chi*pa(kii, iI_i, IR_i, I)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        - chi*pa(kii, rI_i, IR_i, I)*cc(iii, iid, rR_i, rR_d, r*R, N_Qd, N_Qi)
-        - chi*pa(kii, IR_i, Rs_i, R)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        - chi*pa(kii, IR_i, Ri_i, R)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        - chi*pa(kii, IR_i, Rr_i, R)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        - mu*pa(kii, II_i, IR_i, I)*cc(iii, iid, IR_i, IR_d, I*R, N_Qd, N_Qi)
+        - chi*pa(kii, sI_i, IR_i, I)*cc(iii, iid, sR_i, sR_d, s*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, iI_i, IR_i, I)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, rI_i, IR_i, I)*cc(iii, iid, rR_i, rR_d, r*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, IR_i, Rs_i, R)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, IR_i, Ri_i, R)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, IR_i, Rr_i, R)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, II_i, IR_i, I)*cc(iii, iid, IR_i, IR_d, I*R, N_Qd, N_Qi, nd, ni)
         - mu*IR_i
-        - mu*pa(kii, IR_i, RI_i, R)*cc(iii, iid, II_i, II_d, I*I, N_Qd, N_Qi)
-        - mu*pa(kii, iI_i, IR_i, I)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        - mu*pa(kii, IR_i, Ri_i, R)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+        - mu*pa(kii, IR_i, RI_i, R)*cc(iii, iid, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, iI_i, IR_i, I)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, IR_i, Ri_i, R)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
         ;
             
-      Is_d_t = + tmm*pa(kdd, IS_d, Ss_d, S)*cc(ddi, ddd, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        - tpp*pa(kdd, Is_d, si_d, s)*cc(ddi, ddd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + tmp*pa(kdd, iS_d, Ss_d, S)*cc(ddi, ddd, is_i, is_d, i*s, N_Qd, N_Qi)
+      Is_d_t = + tmm*pa(kdd, IS_d, Ss_d, S)*cc(ddi, ddd, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        - tpp*pa(kdd, Is_d, si_d, s)*cc(ddi, ddd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + tmp*pa(kdd, iS_d, Ss_d, S)*cc(ddi, ddd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
         - tpm*Is_d
-        - tpm*pa(kdd, Is_d, sI_d, s)*cc(ddi, ddd, II_i, II_d, I*I, N_Qd, N_Qi)
+        - tpm*pa(kdd, Is_d, sI_d, s)*cc(ddi, ddd, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
         - gm*Is_d
         + dp*Ir_d
         - lm*Is_d
         + lm*si_d
         - om*Is_d
-        + chi*pa(kid, sS_i, SI_d, S)*cc(idi, idd, sI_i, sI_d, s*I, N_Qd, N_Qi)
-        + chi*pa(kid, iS_i, SI_d, S)*cc(idi, idd, iI_i, iI_d, i*I, N_Qd, N_Qi)
-        + chi*pa(kid, rS_i, SI_d, S)*cc(idi, idd, rI_i, rI_d, r*I, N_Qd, N_Qi)
-        - chi*pa(kid, sI_i, Is_d, I)*cc(idi, idd, ss_i, ss_d, s*s, N_Qd, N_Qi)
-        - chi*pa(kid, iI_i, Is_d, I)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi)
-        - chi*pa(kid, rI_i, Is_d, I)*cc(idi, idd, rs_i, rs_d, r*s, N_Qd, N_Qi)
-        + mu*pa(kid, IS_i, SI_d, S)*cc(idi, idd, II_i, II_d, I*I, N_Qd, N_Qi)
-        - mu*pa(kid, II_i, Is_d, I)*cc(idi, idd, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        + mu*pa(kid, iS_i, SI_d, S)*cc(idi, idd, iI_i, iI_d, i*I, N_Qd, N_Qi)
-        - mu*pa(kid, iI_i, Is_d, I)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi)
+        + chi*pa(kid, sS_i, SI_d, S)*cc(idi, idd, sI_i, sI_d, s*I, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, iS_i, SI_d, S)*cc(idi, idd, iI_i, iI_d, i*I, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, rS_i, SI_d, S)*cc(idi, idd, rI_i, rI_d, r*I, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, sI_i, Is_d, I)*cc(idi, idd, ss_i, ss_d, s*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, iI_i, Is_d, I)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, rI_i, Is_d, I)*cc(idi, idd, rs_i, rs_d, r*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, IS_i, SI_d, S)*cc(idi, idd, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, II_i, Is_d, I)*cc(idi, idd, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, iS_i, SI_d, S)*cc(idi, idd, iI_i, iI_d, i*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, iI_i, Is_d, I)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
         - qid*chi*Is_d
         + qid*mu*SI_d;
 
-      Is_i_t = + tmm*pa(kdi, IS_d, Ss_i, S)*cc(dii, did, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        - tpp*pa(kid, Is_i, si_d, s)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + tmp*pa(kdi, iS_d, Ss_i, S)*cc(dii, did, is_i, is_d, i*s, N_Qd, N_Qi)
-        - tpm*pa(kid, Is_i, sI_d, s)*cc(idi, idd, II_i, II_d, I*I, N_Qd, N_Qi)
+      Is_i_t = + tmm*pa(kdi, IS_d, Ss_i, S)*cc(dii, did, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        - tpp*pa(kid, Is_i, si_d, s)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + tmp*pa(kdi, iS_d, Ss_i, S)*cc(dii, did, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        - tpm*pa(kid, Is_i, sI_d, s)*cc(idi, idd, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
         - gm*Is_i
         + dp*Ir_i
         - lm*Is_i
         + lm*si_i
         - om*Is_i
-        + chi*pa(kii, sS_i, SI_i, S)*cc(iii, iid, sI_i, sI_d, s*I, N_Qd, N_Qi)
-        + chi*pa(kii, iS_i, SI_i, S)*cc(iii, iid, iI_i, iI_d, i*I, N_Qd, N_Qi)
-        + chi*pa(kii, rS_i, SI_i, S)*cc(iii, iid, rI_i, rI_d, r*I, N_Qd, N_Qi)
+        + chi*pa(kii, sS_i, SI_i, S)*cc(iii, iid, sI_i, sI_d, s*I, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, iS_i, SI_i, S)*cc(iii, iid, iI_i, iI_d, i*I, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, rS_i, SI_i, S)*cc(iii, iid, rI_i, rI_d, r*I, N_Qd, N_Qi, nd, ni)
         - chi*Is_i
-        - chi*pa(kii, sI_i, Is_i, I)*cc(iii, iid, ss_i, ss_d, s*s, N_Qd, N_Qi)
-        - chi*pa(kii, iI_i, Is_i, I)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi)
-        - chi*pa(kii, rI_i, Is_i, I)*cc(iii, iid, rs_i, rs_d, r*s, N_Qd, N_Qi)
+        - chi*pa(kii, sI_i, Is_i, I)*cc(iii, iid, ss_i, ss_d, s*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, iI_i, Is_i, I)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, rI_i, Is_i, I)*cc(iii, iid, rs_i, rs_d, r*s, N_Qd, N_Qi, nd, ni)
         + mu*SI_i
-        + mu*pa(kii, IS_i, SI_i, S)*cc(iii, iid, II_i, II_d, I*I, N_Qd, N_Qi)
-        - mu*pa(kii, II_i, Is_i, I)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        + mu*pa(kii, iS_i, SI_i, S)*cc(iii, iid, iI_i, iI_d, i*I, N_Qd, N_Qi)
-        - mu*pa(kii, iI_i, Is_i, I)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi)
+        + mu*pa(kii, IS_i, SI_i, S)*cc(iii, iid, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, II_i, Is_i, I)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, iS_i, SI_i, S)*cc(iii, iid, iI_i, iI_d, i*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, iI_i, Is_i, I)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
         - qdi*tpm*Is_i;
 
-      Ii_d_t = + tmm*pa(kdd, IS_d, Si_d, S)*cc(ddi, ddd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + tpp*pa(kdd, Is_d, si_d, s)*cc(ddi, ddd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+      Ii_d_t = + tmm*pa(kdd, IS_d, Si_d, S)*cc(ddi, ddd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + tpp*pa(kdd, Is_d, si_d, s)*cc(ddi, ddd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
         + tmp*Si_d
-        + tmp*pa(kdd, iS_d, Si_d, S)*cc(ddi, ddd, ii_i, ii_d, i*i, N_Qd, N_Qi)
+        + tmp*pa(kdd, iS_d, Si_d, S)*cc(ddi, ddd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
         + tpm*Is_d
-        + tpm*pa(kdd, Is_d, sI_d, s)*cc(ddi, ddd, II_i, II_d, I*I, N_Qd, N_Qi)
+        + tpm*pa(kdd, Is_d, sI_d, s)*cc(ddi, ddd, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
         - gm*Ii_d
         - gp*Ii_d
         - lm*Ii_d
         + lm*ii_d
         + om*II_d
         - om*Ii_d
-        + chi*pa(kdi, II_d, Is_i, I)*cc(dii, did, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        - chi*pa(kid, sI_i, Ii_d, I)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi)
-        + chi*pa(kdi, II_d, Ii_i, I)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        - chi*pa(kid, iI_i, Ii_d, I)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + chi*pa(kdi, II_d, Ir_i, I)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        - chi*pa(kid, rI_i, Ii_d, I)*cc(idi, idd, ri_i, ri_d, r*i, N_Qd, N_Qi)
-        + mu*pa(kdi, II_d, II_i, I)*cc(dii, did, II_i, II_d, I*I, N_Qd, N_Qi)
-        - mu*pa(kid, II_i, Ii_d, I)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + mu*pa(kdi, II_d, Ii_i, I)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        - mu*pa(kid, iI_i, Ii_d, I)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi)
+        + chi*pa(kdi, II_d, Is_i, I)*cc(dii, did, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, sI_i, Ii_d, I)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, II_d, Ii_i, I)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, iI_i, Ii_d, I)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, II_d, Ir_i, I)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, rI_i, Ii_d, I)*cc(idi, idd, ri_i, ri_d, r*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kdi, II_d, II_i, I)*cc(dii, did, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, II_i, Ii_d, I)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kdi, II_d, Ii_i, I)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, iI_i, Ii_d, I)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
         - qid*chi*Ii_d
         + qid*mu*II_d
         - qid*mu*Ii_d;
 
-      Ii_i_t = + tmm*pa(kdi, IS_d, Si_i, S)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + tpp*pa(kid, Is_i, si_d, s)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + tmp*pa(kdi, iS_d, Si_i, S)*cc(dii, did, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + tpm*pa(kid, Is_i, sI_d, s)*cc(idi, idd, II_i, II_d, I*I, N_Qd, N_Qi)
+      Ii_i_t = + tmm*pa(kdi, IS_d, Si_i, S)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + tpp*pa(kid, Is_i, si_d, s)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + tmp*pa(kdi, iS_d, Si_i, S)*cc(dii, did, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + tpm*pa(kid, Is_i, sI_d, s)*cc(idi, idd, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
         - gm*Ii_i
         - gp*Ii_i
         - lm*Ii_i
         + lm*ii_i
         + om*II_i
         - om*Ii_i
-        + chi*pa(kii, II_i, Is_i, I)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        - chi*pa(kii, sI_i, Ii_i, I)*cc(iii, iid, si_i, si_d, s*i, N_Qd, N_Qi)
+        + chi*pa(kii, II_i, Is_i, I)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, sI_i, Ii_i, I)*cc(iii, iid, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
         - chi*Ii_i
-        + chi*pa(kii, II_i, Ii_i, I)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        - chi*pa(kii, iI_i, Ii_i, I)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + chi*pa(kii, II_i, Ir_i, I)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        - chi*pa(kii, rI_i, Ii_i, I)*cc(iii, iid, ri_i, ri_d, r*i, N_Qd, N_Qi)
+        + chi*pa(kii, II_i, Ii_i, I)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, iI_i, Ii_i, I)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, II_i, Ir_i, I)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, rI_i, Ii_i, I)*cc(iii, iid, ri_i, ri_d, r*i, N_Qd, N_Qi, nd, ni)
         + mu*II_i
-        + mu*pa(kii, II_i, II_i, I)*cc(iii, iid, II_i, II_d, I*I, N_Qd, N_Qi)
-        - mu*pa(kii, II_i, Ii_i, I)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+        + mu*pa(kii, II_i, II_i, I)*cc(iii, iid, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, II_i, Ii_i, I)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
         - mu*Ii_i
-        + mu*pa(kii, II_i, Ii_i, I)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        - mu*pa(kii, iI_i, Ii_i, I)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi)
+        + mu*pa(kii, II_i, Ii_i, I)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, iI_i, Ii_i, I)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
         + qdi*tmp*Si_i
         + qdi*tpm*Is_i;
 
-      Ir_d_t = + tmm*pa(kdd, IS_d, Sr_d, S)*cc(ddi, ddd, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        + tmp*pa(kdd, iS_d, Sr_d, S)*cc(ddi, ddd, ir_i, ir_d, i*r, N_Qd, N_Qi)
+      Ir_d_t = + tmm*pa(kdd, IS_d, Sr_d, S)*cc(ddi, ddd, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        + tmp*pa(kdd, iS_d, Sr_d, S)*cc(ddi, ddd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
         - gm*Ir_d
         + gp*Ii_d
         - dp*Ir_d
         + lm*ir_d
         - lm*Ir_d
         - om*Ir_d
-        - chi*pa(kid, sI_i, Ir_d, I)*cc(idi, idd, sr_i, sr_d, s*r, N_Qd, N_Qi)
-        - chi*pa(kid, iI_i, Ir_d, I)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        - chi*pa(kid, rI_i, Ir_d, I)*cc(idi, idd, rr_i, rr_d, r*r, N_Qd, N_Qi)
-        + chi*pa(kdi, IR_d, Rs_i, R)*cc(dii, did, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        + chi*pa(kdi, IR_d, Ri_i, R)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + chi*pa(kdi, IR_d, Rr_i, R)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        - mu*pa(kid, II_i, Ir_d, I)*cc(idi, idd, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        + mu*pa(kdi, IR_d, RI_i, R)*cc(dii, did, II_i, II_d, I*I, N_Qd, N_Qi)
-        - mu*pa(kid, iI_i, Ir_d, I)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        + mu*pa(kdi, IR_d, Ri_i, R)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+        - chi*pa(kid, sI_i, Ir_d, I)*cc(idi, idd, sr_i, sr_d, s*r, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, iI_i, Ir_d, I)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, rI_i, Ir_d, I)*cc(idi, idd, rr_i, rr_d, r*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, IR_d, Rs_i, R)*cc(dii, did, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, IR_d, Ri_i, R)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, IR_d, Rr_i, R)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, II_i, Ir_d, I)*cc(idi, idd, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kdi, IR_d, RI_i, R)*cc(dii, did, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, iI_i, Ir_d, I)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kdi, IR_d, Ri_i, R)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
         - qid*chi*Ir_d
         + qid*mu*IR_d;
 
-      Ir_i_t = + tmm*pa(kdi, IS_d, Sr_i, S)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        + tmp*pa(kdi, iS_d, Sr_i, S)*cc(dii, did, ir_i, ir_d, i*r, N_Qd, N_Qi)
+      Ir_i_t = + tmm*pa(kdi, IS_d, Sr_i, S)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        + tmp*pa(kdi, iS_d, Sr_i, S)*cc(dii, did, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
         - gm*Ir_i
         + gp*Ii_i
         - dp*Ir_i
         + lm*ir_i
         - lm*Ir_i
         - om*Ir_i
-        - chi*pa(kii, sI_i, Ir_i, I)*cc(iii, iid, sr_i, sr_d, s*r, N_Qd, N_Qi)
-        - chi*pa(kii, iI_i, Ir_i, I)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi)
+        - chi*pa(kii, sI_i, Ir_i, I)*cc(iii, iid, sr_i, sr_d, s*r, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, iI_i, Ir_i, I)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
         - chi*Ir_i
-        - chi*pa(kii, rI_i, Ir_i, I)*cc(iii, iid, rr_i, rr_d, r*r, N_Qd, N_Qi)
-        + chi*pa(kii, IR_i, Rs_i, R)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        + chi*pa(kii, IR_i, Ri_i, R)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + chi*pa(kii, IR_i, Rr_i, R)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        - mu*pa(kii, II_i, Ir_i, I)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
+        - chi*pa(kii, rI_i, Ir_i, I)*cc(iii, iid, rr_i, rr_d, r*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, IR_i, Rs_i, R)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, IR_i, Ri_i, R)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, IR_i, Rr_i, R)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, II_i, Ir_i, I)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
         + mu*IR_i
-        + mu*pa(kii, IR_i, RI_i, R)*cc(iii, iid, II_i, II_d, I*I, N_Qd, N_Qi)
-        - mu*pa(kii, iI_i, Ir_i, I)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        + mu*pa(kii, IR_i, Ri_i, R)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+        + mu*pa(kii, IR_i, RI_i, R)*cc(iii, iid, II_i, II_d, I*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, iI_i, Ir_i, I)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, IR_i, Ri_i, R)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
         ;
             
       RR_d_t = 2*(
                   + gm*IR_d
                   - dm*RR_d
                   + lm*Rr_d
-                  - chi*pa(kdi, RR_d, Rs_i, R)*cc(dii, did, Rs_i, Rs_d, R*s, N_Qd, N_Qi)
-                  - chi*pa(kdi, RR_d, Ri_i, R)*cc(dii, did, Ri_i, Ri_d, R*i, N_Qd, N_Qi)
-                  - chi*pa(kdi, RR_d, Rr_i, R)*cc(dii, did, Rr_i, Rr_d, R*r, N_Qd, N_Qi)
-                  - mu*pa(kdi, RR_d, RI_i, R)*cc(dii, did, RI_i, RI_d, R*I, N_Qd, N_Qi)
-                  - mu*pa(kdi, RR_d, Ri_i, R)*cc(dii, did, Ri_i, Ri_d, R*i, N_Qd, N_Qi)
+                  - chi*pa(kdi, RR_d, Rs_i, R)*cc(dii, did, Rs_i, Rs_d, R*s, N_Qd, N_Qi, nd, ni)
+                  - chi*pa(kdi, RR_d, Ri_i, R)*cc(dii, did, Ri_i, Ri_d, R*i, N_Qd, N_Qi, nd, ni)
+                  - chi*pa(kdi, RR_d, Rr_i, R)*cc(dii, did, Rr_i, Rr_d, R*r, N_Qd, N_Qi, nd, ni)
+                  - mu*pa(kdi, RR_d, RI_i, R)*cc(dii, did, RI_i, RI_d, R*I, N_Qd, N_Qi, nd, ni)
+                  - mu*pa(kdi, RR_d, Ri_i, R)*cc(dii, did, Ri_i, Ri_d, R*i, N_Qd, N_Qi, nd, ni)
                   );
 
       RR_i_t = 2*(
                   + gm*IR_i
                   - dm*RR_i
                   + lm*Rr_i
-                  - chi*pa(kii, RR_i, Rs_i, R)*cc(iii, iid, Rs_i, Rs_d, R*s, N_Qd, N_Qi)
-                  - chi*pa(kii, RR_i, Ri_i, R)*cc(iii, iid, Ri_i, Ri_d, R*i, N_Qd, N_Qi)
-                  - chi*pa(kii, RR_i, Rr_i, R)*cc(iii, iid, Rr_i, Rr_d, R*r, N_Qd, N_Qi)
-                  - mu*pa(kii, RR_i, RI_i, R)*cc(iii, iid, RI_i, RI_d, R*I, N_Qd, N_Qi)
-                  - mu*pa(kii, RR_i, Ri_i, R)*cc(iii, iid, Ri_i, Ri_d, R*i, N_Qd, N_Qi)
+                  - chi*pa(kii, RR_i, Rs_i, R)*cc(iii, iid, Rs_i, Rs_d, R*s, N_Qd, N_Qi, nd, ni)
+                  - chi*pa(kii, RR_i, Ri_i, R)*cc(iii, iid, Ri_i, Ri_d, R*i, N_Qd, N_Qi, nd, ni)
+                  - chi*pa(kii, RR_i, Rr_i, R)*cc(iii, iid, Rr_i, Rr_d, R*r, N_Qd, N_Qi, nd, ni)
+                  - mu*pa(kii, RR_i, RI_i, R)*cc(iii, iid, RI_i, RI_d, R*I, N_Qd, N_Qi, nd, ni)
+                  - mu*pa(kii, RR_i, Ri_i, R)*cc(iii, iid, Ri_i, Ri_d, R*i, N_Qd, N_Qi, nd, ni)
                   );
 
-      Rs_d_t = - tpp*pa(kdd, Rs_d, si_d, s)*cc(ddi, ddd, Ri_i, Ri_d, R*i, N_Qd, N_Qi)
-        - tpm*pa(kdd, Rs_d, sI_d, s)*cc(ddi, ddd, RI_i, RI_d, R*I, N_Qd, N_Qi)
+      Rs_d_t = - tpp*pa(kdd, Rs_d, si_d, s)*cc(ddi, ddd, Ri_i, Ri_d, R*i, N_Qd, N_Qi, nd, ni)
+        - tpm*pa(kdd, Rs_d, sI_d, s)*cc(ddi, ddd, RI_i, RI_d, R*I, N_Qd, N_Qi, nd, ni)
         + gm*Is_d
         - dm*Rs_d
         + dp*Rr_d
         - lm*Rs_d
         + lm*sr_d
-        + chi*pa(kid, sS_i, SR_d, S)*cc(idi, idd, sR_i, sR_d, s*R, N_Qd, N_Qi)
-        + chi*pa(kid, iS_i, SR_d, S)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        + chi*pa(kid, rS_i, SR_d, S)*cc(idi, idd, rR_i, rR_d, r*R, N_Qd, N_Qi)
-        - chi*pa(kid, sR_i, Rs_d, R)*cc(idi, idd, ss_i, ss_d, s*s, N_Qd, N_Qi)
-        - chi*pa(kid, iR_i, Rs_d, R)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi)
-        - chi*pa(kid, rR_i, Rs_d, R)*cc(idi, idd, rs_i, rs_d, r*s, N_Qd, N_Qi)
-        + mu*pa(kid, IS_i, SR_d, S)*cc(idi, idd, IR_i, IR_d, I*R, N_Qd, N_Qi)
-        - mu*pa(kid, IR_i, Rs_d, R)*cc(idi, idd, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        + mu*pa(kid, iS_i, SR_d, S)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        - mu*pa(kid, iR_i, Rs_d, R)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi)
+        + chi*pa(kid, sS_i, SR_d, S)*cc(idi, idd, sR_i, sR_d, s*R, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, iS_i, SR_d, S)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, rS_i, SR_d, S)*cc(idi, idd, rR_i, rR_d, r*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, sR_i, Rs_d, R)*cc(idi, idd, ss_i, ss_d, s*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, iR_i, Rs_d, R)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, rR_i, Rs_d, R)*cc(idi, idd, rs_i, rs_d, r*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, IS_i, SR_d, S)*cc(idi, idd, IR_i, IR_d, I*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, IR_i, Rs_d, R)*cc(idi, idd, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, iS_i, SR_d, S)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, iR_i, Rs_d, R)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
         - qid*chi*Rs_d;
 
-      Rs_i_t = - tpp*pa(kid, Rs_i, si_d, s)*cc(idi, idd, Ri_i, Ri_d, R*i, N_Qd, N_Qi)
-        - tpm*pa(kid, Rs_i, sI_d, s)*cc(idi, idd, RI_i, RI_d, R*I, N_Qd, N_Qi)
+      Rs_i_t = - tpp*pa(kid, Rs_i, si_d, s)*cc(idi, idd, Ri_i, Ri_d, R*i, N_Qd, N_Qi, nd, ni)
+        - tpm*pa(kid, Rs_i, sI_d, s)*cc(idi, idd, RI_i, RI_d, R*I, N_Qd, N_Qi, nd, ni)
         + gm*Is_i
         - dm*Rs_i
         + dp*Rr_i
         - lm*Rs_i
         + lm*sr_i
-        + chi*pa(kii, sS_i, SR_i, S)*cc(iii, iid, sR_i, sR_d, s*R, N_Qd, N_Qi)
-        + chi*pa(kii, iS_i, SR_i, S)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        + chi*pa(kii, rS_i, SR_i, S)*cc(iii, iid, rR_i, rR_d, r*R, N_Qd, N_Qi)
+        + chi*pa(kii, sS_i, SR_i, S)*cc(iii, iid, sR_i, sR_d, s*R, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, iS_i, SR_i, S)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, rS_i, SR_i, S)*cc(iii, iid, rR_i, rR_d, r*R, N_Qd, N_Qi, nd, ni)
         - chi*Rs_i
-        - chi*pa(kii, sR_i, Rs_i, R)*cc(iii, iid, ss_i, ss_d, s*s, N_Qd, N_Qi)
-        - chi*pa(kii, iR_i, Rs_i, R)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi)
-        - chi*pa(kii, rR_i, Rs_i, R)*cc(iii, iid, rs_i, rs_d, r*s, N_Qd, N_Qi)
-        + mu*pa(kii, IS_i, SR_i, S)*cc(iii, iid, IR_i, IR_d, I*R, N_Qd, N_Qi)
-        - mu*pa(kii, IR_i, Rs_i, R)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        + mu*pa(kii, iS_i, SR_i, S)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        - mu*pa(kii, iR_i, Rs_i, R)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi)
+        - chi*pa(kii, sR_i, Rs_i, R)*cc(iii, iid, ss_i, ss_d, s*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, iR_i, Rs_i, R)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, rR_i, Rs_i, R)*cc(iii, iid, rs_i, rs_d, r*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, IS_i, SR_i, S)*cc(iii, iid, IR_i, IR_d, I*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, IR_i, Rs_i, R)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, iS_i, SR_i, S)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, iR_i, Rs_i, R)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
         ;
             
-      Ri_d_t = + tpp*pa(kdd, Rs_d, si_d, s)*cc(ddi, ddd, Ri_i, Ri_d, R*i, N_Qd, N_Qi)
-        + tpm*pa(kdd, Rs_d, sI_d, s)*cc(ddi, ddd, RI_i, RI_d, R*I, N_Qd, N_Qi)
+      Ri_d_t = + tpp*pa(kdd, Rs_d, si_d, s)*cc(ddi, ddd, Ri_i, Ri_d, R*i, N_Qd, N_Qi, nd, ni)
+        + tpm*pa(kdd, Rs_d, sI_d, s)*cc(ddi, ddd, RI_i, RI_d, R*I, N_Qd, N_Qi, nd, ni)
         + gm*Ii_d
         - gp*Ri_d
         - dm*Ri_d
         - lm*Ri_d
         + lm*ir_d
         + om*IR_d
-        + chi*pa(kid, sI_i, IR_d, I)*cc(idi, idd, sR_i, sR_d, s*R, N_Qd, N_Qi)
-        + chi*pa(kid, iI_i, IR_d, I)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        + chi*pa(kid, rI_i, IR_d, I)*cc(idi, idd, rR_i, rR_d, r*R, N_Qd, N_Qi)
-        - chi*pa(kid, sR_i, Ri_d, R)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi)
-        - chi*pa(kid, iR_i, Ri_d, R)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        - chi*pa(kid, rR_i, Ri_d, R)*cc(idi, idd, ri_i, ri_d, r*i, N_Qd, N_Qi)
-        + mu*pa(kid, II_i, IR_d, I)*cc(idi, idd, IR_i, IR_d, I*R, N_Qd, N_Qi)
-        - mu*pa(kid, IR_i, Ri_d, R)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + mu*pa(kid, iI_i, IR_d, I)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        - mu*pa(kid, iR_i, Ri_d, R)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi)
+        + chi*pa(kid, sI_i, IR_d, I)*cc(idi, idd, sR_i, sR_d, s*R, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, iI_i, IR_d, I)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, rI_i, IR_d, I)*cc(idi, idd, rR_i, rR_d, r*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, sR_i, Ri_d, R)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, iR_i, Ri_d, R)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, rR_i, Ri_d, R)*cc(idi, idd, ri_i, ri_d, r*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, II_i, IR_d, I)*cc(idi, idd, IR_i, IR_d, I*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, IR_i, Ri_d, R)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, iI_i, IR_d, I)*cc(idi, idd, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, iR_i, Ri_d, R)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
         - qid*chi*Ri_d
         - qid*mu*Ri_d;
 
-      Ri_i_t = + tpp*pa(kid, Rs_i, si_d, s)*cc(idi, idd, Ri_i, Ri_d, R*i, N_Qd, N_Qi)
-        + tpm*pa(kid, Rs_i, sI_d, s)*cc(idi, idd, RI_i, RI_d, R*I, N_Qd, N_Qi)
+      Ri_i_t = + tpp*pa(kid, Rs_i, si_d, s)*cc(idi, idd, Ri_i, Ri_d, R*i, N_Qd, N_Qi, nd, ni)
+        + tpm*pa(kid, Rs_i, sI_d, s)*cc(idi, idd, RI_i, RI_d, R*I, N_Qd, N_Qi, nd, ni)
         + gm*Ii_i
         - gp*Ri_i
         - dm*Ri_i
         - lm*Ri_i
         + lm*ir_i
         + om*IR_i
-        + chi*pa(kii, sI_i, IR_i, I)*cc(iii, iid, sR_i, sR_d, s*R, N_Qd, N_Qi)
-        + chi*pa(kii, iI_i, IR_i, I)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi)
-        + chi*pa(kii, rI_i, IR_i, I)*cc(iii, iid, rR_i, rR_d, r*R, N_Qd, N_Qi)
-        - chi*pa(kii, sR_i, Ri_i, R)*cc(iii, iid, si_i, si_d, s*i, N_Qd, N_Qi)
+        + chi*pa(kii, sI_i, IR_i, I)*cc(iii, iid, sR_i, sR_d, s*R, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, iI_i, IR_i, I)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, rI_i, IR_i, I)*cc(iii, iid, rR_i, rR_d, r*R, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, sR_i, Ri_i, R)*cc(iii, iid, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
         - chi*Ri_i
-        - chi*pa(kii, iR_i, Ri_i, R)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        - chi*pa(kii, rR_i, Ri_i, R)*cc(iii, iid, ri_i, ri_d, r*i, N_Qd, N_Qi)
-        + mu*pa(kii, II_i, IR_i, I)*cc(iii, iid, IR_i, IR_d, I*R, N_Qd, N_Qi)
-        - mu*pa(kii, IR_i, Ri_i, R)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + mu*pa(kii, iI_i, IR_i, I)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi)
+        - chi*pa(kii, iR_i, Ri_i, R)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, rR_i, Ri_i, R)*cc(iii, iid, ri_i, ri_d, r*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, II_i, IR_i, I)*cc(iii, iid, IR_i, IR_d, I*R, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, IR_i, Ri_i, R)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, iI_i, IR_i, I)*cc(iii, iid, iR_i, iR_d, i*R, N_Qd, N_Qi, nd, ni)
         - mu*Ri_i
-        - mu*pa(kii, iR_i, Ri_i, R)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi)
+        - mu*pa(kii, iR_i, Ri_i, R)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
         ;
             
       Rr_d_t = + gm*Ir_d
@@ -833,16 +835,16 @@ namespace InfoSIRSpa
         - dp*Rr_d
         - lm*Rr_d
         + lm*rr_d
-        + chi*pa(kdi, RR_d, Rs_i, R)*cc(dii, did, Rs_i, Rs_d, R*s, N_Qd, N_Qi)
-        - chi*pa(kid, sR_i, Rr_d, R)*cc(idi, idd, sr_i, sr_d, s*r, N_Qd, N_Qi)
-        + chi*pa(kdi, RR_d, Ri_i, R)*cc(dii, did, Ri_i, Ri_d, R*i, N_Qd, N_Qi)
-        - chi*pa(kid, iR_i, Rr_d, R)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        + chi*pa(kdi, RR_d, Rr_i, R)*cc(dii, did, Rr_i, Rr_d, R*r, N_Qd, N_Qi)
-        - chi*pa(kid, rR_i, Rr_d, R)*cc(idi, idd, rr_i, rr_d, r*r, N_Qd, N_Qi)
-        + mu*pa(kdi, RR_d, RI_i, R)*cc(dii, did, RI_i, RI_d, R*I, N_Qd, N_Qi)
-        - mu*pa(kid, IR_i, Rr_d, R)*cc(idi, idd, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        + mu*pa(kdi, RR_d, Ri_i, R)*cc(dii, did, Ri_i, Ri_d, R*i, N_Qd, N_Qi)
-        - mu*pa(kid, iR_i, Rr_d, R)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi)
+        + chi*pa(kdi, RR_d, Rs_i, R)*cc(dii, did, Rs_i, Rs_d, R*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, sR_i, Rr_d, R)*cc(idi, idd, sr_i, sr_d, s*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, RR_d, Ri_i, R)*cc(dii, did, Ri_i, Ri_d, R*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, iR_i, Rr_d, R)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kdi, RR_d, Rr_i, R)*cc(dii, did, Rr_i, Rr_d, R*r, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kid, rR_i, Rr_d, R)*cc(idi, idd, rr_i, rr_d, r*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kdi, RR_d, RI_i, R)*cc(dii, did, RI_i, RI_d, R*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, IR_i, Rr_d, R)*cc(idi, idd, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kdi, RR_d, Ri_i, R)*cc(dii, did, Ri_i, Ri_d, R*i, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kid, iR_i, Rr_d, R)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
         - qid*chi*Rr_d;
 
       Rr_i_t = + gm*Ir_i
@@ -851,220 +853,220 @@ namespace InfoSIRSpa
         - dp*Rr_i
         - lm*Rr_i
         + lm*rr_i
-        + chi*pa(kii, RR_i, Rs_i, R)*cc(iii, iid, Rs_i, Rs_d, R*s, N_Qd, N_Qi)
-        - chi*pa(kii, sR_i, Rr_i, R)*cc(iii, iid, sr_i, sr_d, s*r, N_Qd, N_Qi)
-        + chi*pa(kii, RR_i, Ri_i, R)*cc(iii, iid, Ri_i, Ri_d, R*i, N_Qd, N_Qi)
-        - chi*pa(kii, iR_i, Rr_i, R)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi)
+        + chi*pa(kii, RR_i, Rs_i, R)*cc(iii, iid, Rs_i, Rs_d, R*s, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, sR_i, Rr_i, R)*cc(iii, iid, sr_i, sr_d, s*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, RR_i, Ri_i, R)*cc(iii, iid, Ri_i, Ri_d, R*i, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, iR_i, Rr_i, R)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
         - chi*Rr_i
-        + chi*pa(kii, RR_i, Rr_i, R)*cc(iii, iid, Rr_i, Rr_d, R*r, N_Qd, N_Qi)
-        - chi*pa(kii, rR_i, Rr_i, R)*cc(iii, iid, rr_i, rr_d, r*r, N_Qd, N_Qi)
-        + mu*pa(kii, RR_i, RI_i, R)*cc(iii, iid, RI_i, RI_d, R*I, N_Qd, N_Qi)
-        - mu*pa(kii, IR_i, Rr_i, R)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        + mu*pa(kii, RR_i, Ri_i, R)*cc(iii, iid, Ri_i, Ri_d, R*i, N_Qd, N_Qi)
-        - mu*pa(kii, iR_i, Rr_i, R)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi)
+        + chi*pa(kii, RR_i, Rr_i, R)*cc(iii, iid, Rr_i, Rr_d, R*r, N_Qd, N_Qi, nd, ni)
+        - chi*pa(kii, rR_i, Rr_i, R)*cc(iii, iid, rr_i, rr_d, r*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, RR_i, RI_i, R)*cc(iii, iid, RI_i, RI_d, R*I, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, IR_i, Rr_i, R)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, RR_i, Ri_i, R)*cc(iii, iid, Ri_i, Ri_d, R*i, N_Qd, N_Qi, nd, ni)
+        - mu*pa(kii, iR_i, Rr_i, R)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
         ;
             
       ss_d_t = 2*(
-                  - tpp*pa(kdd, ss_d, si_d, s)*cc(ddi, ddd, si_i, si_d, s*i, N_Qd, N_Qi)
-                  - tpm*pa(kdd, ss_d, sI_d, s)*cc(ddi, ddd, sI_i, sI_d, s*I, N_Qd, N_Qi)
+                  - tpp*pa(kdd, ss_d, si_d, s)*cc(ddi, ddd, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
+                  - tpm*pa(kdd, ss_d, sI_d, s)*cc(ddi, ddd, sI_i, sI_d, s*I, N_Qd, N_Qi, nd, ni)
                   + dp*sr_d
                   - lm*ss_d
-                  + chi*pa(kid, sS_i, Ss_d, S)*cc(idi, idd, ss_i, ss_d, s*s, N_Qd, N_Qi)
-                  + chi*pa(kid, iS_i, Ss_d, S)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi)
-                  + chi*pa(kid, rS_i, Ss_d, S)*cc(idi, idd, rs_i, rs_d, r*s, N_Qd, N_Qi)
-                  + mu*pa(kid, IS_i, Ss_d, S)*cc(idi, idd, Is_i, Is_d, I*s, N_Qd, N_Qi)
-                  + mu*pa(kid, iS_i, Ss_d, S)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi)
+                  + chi*pa(kid, sS_i, Ss_d, S)*cc(idi, idd, ss_i, ss_d, s*s, N_Qd, N_Qi, nd, ni)
+                  + chi*pa(kid, iS_i, Ss_d, S)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+                  + chi*pa(kid, rS_i, Ss_d, S)*cc(idi, idd, rs_i, rs_d, r*s, N_Qd, N_Qi, nd, ni)
+                  + mu*pa(kid, IS_i, Ss_d, S)*cc(idi, idd, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+                  + mu*pa(kid, iS_i, Ss_d, S)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
                   + qid*chi*Ss_d
                   );
 
       ss_i_t = 2*(
-                  - tpp*pa(kid, ss_i, si_d, s)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi)
-                  - tpm*pa(kid, ss_i, sI_d, s)*cc(idi, idd, sI_i, sI_d, s*I, N_Qd, N_Qi)
+                  - tpp*pa(kid, ss_i, si_d, s)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
+                  - tpm*pa(kid, ss_i, sI_d, s)*cc(idi, idd, sI_i, sI_d, s*I, N_Qd, N_Qi, nd, ni)
                   + dp*sr_i
                   - lm*ss_i
                   + chi*Ss_i
-                  + chi*pa(kii, sS_i, Ss_i, S)*cc(iii, iid, ss_i, ss_d, s*s, N_Qd, N_Qi)
-                  + chi*pa(kii, iS_i, Ss_i, S)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi)
-                  + chi*pa(kii, rS_i, Ss_i, S)*cc(iii, iid, rs_i, rs_d, r*s, N_Qd, N_Qi)
-                  + mu*pa(kii, IS_i, Ss_i, S)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi)
-                  + mu*pa(kii, iS_i, Ss_i, S)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi)
+                  + chi*pa(kii, sS_i, Ss_i, S)*cc(iii, iid, ss_i, ss_d, s*s, N_Qd, N_Qi, nd, ni)
+                  + chi*pa(kii, iS_i, Ss_i, S)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+                  + chi*pa(kii, rS_i, Ss_i, S)*cc(iii, iid, rs_i, rs_d, r*s, N_Qd, N_Qi, nd, ni)
+                  + mu*pa(kii, IS_i, Ss_i, S)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+                  + mu*pa(kii, iS_i, Ss_i, S)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
                   );
 
       si_d_t = - tpp*si_d
-        + tpp*pa(kdd, ss_d, si_d, s)*cc(ddi, ddd, si_i, si_d, s*i, N_Qd, N_Qi)
-        - tpp*pa(kdd, is_d, si_d, s)*cc(ddi, ddd, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + tpm*pa(kdd, ss_d, sI_d, s)*cc(ddi, ddd, sI_i, sI_d, s*I, N_Qd, N_Qi)
-        - tpm*pa(kdd, Is_d, si_d, s)*cc(ddi, ddd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+        + tpp*pa(kdd, ss_d, si_d, s)*cc(ddi, ddd, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
+        - tpp*pa(kdd, is_d, si_d, s)*cc(ddi, ddd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + tpm*pa(kdd, ss_d, sI_d, s)*cc(ddi, ddd, sI_i, sI_d, s*I, N_Qd, N_Qi, nd, ni)
+        - tpm*pa(kdd, Is_d, si_d, s)*cc(ddi, ddd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
         - gp*si_d
         + dp*ir_d
         - lm*si_d
         - lm*si_d
         + om*Is_d
-        + chi*pa(kid, sS_i, Si_d, S)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi)
-        + chi*pa(kid, iS_i, Si_d, S)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + chi*pa(kid, rS_i, Si_d, S)*cc(idi, idd, ri_i, ri_d, r*i, N_Qd, N_Qi)
-        + chi*pa(kid, sI_i, Is_d, I)*cc(idi, idd, ss_i, ss_d, s*s, N_Qd, N_Qi)
-        + chi*pa(kid, iI_i, Is_d, I)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi)
-        + chi*pa(kid, rI_i, Is_d, I)*cc(idi, idd, rs_i, rs_d, r*s, N_Qd, N_Qi)
-        + mu*pa(kid, IS_i, Si_d, S)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + mu*pa(kid, II_i, Is_d, I)*cc(idi, idd, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        + mu*pa(kid, iS_i, Si_d, S)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + mu*pa(kid, iI_i, Is_d, I)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi)
+        + chi*pa(kid, sS_i, Si_d, S)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, iS_i, Si_d, S)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, rS_i, Si_d, S)*cc(idi, idd, ri_i, ri_d, r*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, sI_i, Is_d, I)*cc(idi, idd, ss_i, ss_d, s*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, iI_i, Is_d, I)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, rI_i, Is_d, I)*cc(idi, idd, rs_i, rs_d, r*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, IS_i, Si_d, S)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, II_i, Is_d, I)*cc(idi, idd, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, iS_i, Si_d, S)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, iI_i, Is_d, I)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
         + qid*chi*Si_d
         + qid*chi*Is_d
         + qid*mu*Si_d;
 
-      si_i_t = + tpp*pa(kid, ss_i, si_d, s)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi)
-        - tpp*pa(kdi, is_d, si_i, s)*cc(dii, did, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + tpm*pa(kid, ss_i, sI_d, s)*cc(idi, idd, sI_i, sI_d, s*I, N_Qd, N_Qi)
-        - tpm*pa(kdi, Is_d, si_i, s)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+      si_i_t = + tpp*pa(kid, ss_i, si_d, s)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
+        - tpp*pa(kdi, is_d, si_i, s)*cc(dii, did, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + tpm*pa(kid, ss_i, sI_d, s)*cc(idi, idd, sI_i, sI_d, s*I, N_Qd, N_Qi, nd, ni)
+        - tpm*pa(kdi, Is_d, si_i, s)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
         - gp*si_i
         + dp*ir_i
         - lm*si_i
         - lm*si_i
         + om*Is_i
-        + chi*pa(kii, sS_i, Si_i, S)*cc(iii, iid, si_i, si_d, s*i, N_Qd, N_Qi)
+        + chi*pa(kii, sS_i, Si_i, S)*cc(iii, iid, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
         + chi*Si_i
-        + chi*pa(kii, iS_i, Si_i, S)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + chi*pa(kii, rS_i, Si_i, S)*cc(iii, iid, ri_i, ri_d, r*i, N_Qd, N_Qi)
+        + chi*pa(kii, iS_i, Si_i, S)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, rS_i, Si_i, S)*cc(iii, iid, ri_i, ri_d, r*i, N_Qd, N_Qi, nd, ni)
         + chi*Is_i
-        + chi*pa(kii, sI_i, Is_i, I)*cc(iii, iid, ss_i, ss_d, s*s, N_Qd, N_Qi)
-        + chi*pa(kii, iI_i, Is_i, I)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi)
-        + chi*pa(kii, rI_i, Is_i, I)*cc(iii, iid, rs_i, rs_d, r*s, N_Qd, N_Qi)
-        + mu*pa(kii, IS_i, Si_i, S)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + mu*pa(kii, II_i, Is_i, I)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi)
+        + chi*pa(kii, sI_i, Is_i, I)*cc(iii, iid, ss_i, ss_d, s*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, iI_i, Is_i, I)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, rI_i, Is_i, I)*cc(iii, iid, rs_i, rs_d, r*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, IS_i, Si_i, S)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, II_i, Is_i, I)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
         + mu*Si_i
-        + mu*pa(kii, iS_i, Si_i, S)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + mu*pa(kii, iI_i, Is_i, I)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi)
+        + mu*pa(kii, iS_i, Si_i, S)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, iI_i, Is_i, I)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
         - qdi*tpp*si_i;
 
-      sr_d_t = - tpp*pa(kdd, is_d, sr_d, s)*cc(ddi, ddd, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        - tpm*pa(kdd, Is_d, sr_d, s)*cc(ddi, ddd, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
+      sr_d_t = - tpp*pa(kdd, is_d, sr_d, s)*cc(ddi, ddd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        - tpm*pa(kdd, Is_d, sr_d, s)*cc(ddi, ddd, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
         + gp*si_d
         - dp*sr_d
         + dp*rr_d
         - lm*sr_d
         - lm*sr_d
-        + chi*pa(kid, sS_i, Sr_d, S)*cc(idi, idd, sr_i, sr_d, s*r, N_Qd, N_Qi)
-        + chi*pa(kid, iS_i, Sr_d, S)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        + chi*pa(kid, rS_i, Sr_d, S)*cc(idi, idd, rr_i, rr_d, r*r, N_Qd, N_Qi)
-        + chi*pa(kid, sR_i, Rs_d, R)*cc(idi, idd, ss_i, ss_d, s*s, N_Qd, N_Qi)
-        + chi*pa(kid, iR_i, Rs_d, R)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi)
-        + chi*pa(kid, rR_i, Rs_d, R)*cc(idi, idd, rs_i, rs_d, r*s, N_Qd, N_Qi)
-        + mu*pa(kid, IS_i, Sr_d, S)*cc(idi, idd, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        + mu*pa(kid, IR_i, Rs_d, R)*cc(idi, idd, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        + mu*pa(kid, iS_i, Sr_d, S)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        + mu*pa(kid, iR_i, Rs_d, R)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi)
+        + chi*pa(kid, sS_i, Sr_d, S)*cc(idi, idd, sr_i, sr_d, s*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, iS_i, Sr_d, S)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, rS_i, Sr_d, S)*cc(idi, idd, rr_i, rr_d, r*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, sR_i, Rs_d, R)*cc(idi, idd, ss_i, ss_d, s*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, iR_i, Rs_d, R)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, rR_i, Rs_d, R)*cc(idi, idd, rs_i, rs_d, r*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, IS_i, Sr_d, S)*cc(idi, idd, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, IR_i, Rs_d, R)*cc(idi, idd, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, iS_i, Sr_d, S)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, iR_i, Rs_d, R)*cc(idi, idd, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
         + qid*chi*Sr_d
         + qid*chi*Rs_d;
 
-      sr_i_t = - tpp*pa(kdi, is_d, sr_i, s)*cc(dii, did, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        - tpm*pa(kdi, Is_d, sr_i, s)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
+      sr_i_t = - tpp*pa(kdi, is_d, sr_i, s)*cc(dii, did, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        - tpm*pa(kdi, Is_d, sr_i, s)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
         + gp*si_i
         - dp*sr_i
         + dp*rr_i
         - lm*sr_i
         - lm*sr_i
-        + chi*pa(kii, sS_i, Sr_i, S)*cc(iii, iid, sr_i, sr_d, s*r, N_Qd, N_Qi)
-        + chi*pa(kii, iS_i, Sr_i, S)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi)
+        + chi*pa(kii, sS_i, Sr_i, S)*cc(iii, iid, sr_i, sr_d, s*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, iS_i, Sr_i, S)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
         + chi*Sr_i
-        + chi*pa(kii, rS_i, Sr_i, S)*cc(iii, iid, rr_i, rr_d, r*r, N_Qd, N_Qi)
+        + chi*pa(kii, rS_i, Sr_i, S)*cc(iii, iid, rr_i, rr_d, r*r, N_Qd, N_Qi, nd, ni)
         + chi*Rs_i
-        + chi*pa(kii, sR_i, Rs_i, R)*cc(iii, iid, ss_i, ss_d, s*s, N_Qd, N_Qi)
-        + chi*pa(kii, iR_i, Rs_i, R)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi)
-        + chi*pa(kii, rR_i, Rs_i, R)*cc(iii, iid, rs_i, rs_d, r*s, N_Qd, N_Qi)
-        + mu*pa(kii, IS_i, Sr_i, S)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        + mu*pa(kii, IR_i, Rs_i, R)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi)
-        + mu*pa(kii, iS_i, Sr_i, S)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        + mu*pa(kii, iR_i, Rs_i, R)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi)
+        + chi*pa(kii, sR_i, Rs_i, R)*cc(iii, iid, ss_i, ss_d, s*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, iR_i, Rs_i, R)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, rR_i, Rs_i, R)*cc(iii, iid, rs_i, rs_d, r*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, IS_i, Sr_i, S)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, IR_i, Rs_i, R)*cc(iii, iid, Is_i, Is_d, I*s, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, iS_i, Sr_i, S)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, iR_i, Rs_i, R)*cc(iii, iid, is_i, is_d, i*s, N_Qd, N_Qi, nd, ni)
         ;
             
       ii_d_t = 2*(
                   + tpp*si_d
-                  + tpp*pa(kdd, is_d, si_d, s)*cc(ddi, ddd, ii_i, ii_d, i*i, N_Qd, N_Qi)
-                  + tpm*pa(kdd, Is_d, si_d, s)*cc(ddi, ddd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+                  + tpp*pa(kdd, is_d, si_d, s)*cc(ddi, ddd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+                  + tpm*pa(kdd, Is_d, si_d, s)*cc(ddi, ddd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
                   - gp*ii_d
                   - lm*ii_d
                   + om*Ii_d
-                  + chi*pa(kid, sI_i, Ii_d, I)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi)
-                  + chi*pa(kid, iI_i, Ii_d, I)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi)
-                  + chi*pa(kid, rI_i, Ii_d, I)*cc(idi, idd, ri_i, ri_d, r*i, N_Qd, N_Qi)
-                  + mu*pa(kid, II_i, Ii_d, I)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-                  + mu*pa(kid, iI_i, Ii_d, I)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi)
+                  + chi*pa(kid, sI_i, Ii_d, I)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
+                  + chi*pa(kid, iI_i, Ii_d, I)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+                  + chi*pa(kid, rI_i, Ii_d, I)*cc(idi, idd, ri_i, ri_d, r*i, N_Qd, N_Qi, nd, ni)
+                  + mu*pa(kid, II_i, Ii_d, I)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+                  + mu*pa(kid, iI_i, Ii_d, I)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
                   + qid*chi*Ii_d
                   + qid*mu*Ii_d
                   );
 
       ii_i_t = 2*(
-                  + tpp*pa(kdi, is_d, si_i, s)*cc(dii, did, ii_i, ii_d, i*i, N_Qd, N_Qi)
-                  + tpm*pa(kdi, Is_d, si_i, s)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+                  + tpp*pa(kdi, is_d, si_i, s)*cc(dii, did, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+                  + tpm*pa(kdi, Is_d, si_i, s)*cc(dii, did, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
                   - gp*ii_i
                   - lm*ii_i
                   + om*Ii_i
-                  + chi*pa(kii, sI_i, Ii_i, I)*cc(iii, iid, si_i, si_d, s*i, N_Qd, N_Qi)
+                  + chi*pa(kii, sI_i, Ii_i, I)*cc(iii, iid, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
                   + chi*Ii_i
-                  + chi*pa(kii, iI_i, Ii_i, I)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi)
-                  + chi*pa(kii, rI_i, Ii_i, I)*cc(iii, iid, ri_i, ri_d, r*i, N_Qd, N_Qi)
-                  + mu*pa(kii, II_i, Ii_i, I)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
+                  + chi*pa(kii, iI_i, Ii_i, I)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+                  + chi*pa(kii, rI_i, Ii_i, I)*cc(iii, iid, ri_i, ri_d, r*i, N_Qd, N_Qi, nd, ni)
+                  + mu*pa(kii, II_i, Ii_i, I)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
                   + mu*Ii_i
-                  + mu*pa(kii, iI_i, Ii_i, I)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi)
+                  + mu*pa(kii, iI_i, Ii_i, I)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
                   + qdi*tpp*si_i
                   );
 
-      ir_d_t = + tpp*pa(kdd, is_d, sr_d, s)*cc(ddi, ddd, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        + tpm*pa(kdd, Is_d, sr_d, s)*cc(ddi, ddd, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
+      ir_d_t = + tpp*pa(kdd, is_d, sr_d, s)*cc(ddi, ddd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        + tpm*pa(kdd, Is_d, sr_d, s)*cc(ddi, ddd, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
         + gp*ii_d
         - gp*ir_d
         - dp*ir_d
         - lm*ir_d
         - lm*ir_d
         + om*Ir_d
-        + chi*pa(kid, sI_i, Ir_d, I)*cc(idi, idd, sr_i, sr_d, s*r, N_Qd, N_Qi)
-        + chi*pa(kid, iI_i, Ir_d, I)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        + chi*pa(kid, rI_i, Ir_d, I)*cc(idi, idd, rr_i, rr_d, r*r, N_Qd, N_Qi)
-        + chi*pa(kid, sR_i, Ri_d, R)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi)
-        + chi*pa(kid, iR_i, Ri_d, R)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + chi*pa(kid, rR_i, Ri_d, R)*cc(idi, idd, ri_i, ri_d, r*i, N_Qd, N_Qi)
-        + mu*pa(kid, II_i, Ir_d, I)*cc(idi, idd, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        + mu*pa(kid, IR_i, Ri_d, R)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + mu*pa(kid, iI_i, Ir_d, I)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        + mu*pa(kid, iR_i, Ri_d, R)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi)
+        + chi*pa(kid, sI_i, Ir_d, I)*cc(idi, idd, sr_i, sr_d, s*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, iI_i, Ir_d, I)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, rI_i, Ir_d, I)*cc(idi, idd, rr_i, rr_d, r*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, sR_i, Ri_d, R)*cc(idi, idd, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, iR_i, Ri_d, R)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kid, rR_i, Ri_d, R)*cc(idi, idd, ri_i, ri_d, r*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, II_i, Ir_d, I)*cc(idi, idd, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, IR_i, Ri_d, R)*cc(idi, idd, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, iI_i, Ir_d, I)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kid, iR_i, Ri_d, R)*cc(idi, idd, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
         + qid*chi*Ir_d
         + qid*chi*Ri_d
         + qid*mu*Ri_d;
 
-      ir_i_t = + tpp*pa(kdi, is_d, sr_i, s)*cc(dii, did, ir_i, ir_d, i*r, N_Qd, N_Qi)
-        + tpm*pa(kdi, Is_d, sr_i, s)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
+      ir_i_t = + tpp*pa(kdi, is_d, sr_i, s)*cc(dii, did, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+        + tpm*pa(kdi, Is_d, sr_i, s)*cc(dii, did, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
         + gp*ii_i
         - gp*ir_i
         - dp*ir_i
         - lm*ir_i
         - lm*ir_i
         + om*Ir_i
-        + chi*pa(kii, sI_i, Ir_i, I)*cc(iii, iid, sr_i, sr_d, s*r, N_Qd, N_Qi)
-        + chi*pa(kii, iI_i, Ir_i, I)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi)
+        + chi*pa(kii, sI_i, Ir_i, I)*cc(iii, iid, sr_i, sr_d, s*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, iI_i, Ir_i, I)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
         + chi*Ir_i
-        + chi*pa(kii, rI_i, Ir_i, I)*cc(iii, iid, rr_i, rr_d, r*r, N_Qd, N_Qi)
-        + chi*pa(kii, sR_i, Ri_i, R)*cc(iii, iid, si_i, si_d, s*i, N_Qd, N_Qi)
+        + chi*pa(kii, rI_i, Ir_i, I)*cc(iii, iid, rr_i, rr_d, r*r, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, sR_i, Ri_i, R)*cc(iii, iid, si_i, si_d, s*i, N_Qd, N_Qi, nd, ni)
         + chi*Ri_i
-        + chi*pa(kii, iR_i, Ri_i, R)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi)
-        + chi*pa(kii, rR_i, Ri_i, R)*cc(iii, iid, ri_i, ri_d, r*i, N_Qd, N_Qi)
-        + mu*pa(kii, II_i, Ir_i, I)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-        + mu*pa(kii, IR_i, Ri_i, R)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi)
-        + mu*pa(kii, iI_i, Ir_i, I)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi)
+        + chi*pa(kii, iR_i, Ri_i, R)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
+        + chi*pa(kii, rR_i, Ri_i, R)*cc(iii, iid, ri_i, ri_d, r*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, II_i, Ir_i, I)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, IR_i, Ri_i, R)*cc(iii, iid, Ii_i, Ii_d, I*i, N_Qd, N_Qi, nd, ni)
+        + mu*pa(kii, iI_i, Ir_i, I)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
         + mu*Ri_i
-        + mu*pa(kii, iR_i, Ri_i, R)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi)
+        + mu*pa(kii, iR_i, Ri_i, R)*cc(iii, iid, ii_i, ii_d, i*i, N_Qd, N_Qi, nd, ni)
         ;
             
       rr_d_t = 2*(
                   + gp*ir_d
                   - dp*rr_d
                   - lm*rr_d
-                  + chi*pa(kid, sR_i, Rr_d, R)*cc(idi, idd, sr_i, sr_d, s*r, N_Qd, N_Qi)
-                  + chi*pa(kid, iR_i, Rr_d, R)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi)
-                  + chi*pa(kid, rR_i, Rr_d, R)*cc(idi, idd, rr_i, rr_d, r*r, N_Qd, N_Qi)
-                  + mu*pa(kid, IR_i, Rr_d, R)*cc(idi, idd, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-                  + mu*pa(kid, iR_i, Rr_d, R)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi)
+                  + chi*pa(kid, sR_i, Rr_d, R)*cc(idi, idd, sr_i, sr_d, s*r, N_Qd, N_Qi, nd, ni)
+                  + chi*pa(kid, iR_i, Rr_d, R)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
+                  + chi*pa(kid, rR_i, Rr_d, R)*cc(idi, idd, rr_i, rr_d, r*r, N_Qd, N_Qi, nd, ni)
+                  + mu*pa(kid, IR_i, Rr_d, R)*cc(idi, idd, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+                  + mu*pa(kid, iR_i, Rr_d, R)*cc(idi, idd, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
                   + qid*chi*Rr_d
                   );
 
@@ -1072,12 +1074,12 @@ namespace InfoSIRSpa
                   + gp*ir_i
                   - dp*rr_i
                   - lm*rr_i
-                  + chi*pa(kii, sR_i, Rr_i, R)*cc(iii, iid, sr_i, sr_d, s*r, N_Qd, N_Qi)
-                  + chi*pa(kii, iR_i, Rr_i, R)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi)
+                  + chi*pa(kii, sR_i, Rr_i, R)*cc(iii, iid, sr_i, sr_d, s*r, N_Qd, N_Qi, nd, ni)
+                  + chi*pa(kii, iR_i, Rr_i, R)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
                   + chi*Rr_i
-                  + chi*pa(kii, rR_i, Rr_i, R)*cc(iii, iid, rr_i, rr_d, r*r, N_Qd, N_Qi)
-                  + mu*pa(kii, IR_i, Rr_i, R)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi)
-                  + mu*pa(kii, iR_i, Rr_i, R)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi)
+                  + chi*pa(kii, rR_i, Rr_i, R)*cc(iii, iid, rr_i, rr_d, r*r, N_Qd, N_Qi, nd, ni)
+                  + mu*pa(kii, IR_i, Rr_i, R)*cc(iii, iid, Ir_i, Ir_d, I*r, N_Qd, N_Qi, nd, ni)
+                  + mu*pa(kii, iR_i, Rr_i, R)*cc(iii, iid, ir_i, ir_d, i*r, N_Qd, N_Qi, nd, ni)
                   );
       
       return GSL_SUCCESS;         
