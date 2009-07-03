@@ -1,4 +1,0 @@
-#!/bin/sh
-echo -ne "`~/Code/my_ode/info_dist.pl $1 | head -1` "
-test=`echo $1 | sed 's/^.*or_\([0-9]\.[0-9][0-9]\)_.*$/\1/g'`
-~/Code/my_ode/analyse_ode_dat.pl $1 1 | awk '{oI=$2*'$test'; print oI " " '$test' " " $2}'
