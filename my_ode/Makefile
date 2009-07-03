@@ -54,6 +54,6 @@ cleaner:
 #-------------------------------------------------------------------
 # DO NOT DELETE
 
-#out/solve_ode.o: include/file_io.hh include/Sleep.hh include/pa_macros.hh \
-#                 include/ode_solver.hh include/ode_io_utils.hh include/convergence.hh \
-#                 include/Diminish.hh include/InfoSIRSmf.hh
+out/solve_ode.o: include/file_io.hh include/Sleep.hh include/pa_macros.hh \
+                 include/ode_solver.hh include/ode_io_utils.hh include/convergence.hh \
+                 include/Diminish.hh include/InfoSIRSmf.hh include/InfoSIRSpa.hh
