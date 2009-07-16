@@ -10,20 +10,18 @@
 #include <exception>
 #include <boost/program_options.hpp>
 
-#include "ode_solver.hh"
-#include "file_io.hh"
+//#include "ode_solver.hh"
 
 //------------------------------------------------------------
 
 namespace po = boost::program_options;
-namespace fio = file_io_utils;
 
 //------------------------------------------------------------
 
 std::string find_ode_type(int argc, char* argv[])
 {
   std::string type("no type specified");
-
+  
   int i;
   for (i = 1; i < argc; ++i) {
     if (!strcmp(argv[i],"--ode-type=mf")) {
@@ -34,7 +32,7 @@ std::string find_ode_type(int argc, char* argv[])
       break;
     }
   }
-
+  
   return type;
 }
 
@@ -60,14 +58,16 @@ po::options_description* generate_main_options()
      "file containing model parameters")
     ("graph-params-file,g",po::value<std::string>(),
      "file containing graph parameters")
-    ("gp-file",
-     "write gnuplot script params file")
+    ("no-gp-file",
+     "do not write gnuplot script params file")
     ("check-convergence",
      "check for convergence and stop before Tmax")
     ;
   
   return opt;
 }
+
+//------------------------------------------------------------
 
 po::options_description* generate_ode_options()
 {
@@ -95,7 +95,6 @@ po::options_description* generate_ode_options()
 
   return opt;
 }
-
 
 //------------------------------------------------------------
 
@@ -216,6 +215,8 @@ bool parse_graph_args_file(po::options_description& graph_options,
   
 }
 
+//------------------------------------------------------------
+
 template <class Params, class Eqs>
 int init_ode_params(po::variables_map& vm,
                     ode::OdeSolver<Params, Eqs>& x)
@@ -227,13 +228,13 @@ int init_ode_params(po::variables_map& vm,
     std::cerr << "ERROR: no file-id given" << std::endl;
     return 1;
   }
-//   if (vm.count("ic-file")) {
-//     // ode ic file name 
-//     x.set_ic_file_name(vm["ic-file"].as<std::string>().c_str());      
-//   } else  {
-//     std::cerr << "ERROR: no ic-file given" << std::endl;
-//     return 1;
-//   }   
+  if (vm.count("ic-file")) {
+    // ode ic file name 
+    x.set_ic_file_name(vm["ic-file"].as<std::string>().c_str());      
+  } else  {
+    std::cerr << "ERROR: no ic-file given" << std::endl;
+    return 1;
+  }   
   if (vm.count("tmax")) {
     x.set_tmax(vm["tmax"].as<double>());
   } else {
@@ -280,7 +281,8 @@ int init_ode_params(po::variables_map& vm,
   return 0;
 }
 
-
+//------------------------------------------------------------
+  
 int write_gp_script(std::string fname, double Qd, double Qi,
                     double tmax, double N, bool verbose)
 {
@@ -317,4 +319,5 @@ int write_gp_script(std::string fname, double Qd, double Qi,
 }
 
 //------------------------------------------------------------
+
 #endif // ODE_IO_UTILS_H
