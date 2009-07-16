@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
   std::string ode_type = find_ode_type(argc, argv);
   
   if ((ode_type != "mf") && (ode_type != "pa")) {
-    std::cerr << "ERROR: ode-type is neither mf nor pa" << std::endl;
+    std::cerr << "ERROR: ode-type is niether mf nor pa" << std::endl;
     return 1;
   }
   
@@ -117,7 +117,17 @@ int solve_ode_system(int argc, char* argv[])
   
   // initializing ode parameters
   init_ode_params(vm, ode_sys);
-  
+
+  std::ofstream cmdLineFile;
+  std::string cmdLineFileName = ode_sys.get_file_id() + ".cmd_line";
+  cmdLineFile.open(cmdLineFileName.c_str(), std::ios::out);
+  cmdLineFile << argv[0] << " ";
+  for (int j = 1; j < argc; j++) {
+    cmdLineFile << argv[j] << " ";
+  }
+  cmdLineFile << std::endl;
+  cmdLineFile.close();
+
   // initializing model parameters
   init_model_params(vm, ode_sys);
   
@@ -125,7 +135,6 @@ int solve_ode_system(int argc, char* argv[])
   init_graph_params(vm, ode_sys);
   
   // print ode_system
-  std::cout << "print ode system" << std::endl;
   std::cout << ode_sys << std::endl;
   
   // init rhs
@@ -137,7 +146,7 @@ int solve_ode_system(int argc, char* argv[])
   //------------------------------------------------------------
   // write parameters to Gnuplot script
   
-  if (vm.count("gp-file")) {
+  if (!vm.count("no-gp-file")) {
     write_gp_script(vm["file-id"].as<std::string>(),
                     vm["Qd"].as<double>(),
                     vm["Qi"].as<double>(),
