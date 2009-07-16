@@ -56,6 +56,7 @@ namespace ode
     void set_convergence_check(const bool b)
     { OdeSolver::check_if_converged = b; }
     void set_file_id(std::string file_id) { OdeSolver::file_id = file_id; }
+    void set_ic_file_name(std::string ic_file) { OdeSolver::ic_file = ic_file; }
     void set_rhs(double *rhs_ic) { OdeSolver::rhs = rhs_ic; }
     void set_verbose(const bool verbose)
     { OdeSolver::verbose = verbose; }
@@ -70,6 +71,7 @@ namespace ode
     bool get_convergence_check() const { return check_if_converged; }
     double* get_rhs() const { return rhs; }
     std::string get_file_id() const {return file_id; }
+    std::string get_ic_file_name() const {return ic_file; }
     bool get_verbose() const { return verbose; }
     Params* get_model_params() const { return model_params; }
     Eqs get_model_eqs() const { return model_eqs; }
@@ -101,6 +103,7 @@ namespace ode
     
     // output file
     std::string file_id; // file identifier
+    std::string ic_file; // file identifier
     
     // Model object
     Params* model_params;
@@ -120,6 +123,7 @@ namespace ode
   {
     step_algo = "rkf45";
     file_id = "no_file_id";
+    ic_file = "";
     rhs=NULL;
     model_params = new Params;
     
@@ -144,7 +148,12 @@ namespace ode
      unsigned int nv = model_params->nvars;     
      
      // opening ic_file
-     std::string fname = file_id + ".init";
+     std::string fname;
+     if (ic_file == "") {
+       fname = file_id + ".init";
+     } else {
+       fname = ic_file;
+     }
      std::ifstream ic;
      try {
        ic.open(fname.c_str(), std::ios::in);
@@ -402,7 +411,7 @@ namespace ode
            << "verbose mode ....... " << x.get_verbose() << std::endl
            << "convergence check .. " << x.get_convergence_check() << std::endl
            << "output file ........ " << x.get_file_id()+".dat" << std::endl
-           << "ic file ............ " << x.get_file_id()+".init" << std::endl
+           << "ic file ............ " << x.get_ic_file_name() << std::endl
            << "dt ................. " << x.get_dt() << std::endl
            << "step type .......... " << x.get_step_algo() << std::endl
            << "abs tol ............ " << x.get_abs_tol() << std::endl
