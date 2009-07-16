@@ -10,15 +10,9 @@ namespace convergence
 
   public:
     
-    ConvergenceCheck(unsigned int nv = 0, unsigned int smp_int = 10,
+    ConvergenceCheck(unsigned int nv = 0, unsigned int smp_int = 1,
                      unsigned int nsmpls = 3, double e = 1e-5) :
-      nvars(nv), samples_interval(smp_int), nsamples(nsmpls), eps(e) {
-      
-      // allocating rhs memory
-      //rhs.resize(nsamples);
-      //for (unsigned int i = 0; i < rhs.size(); ++i)
-      //  rhs[i].resize(nvars);            
-    }
+      nvars(nv), samples_interval(smp_int), nsamples(nsmpls), eps(e) {}
     
     ~ConvergenceCheck() {}
     
@@ -81,11 +75,16 @@ namespace convergence
       // compare to eps
       for (unsigned int i = 0; i < rhs.size()-1; i++)
         if (norm[i] > eps)
-          converge = false;      
+          converge = false;
+      
+//       for (unsigned int i = 0; i < rhs.size()-1; i++)
+//         std::cout << norm[i] << '\t';
+//       std::cout << std::endl << std::endl;
+      
     }
     
     return converge;
-
+    
   }
 
   
