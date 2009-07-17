@@ -1,7 +1,7 @@
 #------ GNU g++ -----------------------------------------------------
 
 CC         = g++
-CPPFLAGS     = -Wall -O3 -g -I${CODEDIR} -Iinclude
+CPPFLAGS     = -Wall -O3 -I${CODEDIR} -Iinclude
 
 LINKER      = g++
 LDFLAGS     = -lboost_program_options -lgsl 
