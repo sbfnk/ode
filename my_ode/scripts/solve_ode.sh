@@ -80,7 +80,7 @@ done
 # setting variables and paths
 echo '... resetting variables and paths'
 solver=solve_ode.x 
-exec=$CODEDIR/solver/bin/$solver
+exec=$CODEDIR/my_ode/bin/$solver
 
 output_dir="$DATADIR/$file_id"
 log_file=$file_id.log
