@@ -1,12 +1,23 @@
 #!/usr/bin/perl
 
-for (my $ninit = 5000; $ninit < 10000; $ninit=$ninit+1000) {
-  for (my $beta=0.01;$beta<=0.6;$beta=$beta+0.01) {
-    for (my $rho=0.01;$rho<=0.3;$rho=$rho+0.01) {
-      for (my $epsilon=1;$epsilon<=5;$epsilon=$epsilon+1) {
-        system "./solve_ode.x --file-id angola4 --ic-file angola_$ninit.ic --nsave 1 --dt=0.1 --N 1250000 -p angola3.prm -m angola3.mpm  --beta $beta --rho $rho --sigma-file angola.csv --epsilon $epsilon > /dev/null 2>&1";
-        system "./reported.sh angola4.dat > reported2.dat";
-        print "$ninit $beta $rho $epsilon ".`./least_squares.sh reported2.dat recorded.dat`;
+my $codeDir = $ENV{'CODEDIR'}."/sleep_ode";
+my $dataDir = $ENV{'DATADIR'}."/Sleeping_Sickness";
+
+for (my $nmul = 1; $nmul < 4; $nmul=$nmul+1) {
+  for (my $ninit = 100 * (10**($nmul - 1)); $ninit < 1000 * (10**($nmul - 1)); $ninit=$ninit+(100 * (10**($nmul - 1)))) {
+    for (my $beta=(0.5*(2**(3-$nmul)));$beta<(1*(2**(3-$nmul)));$beta=$beta+0.02) {
+#      for (my $rho=0.02;$rho<=1;$rho=$rho+0.02) {
+      for (my $rho=0.02;$rho<2;$rho=$rho+0.02) {
+        for (my $epsilon=0.1;$epsilon<=10;$epsilon=$epsilon*10) {
+          system "$codeDir/bin/solve_ode.x --file-id $dataDir/temp --ic-file $codeDir/init/angola_$ninit.ic --nsave 1 --dt=0.1 --N 1250000 -p $codeDir/params/angola.prm -m $codeDir/params/angola.mpm  --t0=1972 --tmax=1998 --beta $beta --rho $rho --sigma-file $codeDir/data/screening.dat --epsilon $epsilon > /dev/null 2>&1";
+          system "$codeDir/scripts/reported.sh $dataDir/temp.dat > $dataDir/temp_reported.dat";
+	  my $distance = `$codeDir/scripts/least_squares_weighed.pl $dataDir/temp_reported.dat $codeDir/data/recorded.dat`;
+	  chomp $distance;
+          my $infected_total_last = 
+            `tail -n 1 $dataDir/temp.dat | awk '{print \$3" "\$5}'`;
+          chomp $infected_total_last;
+          print "$ninit $beta $rho $epsilon $infected_total_last $distance\n";
+        }
       }
     }
   }
