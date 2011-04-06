@@ -122,12 +122,17 @@ namespace MillerModel
       double S = p.suscept(rhs[0], degDist);
       double I = 1 - R - S;
       
-      os << rhs[0] << '\t';
-      os << S << '\t';
-      os << I << '\t';
-      os << R << '\t';
+      os << rhs[0] << ' ';
+      os << S << ' ';
+      os << I << ' ';
+      os << R << ' ';
       os << (- gamma*I -
              p.suscept_prime(rhs[0], degDist) *
+             (-beta * rhs[0] +
+              gamma * (1 - rhs[0]) +
+              beta * psi_prime(rhs[0], degDist) / psi_prime(1, degDist)))
+         << ' ';
+      os << (- p.suscept_prime(rhs[0], degDist) *
              (-beta * rhs[0] +
               gamma * (1 - rhs[0]) +
               beta * psi_prime(rhs[0], degDist) / psi_prime(1, degDist)));
@@ -141,6 +146,7 @@ namespace MillerModel
 
       rhs[1] = (1 - p.suscept(rhs[0], degDist))/
         (-beta/gamma * (1-psi_2prime(1, degDist) / psi_prime(1, degDist)));
+      std::cout << "psi(" << rhs[0] << ") = " << p.suscept(rhs[0], degDist) << std::endl;
     }
     
     static void finish(double rhs[], void* params, std::ofstream& os)
