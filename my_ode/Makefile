@@ -4,7 +4,7 @@ CC         = g++
 CPPFLAGS     = -Wall -O3 -I${CODEDIR} -Iinclude
 
 LINKER      = g++
-LDFLAGS     = -lboost_program_options -lgsl 
+LDFLAGS     = -lboost_program_options -lgsl -lgslcblas
 
 #--------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ all: bin/$(EXEC)
 bin/$(EXEC): $(OBJECTS) 
 	@echo ... linking $<: 
 	@echo $(OBJECTS)
-	$(LINKER) $(LDFLAGS) $(OPTFLAGS) $(CPPFLAGS) $(OBJECTS) -o $@
+	$(LINKER) $(OBJECTS) $(LDFLAGS) $(OPTFLAGS) $(CPPFLAGS) -o $@
 	@echo
 
 out/%.o: src/%.cc include/%.hh
