@@ -127,7 +127,7 @@ namespace InfoSIRSmf
     // dummy is for overloading
     
     po::options_description* opt =
-      new po::options_description("Model parameters");
+      new po::options_description("Model parameters", 1024);
     
     opt->add_options()
       ("tau--", po::value<double>(),
