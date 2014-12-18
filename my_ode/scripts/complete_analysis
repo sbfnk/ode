@@ -1,0 +1,56 @@
+#!/bin/sh
+
+FILENAME=$1
+RHO=$2
+N=$3
+
+if [ -z $FILENAME ] ; then
+  echo No filename specified
+  exit 1
+fi
+if [ ! -f "$FILENAME" ] ; then
+	echo "Could not open $FILENAME"
+	exit 1
+fi
+
+if [ -z $RHO ] ; then
+  RHO=0.8
+fi
+
+if [ -z $N ] ; then 
+  N=10000
+fi
+
+SUMSNAME=`basename $FILENAME .dat`.sums.dat
+INFONAME=`basename $FILENAME .dat`.info.dat
+#HISTDIR=Hists_`basename $FILENAME .dat`
+
+#mkdir $HISTDIR
+
+echo Summing up states...
+$CODEDIR/my_ode/analyse_ode_dat.pl $FILENAME $RHO > $SUMSNAME
+echo Generating plot...
+$CODEDIR/my_ode/plot_ode $SUMSNAME
+$CODEDIR/my_ode/plot_ode2 $SUMSNAME
+
+ENDTIME=`tail -1 $FILENAME | awk '{print $1}'`
+
+#echo Generating information distributions...
+#for ((i=0;i<=$ENDTIME;i++))
+#do
+#  $CODEDIR/my_ode/info_dist.pl $FILENAME $i > $HISTDIR/hist$i.dat
+#done
+#for ((i=0;i<10;i++))
+#do
+#  mv $HISTDIR/hist$i.dat $HISTDIR/hist00$i.dat
+#done
+#for ((i=10;i<100;i++))
+#do
+#  mv $HISTDIR/hist$i.dat $HISTDIR/hist0$i.dat
+#done
+#echo Generating plots...
+#for I in $HISTDIR/*.dat
+#do
+#  $CODEDIR/my_ode/plot_hist $I $N
+#done
+echo ...done

@@ -1,0 +1,24 @@
+# %%% Mean Field Approx Parameters File %%%%%%%%%
+
+# Ode parameters: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+file_id      = try1
+tmax         = 10
+dt           = 1e-6
+nsave        = 1
+step_algo    = rkf45
+abs_tol      = 1e-8
+rel_tol      = 1e-8
+
+# Model parameters: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+beta--     = 0.2
+gamma-     = 1.2
+delta-     = 1.0
+beta++     = 0.5  
+gamma+     = 2.0
+delta+     = 1.0
+beta+-     = 1.0
+beta-+     = 1.0
+alpha      = 1.5
+nu         = 1.0
+lambda     = 0.5
+vertices   = 1e5
